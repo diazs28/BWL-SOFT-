@@ -47,7 +47,7 @@ WhatsApp) y pie de página. Botón flotante de WhatsApp en toda la página.
 
 ## Stack
 
-HTML + CSS + JavaScript vanilla (módulos ES), sin build ni dependencias en producción. Fuente
+HTML + CSS + JavaScript vanilla (scripts clásicos con `defer`), sin build ni dependencias en producción. Fuente
 Poppins desde Google Fonts. Sin GSAP: las únicas animaciones son CSS y respetan
 `prefers-reduced-motion`. Publicación estática en Vercel.
 
@@ -63,8 +63,8 @@ npm install          # solo herramientas de desarrollo (ESLint y Prettier)
 npm run dev          # python -m http.server 5173
 ```
 
-Abre http://localhost:5173. No sirve abrir `index.html` con doble clic: los módulos ES necesitan
-un servidor.
+Abre http://localhost:5173. También puedes abrir `index.html` con doble clic: los scripts son
+clásicos (`defer`), no módulos, así que funcionan sin servidor.
 
 ## Variables de entorno
 

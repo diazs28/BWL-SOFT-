@@ -5,7 +5,8 @@
 //   'en-vivo'  → muestra el botón "Ver en vivo" (requiere url)
 //   'privado'  → etiqueta "Software privado"
 //   'demo'     → etiqueta "Demo bajo solicitud"
-export const PROYECTOS = [
+window.BWL = window.BWL || {};
+window.BWL.PROYECTOS = [
   {
     id: 'portalsalud',
     nombre: 'Portal de la Salud',
