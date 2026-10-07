@@ -19,6 +19,11 @@ WhatsApp) y pie de página. Botón flotante de WhatsApp en toda la página.
 - **Paleta**: `--bwl-grafito` #1C1C1F, `--bwl-grafito-2` #2A2A2E, `--bwl-cobre` #D08A62,
   `--bwl-cobre-claro` #F2C4A4, `--bwl-cobre-oscuro` #7A4128 (texto cobre sobre fondo claro),
   `--bwl-humo` #F4EFEC.
+- **Pantalla de inicio** (adaptada de PortalSalud): «BWL & SOFT» aparece palabra por palabra en
+  cobre metalizado, se desvanece y seis columnas de cobre suben de derecha a izquierda para
+  descubrir la página. Dura unos 2 s, se muestra una vez por pestaña y nunca con movimiento
+  reducido. Para volver a verla, abre la página en una pestaña nueva. Se controla en
+  `js/intro.js` y en la sección «Pantalla de inicio» de `css/style.css`.
 - **Detalle memorable**: el logo del hero sobre un disco de cobre torneado (anillos concéntricos)
   con un destello de luz que recorre el metal una sola vez al cargar.
 - **Carrusel**: cada proyecto se ve dentro de un marco de navegador en escritorio y de teléfono en
@@ -89,6 +94,7 @@ css/reset.css           Reset base
 css/style.css           Sistema de diseño (tokens sobre los --bwl-* del kit) y estilos
 js/config.js            MARCA: nombre, WhatsApp, ciudad, redes. Único lugar para datos de contacto
 js/proyectos.js         Datos del carrusel. Único lugar para agregar o editar proyectos
+js/intro.js             Activa la pantalla de inicio (una vez por pestaña)
 js/carrusel.js          Carrusel accesible (flechas, puntos, swipe, teclado, autoplay)
 js/main.js              Enlaces de WhatsApp, menú, formulario y arranque del carrusel
 assets/brand/           Archivos del kit que usa la página + og-image.png (1200x630)
