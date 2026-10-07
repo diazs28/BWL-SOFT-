@@ -1,0 +1,22 @@
+# Dependencias y builds
+node_modules/
+dist/
+build/
+.next/
+coverage/
+.turbo/
+
+# Secretos (nunca al repositorio; versiona solo .env.example)
+.env
+.env.*
+!.env.example
+*.env
+!*.env.example
+.secrets/
+*.pem
+*.key
+
+# Sistema y editores
+.DS_Store
+Thumbs.db
+*.log
