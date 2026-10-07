@@ -1,0 +1,14 @@
+# Kit de marca original: PNG de hasta 3 MB que no se publican
+BWL-Soft-Kit-Logo/
+
+# Herramientas de desarrollo
+node_modules/
+.claude/
+docs/
+package.json
+package-lock.json
+eslint.config.js
+.prettierrc.json
+.prettierignore
+.editorconfig
+README.md
