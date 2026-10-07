@@ -1,0 +1,169 @@
+# BWL & SOFT · Landing-portafolio
+
+## Descripción
+
+Landing de **BWL & SOFT** (BWL SOFT · Binomio Web Lab), equipo de desarrollo de software a la
+medida y páginas web en Popayán, Colombia. Su trabajo es que un cliente potencial vea en segundos
+que hacemos software profesional, revise proyectos reales en un carrusel y nos escriba por WhatsApp
+para cotizar.
+
+Secciones: inicio (hero), proyectos (carrusel), servicios, proceso, contacto (formulario que abre
+WhatsApp) y pie de página. Botón flotante de WhatsApp en toda la página.
+
+### Dirección visual
+
+- **Tono**: taller de ingeniería con acabado de cobre. Fondo grafito dominante, acentos cobre
+  metalizado del kit de marca y una sección clara en humo (servicios) para dar ritmo.
+- **Tipografía**: solo Poppins (400, 500 y 600), la del logo. Titulares en 600 con tracking
+  ligeramente cerrado; el tracking amplio queda reservado al logo.
+- **Paleta**: `--bwl-grafito` #1C1C1F, `--bwl-grafito-2` #2A2A2E, `--bwl-cobre` #D08A62,
+  `--bwl-cobre-claro` #F2C4A4, `--bwl-cobre-oscuro` #7A4128 (texto cobre sobre fondo claro),
+  `--bwl-humo` #F4EFEC.
+- **Detalle memorable**: el logo del hero sobre un disco de cobre torneado (anillos concéntricos)
+  con un destello de luz que recorre el metal una sola vez al cargar.
+- **Carrusel**: cada proyecto se ve dentro de un marco de navegador en escritorio y de teléfono en
+  móvil, con su propia captura para cada tamaño.
+
+## Supuestos (por validar)
+
+- El nombre comercial es **BWL & SOFT**; en el pie y en los datos estructurados aparece también
+  «BWL SOFT · Binomio Web Lab», como en el kit de logo.
+- El dominio provisional es `https://bwl-soft.vercel.app`. Si el proyecto queda con otro dominio,
+  cámbialo en `index.html` (canonical, Open Graph y JSON-LD), `robots.txt` y `sitemap.xml`.
+- No hay correo ni redes además de GitHub: quedan vacíos en `js/config.js` y no se muestran.
+- Las URL de TechnoSur y de la psicóloga Karla Silva se tomaron del campo «homepage» de sus
+  repositorios en GitHub (respondían 200 el 7 de octubre de 2026).
+- Karbon POS se presenta como producto propio para restaurantes y bares; ÁCIDO 303 como proyecto de
+  portafolio (la marca y el evento son ficticios).
+
+## Pendiente
+
+- **PortalSalud**: no está desplegado. Sale como «Demo bajo solicitud». La captura se tomó del
+  build local sin backend (por eso no aparecen productos en la parte baja).
+- **ÁCIDO 303**: no está desplegado. Sale como «Demo bajo solicitud».
+- Cuando cualquiera de los dos tenga URL, cambia en `js/proyectos.js` su `estado` a `'en-vivo'` y
+  llena `url`.
+- Confirmar el dominio definitivo (ver Supuestos).
+
+## Stack
+
+HTML + CSS + JavaScript vanilla (módulos ES), sin build ni dependencias en producción. Fuente
+Poppins desde Google Fonts. Sin GSAP: las únicas animaciones son CSS y respetan
+`prefers-reduced-motion`. Publicación estática en Vercel.
+
+## Requisitos
+
+- Python 3 (para el servidor local) o cualquier servidor estático.
+- Node 22 o superior y npm, solo para lint y formato.
+
+## Instalación
+
+```bash
+npm install          # solo herramientas de desarrollo (ESLint y Prettier)
+npm run dev          # python -m http.server 5173
+```
+
+Abre http://localhost:5173. No sirve abrir `index.html` con doble clic: los módulos ES necesitan
+un servidor.
+
+## Variables de entorno
+
+No usa. Todo el contenido es público y estático.
+
+## Scripts
+
+| Script                 | Qué hace                               |
+| ---------------------- | -------------------------------------- |
+| `npm run dev`          | Servidor local en el puerto 5173       |
+| `npm run lint`         | ESLint sobre `js/`                     |
+| `npm run format`       | Formatea con Prettier                  |
+| `npm run format:check` | Verifica el formato                    |
+| `npm run check`        | Lint + formato (correr antes de un PR) |
+
+## Estructura
+
+```
+index.html              Página principal (SEO, Open Graph y JSON-LD en el <head>)
+404.html                Página de error con la misma marca
+css/reset.css           Reset base
+css/style.css           Sistema de diseño (tokens sobre los --bwl-* del kit) y estilos
+js/config.js            MARCA: nombre, WhatsApp, ciudad, redes. Único lugar para datos de contacto
+js/proyectos.js         Datos del carrusel. Único lugar para agregar o editar proyectos
+js/carrusel.js          Carrusel accesible (flechas, puntos, swipe, teclado, autoplay)
+js/main.js              Enlaces de WhatsApp, menú, formulario y arranque del carrusel
+assets/brand/           Archivos del kit que usa la página + og-image.png (1200x630)
+assets/projects/        Capturas WebP de cada proyecto (escritorio 1280x800, móvil 585x1266)
+BWL-Soft-Kit-Logo/      Kit de marca original. No se modifica y no se publica (.vercelignore)
+vercel.json             cleanUrls, cabeceras de seguridad y caché
+robots.txt, sitemap.xml SEO
+docs/adr/               Decisiones de arquitectura
+```
+
+## Personalización
+
+- **WhatsApp, ciudad, nombre, redes**: `js/config.js`. Todos los botones de WhatsApp toman el número
+  de ahí. Excepción: el teléfono en el JSON-LD de `index.html` es estático (los buscadores lo leen
+  sin ejecutar JS); si cambia el número, actualízalo también ahí.
+- **Textos de servicios y proceso**: directamente en `index.html`.
+- **Colores**: los de marca vienen de `assets/brand/brand-tokens.css` (copia del kit; no editar).
+  Los tokens de la página (`--color-*`, `--fs-*`, `--space-*`) están al inicio de `css/style.css`.
+
+### Agregar un proyecto al carrusel
+
+1. Toma dos capturas del proyecto:
+   - Escritorio: viewport 1280x800.
+   - Móvil: viewport 390x844 (se guarda a 585x1266).
+2. Conviértelas a WebP (máximo 200 KB) y guárdalas como
+   `assets/projects/<id>-desktop.webp` (1280x800), `assets/projects/<id>-desktop-800.webp`
+   (800x500, versión liviana para pantallas medianas) y `assets/projects/<id>-movil.webp`
+   (585x1266).
+3. Agrega un bloque en `js/proyectos.js`:
+
+   ```js
+   {
+     id: 'mi-proyecto',
+     nombre: 'Nombre visible',
+     cliente: 'Para quién se hizo',
+     tipo: 'Tienda en línea con pagos',
+     descripcion: 'Qué hace, en una o dos frases sin jerga.',
+     stack: ['React', 'Node.js'],
+     estado: 'en-vivo', // 'en-vivo' | 'privado' | 'demo'
+     url: 'https://...', // solo si estado es 'en-vivo'
+     imagenes: {
+       escritorio: 'assets/projects/mi-proyecto-desktop.webp',
+       movil: 'assets/projects/mi-proyecto-movil.webp',
+     },
+     alt: 'Descripción de lo que se ve en la captura',
+   },
+   ```
+
+4. Listo: los puntos, la navegación y las etiquetas se generan solos. No hay que tocar el HTML.
+
+> Las imágenes de `/assets` se sirven con caché de un año (`immutable`). Si reemplazas una captura,
+> cámbiale el nombre (por ejemplo `-v2.webp`) para que los navegadores descarguen la nueva.
+
+## Despliegue
+
+En Vercel, como sitio estático sin build:
+
+1. Sube el repositorio a GitHub: `gh repo create dante312w/BWL-Landig --private --source . --push`.
+2. En vercel.com → **Add New → Project** → importa el repositorio.
+3. **Framework Preset**: `Other`. Deja vacíos Build Command y Output Directory.
+4. **Deploy**. Vercel publica la raíz tal cual, aplica `vercel.json` y excluye lo de
+   `.vercelignore` (kit de marca, herramientas de desarrollo).
+5. Si el dominio final no es `bwl-soft.vercel.app`, actualízalo (ver Supuestos) y vuelve a publicar.
+
+Con la CLI: `npx vercel` (vista previa) y `npx vercel --prod`.
+
+## Seguridad
+
+- Sitio estático sin backend ni secretos; no hay `.env`.
+- El formulario no envía datos a ningún servidor: arma el texto y abre WhatsApp en el dispositivo
+  del visitante.
+- CSP estricta en `vercel.json`: solo scripts propios (`'self'`), estilos propios y de Google Fonts,
+  fuentes de `fonts.gstatic.com`, sin `unsafe-inline` ni `eval`. Además HSTS,
+  `X-Content-Type-Options`, `Referrer-Policy`, `Permissions-Policy`, `X-Frame-Options: DENY` y
+  `frame-ancestors 'none'`.
+- Los datos de proyectos se pintan con `textContent` y nodos del DOM, nunca con `innerHTML`
+  (ESLint lo bloquea).
+- Enlaces externos con `rel="noopener noreferrer"`.
