@@ -12,3 +12,6 @@ eslint.config.js
 .prettierignore
 .editorconfig
 README.md
+.gitignore
+.gitattributes
+.prettierignore
