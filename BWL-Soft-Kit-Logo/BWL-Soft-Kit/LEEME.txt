@@ -1,0 +1,47 @@
+BWL SOFT · Binomio Web Lab — Kit de logo
+=========================================
+
+QUÉ USAR Y DÓNDE
+----------------
+SVG (vector, se escala sin perder calidad) -> landing, documentos, impresión.
+PNG 4096 px (carpeta png/)                 -> Word, PowerPoint, redes, cuando no acepten SVG.
+
+Metalizadas (efecto cobre 3D)
+  bwl-soft-logo-cobre-metal-fondo-oscuro      Portadas, hero de la landing, presentaciones
+  bwl-soft-logo-cobre-metal-transparente      Sobre fondos oscuros propios
+  bwl-soft-horizontal-cobre-metal-transparente  Barra de navegación (fondo oscuro)
+  bwl-soft-icono-cobre-metal-fondo-oscuro     Foto de perfil en redes
+
+Planas (un solo color)
+  bwl-soft-logo-plano-grafito / horizontal-plano-grafito   Documentos sobre fondo blanco, facturas
+  bwl-soft-logo-plano-cobre / horizontal-plano-cobre       Fondos claros con color de marca
+  bwl-soft-logo-plano-blanco / horizontal-plano-blanco   Sobre fotos o fondos oscuros
+  bwl-soft-icono-plano-cobre                               Sellos, marcas de agua
+  favicon.svg + png/favicon-32/180/512                     Pestaña del navegador e ícono de app
+
+PALETA
+------
+Cobre claro   #F2C4A4
+Cobre         #D08A62   (principal)
+Cobre medio   #B06A45
+Cobre oscuro  #7A4128
+Grafito       #1C1C1F   (fondo)
+Grafito 2     #2A2A2E
+Humo          #F4EFEC   (fondo claro)
+
+TIPOGRAFÍA
+----------
+Poppins (Google Fonts, gratuita). Logo en Poppins Medium con espaciado amplio.
+En los SVG el texto ya está convertido a trazos: no necesitan instalar la fuente para verlos.
+
+REGLAS RÁPIDAS
+--------------
+- Debajo de unos 120 px de ancho usen la versión plana: el degradado se pierde en tamaños pequeños.
+- Dejen alrededor del logo un espacio libre al menos igual al grosor de la "B".
+- No estirar, rotar ni cambiar los colores fuera de la paleta.
+
+FAVICON EN LA LANDING
+---------------------
+<link rel="icon" href="/favicon.svg" type="image/svg+xml">
+<link rel="icon" href="/favicon-32.png" sizes="32x32">
+<link rel="apple-touch-icon" href="/favicon-180.png">
