@@ -1,0 +1,29 @@
+/* BWL SOFT · Binomio Web Lab — tokens de marca para la landing */
+:root {
+  /* Cobre */
+  --bwl-cobre-claro: #F2C4A4;   /* brillos, hover, texto sobre oscuro */
+  --bwl-cobre: #D08A62;         /* color principal de marca */
+  --bwl-cobre-medio: #B06A45;   /* botones, enlaces sobre fondo claro */
+  --bwl-cobre-oscuro: #7A4128;  /* sombras, bordes */
+
+  /* Neutros */
+  --bwl-grafito: #1C1C1F;       /* fondo principal oscuro */
+  --bwl-grafito-2: #2A2A2E;     /* tarjetas / secciones sobre oscuro */
+  --bwl-humo: #F4EFEC;          /* fondo claro cálido */
+  --bwl-blanco: #FFFFFF;
+
+  /* Degradado metálico (títulos, botones destacados) */
+  --bwl-metal: linear-gradient(180deg, #F2C4A4 0%, #D08A62 38%, #B06A45 62%, #F2C4A4 80%, #7A4128 100%);
+
+  /* Tipografía */
+  --bwl-font: "Poppins", system-ui, sans-serif;
+  --bwl-tracking-logo: 0.16em;
+}
+
+/* Ejemplo: texto con efecto cobre metálico */
+.bwl-text-metal {
+  background: var(--bwl-metal);
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+}
