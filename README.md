@@ -22,8 +22,8 @@ WhatsApp) y pie de página. Botón flotante de WhatsApp en toda la página.
   flecha sigue al cursor. La entrada de las letras arranca justo cuando se desvanece la pantalla
   de inicio.
 - **Ficha del proyecto**: al hacer clic o tocar una miniatura, la imagen vuela y crece hasta la
-  vista previa grande (View Transitions API) y debajo, centrados, aparecen el tipo de proyecto,
-  la descripción y el enlace para verlo en vivo o pedir una demo. Entre proyectos se pasa con las flechas, el teclado
+  vista previa grande (View Transitions API) y al lado aparece su ficha: tipo, nombre, cliente,
+  descripción, tecnologías y el enlace para verlo en vivo o pedir una demo. Entre proyectos se pasa con las flechas, el teclado
   (← →) o deslizando en el celular; una cortina del color del proyecto barre la imagen. Esc o
   "Cerrar" vuelve al inicio. Cada proyecto tiene enlace directo (`/#proyecto-karbon`). Reemplaza
   al antiguo carrusel: los enlaces a `#proyectos` abren la vitrina.

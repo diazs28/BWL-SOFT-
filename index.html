@@ -37,8 +37,8 @@
       href="https://fonts.googleapis.com/css2?family=Anton&family=Poppins:wght@400;500;600&display=swap"
     />
     <link rel="stylesheet" href="assets/brand/brand-tokens.css" />
-    <link rel="stylesheet" href="css/reset.css?v=2026-10-08" />
-    <link rel="stylesheet" href="css/style.css?v=2026-10-08" />
+    <link rel="stylesheet" href="css/reset.css?v=2026-10-08-2" />
+    <link rel="stylesheet" href="css/style.css?v=2026-10-08-2" />
 
     <script type="application/ld+json">
       {
@@ -66,11 +66,11 @@
       }
     </script>
     <!-- Scripts clásicos con defer (no módulos): funcionan también abriendo el archivo con doble clic -->
-    <script src="js/intro.js?v=2026-10-08"></script>
-    <script defer src="js/config.js?v=2026-10-08"></script>
-    <script defer src="js/proyectos.js?v=2026-10-08"></script>
-    <script defer src="js/vitrina.js?v=2026-10-08"></script>
-    <script defer src="js/main.js?v=2026-10-08"></script>
+    <script src="js/intro.js?v=2026-10-08-2"></script>
+    <script defer src="js/config.js?v=2026-10-08-2"></script>
+    <script defer src="js/proyectos.js?v=2026-10-08-2"></script>
+    <script defer src="js/vitrina.js?v=2026-10-08-2"></script>
+    <script defer src="js/main.js?v=2026-10-08-2"></script>
   </head>
   <body>
     <!-- Pantalla de inicio: solo se ve si js/intro.js activa la clase "intro" en <html> -->
@@ -173,9 +173,10 @@
             </figure>
             <div class="ficha__info">
               <p class="ficha__tipo" data-ficha-pieza data-ficha-tipo></p>
-              <!-- El nombre gigante ya es el título visible; este lo leen los lectores de pantalla -->
-              <h2 class="sr" tabindex="-1" data-ficha-titulo></h2>
+              <h2 class="ficha__titulo" tabindex="-1" data-ficha-pieza data-ficha-titulo></h2>
+              <p class="ficha__cliente" data-ficha-pieza data-ficha-cliente></p>
               <p class="ficha__desc" data-ficha-pieza data-ficha-desc></p>
+              <ul class="chips" aria-label="Tecnologías" data-ficha-pieza data-ficha-stack></ul>
               <div class="ficha__accion" data-ficha-pieza data-ficha-accion></div>
               <div class="ficha__nav">
                 <button
