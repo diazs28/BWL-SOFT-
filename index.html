@@ -34,12 +34,11 @@
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link
       rel="stylesheet"
-      href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600&display=swap"
+      href="https://fonts.googleapis.com/css2?family=Anton&family=Poppins:wght@400;500;600&display=swap"
     />
     <link rel="stylesheet" href="assets/brand/brand-tokens.css" />
-    <link rel="stylesheet" href="css/reset.css" />
-    <link rel="stylesheet" href="css/style.css" />
-    <link rel="preload" as="image" href="assets/brand/bwl-soft-logo-cobre-metal-transparente.svg" />
+    <link rel="stylesheet" href="css/reset.css?v=2026-10-08-2" />
+    <link rel="stylesheet" href="css/style.css?v=2026-10-08-2" />
 
     <script type="application/ld+json">
       {
@@ -67,11 +66,11 @@
       }
     </script>
     <!-- Scripts clásicos con defer (no módulos): funcionan también abriendo el archivo con doble clic -->
-    <script src="js/intro.js"></script>
-    <script defer src="js/config.js"></script>
-    <script defer src="js/proyectos.js"></script>
-    <script defer src="js/carrusel.js"></script>
-    <script defer src="js/main.js"></script>
+    <script src="js/intro.js?v=2026-10-08-2"></script>
+    <script defer src="js/config.js?v=2026-10-08-2"></script>
+    <script defer src="js/proyectos.js?v=2026-10-08-2"></script>
+    <script defer src="js/vitrina.js?v=2026-10-08-2"></script>
+    <script defer src="js/main.js?v=2026-10-08-2"></script>
   </head>
   <body>
     <!-- Pantalla de inicio: solo se ve si js/intro.js activa la clase "intro" en <html> -->
@@ -121,60 +120,88 @@
     </header>
 
     <main id="contenido">
-      <!-- Hero -->
-      <section class="hero" id="inicio" aria-labelledby="hero-titulo">
+      <!-- Hero: vitrina de proyectos sobre el nombre gigante, con ficha expandible (js/vitrina.js) -->
+      <section class="hero vitrina" id="inicio" aria-labelledby="hero-titulo" data-vitrina>
         <div class="hero__in envoltura">
-          <div class="hero__texto">
-            <p class="hero__lugar">
-              <span>Desarrollo de software en <span data-marca="ciudad">Popayán</span></span>
-            </p>
+          <p class="vitrina__guia" id="vitrina-guia">Algunos proyectos que hemos construido</p>
+          <ul
+            class="vitrina__fila"
+            id="proyectos"
+            aria-labelledby="vitrina-guia"
+            data-vitrina-fila
+          ></ul>
+          <p class="vitrina__nombre" aria-hidden="true" data-vitrina-nombre>
+            <span class="vitrina__palabra">BWL &amp; SOFT</span>
+          </p>
+          <p class="sr" aria-live="polite" data-vitrina-anuncio></p>
+
+          <div class="vitrina__portada">
             <h1 class="hero__titulo" id="hero-titulo">
               Software a la medida que se adapta a tu negocio, no al revés.
             </h1>
-            <p class="hero__lead">
-              Diseñamos y programamos páginas web, tiendas en línea y sistemas como puntos de venta
-              y paneles administrativos. Te mostramos avances en cada etapa y seguimos contigo
-              después de publicar.
-            </p>
             <div class="hero__acciones">
               <a class="boton" href="#contacto" data-whatsapp>
                 <svg class="icono" aria-hidden="true" viewBox="0 0 24 24"><use href="#i-wa" /></svg>
                 Cotiza tu software
               </a>
-              <a class="boton boton--borde" href="#proyectos">Ver proyectos</a>
+              <button class="boton boton--borde" type="button" data-explorar>
+                Explorar proyectos
+              </button>
             </div>
           </div>
-          <div class="hero__marca" aria-hidden="true">
-            <div class="hero__disco"></div>
-            <div class="hero__logo">
-              <img
-                src="assets/brand/bwl-soft-logo-cobre-metal-transparente.svg"
-                alt=""
-                width="860"
-                height="1073"
-                fetchpriority="high"
-              />
-            </div>
-          </div>
-        </div>
-      </section>
 
-      <!-- Proyectos -->
-      <section class="seccion proyectos" id="proyectos" aria-labelledby="proyectos-titulo">
-        <div class="envoltura">
-          <div class="seccion__cabeza">
-            <h2 class="seccion__titulo" id="proyectos-titulo">
-              Proyectos que ya están funcionando
-            </h2>
-            <p class="seccion__lead">
-              Tiendas, sistemas y sitios que hicimos para clientes y para nuestros propios
-              productos. Los que están publicados los puedes abrir y probar.
-            </p>
-          </div>
-          <div class="carrusel" data-carrusel>
-            <noscript>
-              <p class="aviso">Activa JavaScript para ver el carrusel de proyectos.</p>
-            </noscript>
+          <!-- Ficha del proyecto abierto: la llena js/vitrina.js -->
+          <div class="ficha" id="ficha" data-ficha hidden>
+            <figure class="marco ficha__marco" data-ficha-marco>
+              <div class="marco__barra" aria-hidden="true">
+                <div class="marco__puntos"><span></span><span></span><span></span></div>
+                <div class="marco__url" data-ficha-url></div>
+              </div>
+              <picture>
+                <source media="(max-width: 767px)" width="585" height="1266" data-ficha-fuente />
+                <img
+                  alt=""
+                  width="1280"
+                  height="800"
+                  sizes="(min-width: 1180px) 680px, (min-width: 1000px) 56vw, 100vw"
+                  decoding="async"
+                  draggable="false"
+                  data-ficha-img
+                />
+              </picture>
+              <span class="ficha__cortina" aria-hidden="true" data-ficha-cortina></span>
+            </figure>
+            <div class="ficha__info">
+              <p class="ficha__tipo" data-ficha-pieza data-ficha-tipo></p>
+              <h2 class="ficha__titulo" tabindex="-1" data-ficha-pieza data-ficha-titulo></h2>
+              <p class="ficha__cliente" data-ficha-pieza data-ficha-cliente></p>
+              <p class="ficha__desc" data-ficha-pieza data-ficha-desc></p>
+              <ul class="chips" aria-label="Tecnologías" data-ficha-pieza data-ficha-stack></ul>
+              <div class="ficha__accion" data-ficha-pieza data-ficha-accion></div>
+              <div class="ficha__nav">
+                <button
+                  class="control control--ant"
+                  type="button"
+                  aria-label="Proyecto anterior"
+                  data-ficha-ant
+                >
+                  <svg aria-hidden="true" viewBox="0 0 24 24"><use href="#i-flecha" /></svg>
+                </button>
+                <p class="ficha__contador" data-ficha-contador></p>
+                <button
+                  class="control control--sig"
+                  type="button"
+                  aria-label="Proyecto siguiente"
+                  data-ficha-sig
+                >
+                  <svg aria-hidden="true" viewBox="0 0 24 24"><use href="#i-flecha" /></svg>
+                </button>
+                <button class="ficha__cerrar" type="button" data-ficha-cerrar>
+                  Cerrar
+                  <svg aria-hidden="true" viewBox="0 0 24 24"><use href="#i-cerrar" /></svg>
+                </button>
+              </div>
+            </div>
           </div>
         </div>
       </section>
@@ -538,6 +565,15 @@
           stroke-width="2"
         />
         <path d="M8 10.5V7.5a4 4 0 0 1 8 0v3" fill="none" stroke="currentColor" stroke-width="2" />
+      </symbol>
+      <symbol id="i-cerrar" viewBox="0 0 24 24">
+        <path
+          d="M6 6l12 12M18 6 6 18"
+          fill="none"
+          stroke="currentColor"
+          stroke-width="2"
+          stroke-linecap="round"
+        />
       </symbol>
       <symbol id="i-pausa" viewBox="0 0 24 24">
         <path d="M9 6v12M15 6v12" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" />
