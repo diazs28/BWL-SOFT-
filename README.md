@@ -45,10 +45,10 @@ WhatsApp, presente en toda la página.
 - **Paleta**: `--bwl-grafito` #1C1C1F, `--bwl-grafito-2` #2A2A2E, `--bwl-cobre` #D08A62,
   `--bwl-cobre-claro` #F2C4A4, `--bwl-cobre-oscuro` #7A4128 (texto cobre sobre fondo claro),
   `--bwl-humo` #F4EFEC.
-- **Pantalla de inicio** (adaptada de PortalSalud): «BWL & SOFT» aparece palabra por palabra en
-  cobre metalizado, se desvanece y seis columnas de cobre suben de derecha a izquierda para
-  descubrir la página. Dura unos 2 s, se muestra una vez por pestaña y nunca con movimiento
-  reducido. Para volver a verla, abre la página en una pestaña nueva. Se controla en
+- **Pantalla de inicio** (adaptada del `Preloader.tsx` del equipo, sin React): «BWL & SOFT» se
+  enfoca en cobre, se difumina, sube una ola de cobre con borde suave desde la esquina inferior
+  derecha y el velo sale con desenfoque mientras emergen las letras del nombre gigante. Dura unos
+  3,4 s, se muestra una vez por pestaña y nunca con movimiento reducido. Para volver a verla, abre la página en una pestaña nueva. Se controla en
   `js/intro.js` y en la sección «Pantalla de inicio» de `css/style.css`.
 - **Detalle memorable**: el logo del hero sobre un disco de cobre torneado (anillos concéntricos)
   con un destello de luz que recorre el metal una sola vez al cargar.

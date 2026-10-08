@@ -1,7 +1,7 @@
 // Pantalla de inicio: decide antes de pintar la página si se muestra (una vez por pestaña y
 // nunca con movimiento reducido). Se carga en el <head> sin defer para evitar un parpadeo.
 // La animación es CSS (css/style.css, sección "Pantalla de inicio"); aquí solo se activa y se limpia.
-// Adaptada de la pantalla de carga de PortalSalud.
+// La ola de cobre está adaptada del Preloader.tsx del equipo.
 (function () {
   'use strict';
 
@@ -46,5 +46,5 @@
     if (e.animationName === 'intro-fuera') terminar();
   });
   // Respaldo por si el evento no llega (pestaña en segundo plano, etc.)
-  setTimeout(terminar, 3500);
+  setTimeout(terminar, 4200);
 })();
