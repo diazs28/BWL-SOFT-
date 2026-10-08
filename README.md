@@ -14,8 +14,13 @@ WhatsApp) y pie de página. Botón flotante de WhatsApp en toda la página.
 
 - **Tono**: taller de ingeniería con acabado de cobre. Fondo grafito dominante, acentos cobre
   metalizado del kit de marca y una sección clara en humo (servicios) para dar ritmo.
-- **Tipografía**: solo Poppins (400, 500 y 600), la del logo. Titulares en 600 con tracking
-  ligeramente cerrado; el tracking amplio queda reservado al logo.
+- **Tipografía**: Poppins (400, 500 y 600), la del logo, para todo el texto. Anton solo para el
+  nombre gigante de la vitrina del inicio.
+- **Vitrina del inicio** (`js/vitrina.js`): miniaturas de los proyectos sobre «BWL & SOFT» en
+  letras gigantes con textura de líneas. Al pasar el mouse, enfocar con teclado o tocar una
+  miniatura, las letras se hunden y emerge el nombre del proyecto con su color; un círculo con
+  flecha sigue al cursor. Clic (o segundo toque en el celular) lleva al proyecto en el carrusel.
+  La entrada de las letras arranca justo cuando se desvanece la pantalla de inicio.
 - **Paleta**: `--bwl-grafito` #1C1C1F, `--bwl-grafito-2` #2A2A2E, `--bwl-cobre` #D08A62,
   `--bwl-cobre-claro` #F2C4A4, `--bwl-cobre-oscuro` #7A4128 (texto cobre sobre fondo claro),
   `--bwl-humo` #F4EFEC.
@@ -53,7 +58,7 @@ WhatsApp) y pie de página. Botón flotante de WhatsApp en toda la página.
 ## Stack
 
 HTML + CSS + JavaScript vanilla (scripts clásicos con `defer`), sin build ni dependencias en producción. Fuente
-Poppins desde Google Fonts. Sin GSAP: las únicas animaciones son CSS y respetan
+Poppins y Anton desde Google Fonts. Sin GSAP: las animaciones son CSS y Web Animations API, y respetan
 `prefers-reduced-motion`. Publicación estática en Vercel.
 
 ## Requisitos
@@ -96,7 +101,8 @@ js/config.js            MARCA: nombre, WhatsApp, ciudad, redes. Único lugar par
 js/proyectos.js         Datos del carrusel. Único lugar para agregar o editar proyectos
 js/intro.js             Activa la pantalla de inicio (una vez por pestaña)
 js/carrusel.js          Carrusel accesible (flechas, puntos, swipe, teclado, autoplay)
-js/main.js              Enlaces de WhatsApp, menú, formulario y arranque del carrusel
+js/vitrina.js           Vitrina del inicio: miniaturas de proyectos y nombre gigante animado
+js/main.js              Enlaces de WhatsApp, menú, formulario y arranque del carrusel y la vitrina
 assets/brand/           Archivos del kit que usa la página + og-image.png (1200x630)
 assets/projects/        Capturas WebP de cada proyecto (escritorio 1280x800, móvil 585x1266)
 BWL-Soft-Kit-Logo/      Kit de marca original. No se modifica y no se publica (.vercelignore)
@@ -140,10 +146,17 @@ docs/adr/               Decisiones de arquitectura
        movil: 'assets/projects/mi-proyecto-movil.webp',
      },
      alt: 'Descripción de lo que se ve en la captura',
+     // Opcional: si existe, el proyecto aparece en la vitrina del inicio
+     vitrina: { nombre: 'MI PROYECTO', color: '#E8301C', solido: '#E8301C' },
    },
    ```
 
-4. Listo: los puntos, la navegación y las etiquetas se generan solos. No hay que tocar el HTML.
+   En `vitrina`, `color` puede ser un color o un degradado (`linear-gradient(...)`) para las
+   letras, y `solido` es el color plano del círculo que sigue al cursor. Usa nombres cortos
+   (hasta unos 12 caracteres); si no caben en el celular, se reducen solos.
+
+4. Listo: los puntos, la navegación, las etiquetas y la miniatura del inicio se generan solos. No
+   hay que tocar el HTML.
 
 > Las imágenes de `/assets` se sirven con caché de un año (`immutable`). Si reemplazas una captura,
 > cámbiale el nombre (por ejemplo `-v2.webp`) para que los navegadores descarguen la nueva.
