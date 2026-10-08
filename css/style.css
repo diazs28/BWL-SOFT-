@@ -312,50 +312,112 @@ body {
   font-size: var(--fs-sm);
   color: var(--color-texto-suave);
 }
-.vitrina__fila {
-  position: relative;
+/* Carrusel de miniaturas: se desliza; la del centro es la activa */
+.vitrina__carrusel {
   display: flex;
   align-items: center;
   gap: var(--space-2);
-  /* Alto fijo: la miniatura activa crece sin empujar el nombre */
-  height: 104px;
-  max-width: 100%;
-  padding-inline: var(--space-5);
+  width: min(100%, 540px);
+  margin-top: var(--space-2);
+}
+.vitrina__flecha {
+  display: grid;
+  place-items: center;
+  flex: none;
+  width: 42px;
+  height: 42px;
+  border: 1px solid var(--color-linea);
+  border-radius: 50%;
+  background: rgb(28 28 31 / 0.6);
+  color: var(--color-acento-claro);
+  cursor: pointer;
+  transition:
+    border-color 0.2s,
+    background 0.2s;
+}
+.vitrina__flecha:hover {
+  border-color: var(--color-acento);
+  background: var(--color-fondo-2);
+}
+.vitrina__flecha svg {
+  width: 18px;
+  height: 18px;
+}
+.vitrina__flecha--sig svg {
+  transform: scaleX(-1);
+}
+.vitrina__fila {
+  /* Referencia para medir la posición de cada miniatura */
+  position: relative;
+  flex: 1;
+  min-width: 0;
+  display: flex;
+  align-items: center;
+  gap: var(--space-3);
+  height: 124px;
+  /* Margen de media fila: la primera y la última también pueden quedar al centro */
+  padding-inline: calc(50% - 36px);
+  overflow-x: auto;
+  overscroll-behavior-x: contain;
+  scroll-snap-type: x mandatory;
+  scrollbar-width: none;
   list-style: none;
+  cursor: grab;
+  /* Bordes difuminados: se nota que hay más proyectos a los lados */
+  mask-image: linear-gradient(90deg, transparent, #000 16%, #000 84%, transparent);
+  -webkit-mask-image: linear-gradient(90deg, transparent, #000 16%, #000 84%, transparent);
+}
+.vitrina__fila::-webkit-scrollbar {
+  display: none;
+}
+.vitrina__fila.is-arrastrando {
+  cursor: grabbing;
+  scroll-snap-type: none;
+}
+.vitrina__fila.is-arrastrando .vitrina__mini {
+  pointer-events: none;
 }
 .vitrina__item {
   flex: none;
+  scroll-snap-align: center;
 }
 .vitrina__mini {
   position: relative;
   display: block;
+  width: 72px;
+  height: 72px;
   padding: 0;
   border: 0;
-  background: none;
-  cursor: pointer;
-  width: 48px;
-  height: 48px;
   border-radius: var(--radio-s);
+  background: none;
   overflow: hidden;
+  cursor: pointer;
   outline-offset: 4px;
   box-shadow: 0 0 0 1px rgb(236 235 228 / 0.14);
+  touch-action: manipulation;
   transition:
-    width 0.5s cubic-bezier(0.34, 1.4, 0.64, 1),
-    height 0.5s cubic-bezier(0.34, 1.4, 0.64, 1),
     transform 0.5s cubic-bezier(0.34, 1.4, 0.64, 1),
-    box-shadow 0.3s;
+    box-shadow 0.3s,
+    opacity 0.3s;
 }
 .vitrina__mini img {
   width: 100%;
   height: 100%;
   object-fit: cover;
   object-position: 50% 30%;
+  pointer-events: none;
+  user-select: none;
+  -webkit-user-select: none;
+}
+.vitrina__fila:has(.is-activa) .vitrina__mini:not(.is-activa) {
+  opacity: 0.55;
+}
+.vitrina__mini:not(.is-activa):hover {
+  opacity: 1;
 }
 .vitrina__mini.is-activa {
   z-index: 2;
-  width: 86px;
-  height: 86px;
-  transform: translateY(-6px);
+  transform: translateY(-3px) scale(1.3);
   box-shadow:
     0 0 0 2px var(--solido),
     0 14px 30px rgb(0 0 0 / 0.55);
@@ -472,15 +534,16 @@ html.js .vitrina:not(.is-lista) .vitrina__nombre {
 
 /* Móvil: la fila se desplaza de lado si no cabe; el círculo del cursor no existe */
 @media (max-width: 767px) {
-  .vitrina__fila {
-    width: 100%;
-    justify-content: safe center;
-    overflow-x: auto;
-    overscroll-behavior-x: contain;
-    scrollbar-width: none;
-  }
-  .vitrina__fila::-webkit-scrollbar {
+  .vitrina__flecha {
     display: none;
+  }
+  .vitrina__carrusel {
+    width: calc(100% + 2.5rem);
+    margin-inline: -1.25rem;
+  }
+  .vitrina__fila {
+    height: 108px;
+    padding-inline: calc(50% - 30px);
   }
   .vitrina__nombre {
     font-size: 19vw;
@@ -489,13 +552,8 @@ html.js .vitrina:not(.is-lista) .vitrina__nombre {
     font-size: 13vw;
   }
   .vitrina__mini {
-    width: 52px;
-    height: 52px;
-  }
-  .vitrina__mini.is-activa {
-    width: 76px;
-    height: 76px;
-    transform: translateY(-4px);
+    width: 60px;
+    height: 60px;
   }
 }
 @media not ((hover: hover) and (pointer: fine)) {
@@ -562,13 +620,10 @@ html.js .vitrina:not(.is-lista) .vitrina__nombre {
   padding-block: var(--space-5) var(--space-7);
 }
 .vitrina.is-abierta .vitrina__fila {
-  height: 96px;
+  height: 104px;
 }
 .vitrina.is-abierta .vitrina__nombre {
   font-size: clamp(2.75rem, 6.5vw, 6rem);
-}
-.vitrina.is-abierta .vitrina__mini:not(.is-activa):hover {
-  transform: translateY(-3px);
 }
 
 .ficha {

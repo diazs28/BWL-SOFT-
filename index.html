@@ -40,8 +40,8 @@
       href="https://fonts.googleapis.com/css2?family=Anton&family=Poppins:wght@400;500;600&display=swap"
     />
     <link rel="stylesheet" href="assets/brand/brand-tokens.css" />
-    <link rel="stylesheet" href="css/reset.css?v=2026-10-08-7" />
-    <link rel="stylesheet" href="css/style.css?v=2026-10-08-7" />
+    <link rel="stylesheet" href="css/reset.css?v=2026-10-08-8" />
+    <link rel="stylesheet" href="css/style.css?v=2026-10-08-8" />
 
     <script type="application/ld+json">
       {
@@ -69,14 +69,14 @@
       }
     </script>
     <!-- Scripts clásicos con defer (no módulos): funcionan también abriendo el archivo con doble clic -->
-    <script src="js/intro.js?v=2026-10-08-7"></script>
-    <script defer src="js/config.js?v=2026-10-08-7"></script>
-    <script defer src="js/proyectos.js?v=2026-10-08-7"></script>
-    <script defer src="js/letras.js?v=2026-10-08-7"></script>
-    <script defer src="js/vitrina.js?v=2026-10-08-7"></script>
-    <script defer src="js/servicios.js?v=2026-10-08-7"></script>
-    <script defer src="js/cotizar.js?v=2026-10-08-7"></script>
-    <script defer src="js/main.js?v=2026-10-08-7"></script>
+    <script src="js/intro.js?v=2026-10-08-8"></script>
+    <script defer src="js/config.js?v=2026-10-08-8"></script>
+    <script defer src="js/proyectos.js?v=2026-10-08-8"></script>
+    <script defer src="js/letras.js?v=2026-10-08-8"></script>
+    <script defer src="js/vitrina.js?v=2026-10-08-8"></script>
+    <script defer src="js/servicios.js?v=2026-10-08-8"></script>
+    <script defer src="js/cotizar.js?v=2026-10-08-8"></script>
+    <script defer src="js/main.js?v=2026-10-08-8"></script>
   </head>
   <body>
     <!-- Pantalla de inicio: solo se ve si js/intro.js activa la clase "intro" en <html> -->
@@ -130,13 +130,33 @@
       <!-- Hero: vitrina de proyectos sobre el nombre gigante, con ficha expandible (js/vitrina.js) -->
       <section class="hero vitrina" id="inicio" aria-labelledby="hero-titulo" data-vitrina>
         <div class="hero__in envoltura">
-          <p class="vitrina__guia" id="vitrina-guia">Algunos proyectos que hemos construido</p>
-          <ul
-            class="vitrina__fila"
-            id="proyectos"
-            aria-labelledby="vitrina-guia"
-            data-vitrina-fila
-          ></ul>
+          <p class="vitrina__guia" id="vitrina-guia" data-vitrina-guia>
+            Algunos proyectos que hemos construido
+          </p>
+          <div class="vitrina__carrusel">
+            <button
+              class="vitrina__flecha"
+              type="button"
+              aria-label="Proyecto anterior"
+              data-carrusel-ant
+            >
+              <svg aria-hidden="true" viewBox="0 0 24 24"><use href="#i-flecha" /></svg>
+            </button>
+            <ul
+              class="vitrina__fila"
+              id="proyectos"
+              aria-labelledby="vitrina-guia"
+              data-vitrina-fila
+            ></ul>
+            <button
+              class="vitrina__flecha vitrina__flecha--sig"
+              type="button"
+              aria-label="Proyecto siguiente"
+              data-carrusel-sig
+            >
+              <svg aria-hidden="true" viewBox="0 0 24 24"><use href="#i-flecha" /></svg>
+            </button>
+          </div>
           <p class="gigante vitrina__nombre" aria-hidden="true" data-vitrina-nombre>
             <span class="gigante__palabra">BWL &amp; SOFT</span>
           </p>
