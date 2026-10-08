@@ -1,7 +1,7 @@
 // Vitrina del inicio: miniaturas de los proyectos sobre el nombre gigante "BWL & SOFT".
 //
 // Cerrada: al pasar el mouse (o enfocar con teclado) por una miniatura, las letras del
-// nombre se hunden y emergen las del proyecto con su color. Un círculo sigue al cursor.
+// nombre se hunden y emergen las del proyecto con su color.
 // Abierta: al hacer clic (o tocar), la miniatura vuela y crece hasta ser la vista previa
 // grande del proyecto (View Transitions API) y aparece su ficha: descripción, tecnologías y
 // enlace. Entre proyectos se cambia con las flechas, el teclado o deslizando; una cortina del
@@ -192,7 +192,6 @@
       const activo = boton ? caras.find((c) => c.boton === boton)?.item : null;
       caras.forEach((c) => c.boton.classList.toggle('is-activa', c.item === activo));
       if (boton) {
-        raiz.style.setProperty('--cursor-color', boton.style.getPropertyValue('--solido'));
         if (centrar) centrarEnFila(boton);
       }
     }
@@ -719,67 +718,6 @@
       raiz.scrollIntoView({ behavior: reduceMotion.matches ? 'auto' : 'smooth' });
       if (!abierta) abrir(interactuo ? centrado : actual);
     });
-
-    // ---------- Círculo que sigue al cursor (solo mouse) ----------
-    const cursor = crear('div', 'vitrina__cursor');
-    cursor.setAttribute('aria-hidden', 'true');
-    const flecha = document.createElementNS('http://www.w3.org/2000/svg', 'svg');
-    flecha.setAttribute('viewBox', '0 0 24 24');
-    const trazo = document.createElementNS('http://www.w3.org/2000/svg', 'path');
-    trazo.setAttribute('d', 'M7 17 17 7M8 7h9v9');
-    flecha.append(trazo);
-    cursor.append(flecha);
-    raiz.append(cursor);
-
-    // Resorte simple: rigidez 400, amortiguación 30, masa 1
-    const resorte = { x: 0, y: 0, vx: 0, vy: 0, objX: 0, objY: 0 };
-    let cuadro = null;
-    let ultimo = 0;
-
-    function pintarCursor() {
-      cursor.style.transform = `translate3d(${resorte.x}px, ${resorte.y}px, 0)`;
-    }
-
-    function paso(t) {
-      const dt = Math.min((t - ultimo) / 1000, 1 / 30);
-      ultimo = t;
-      const fx = 400 * (resorte.objX - resorte.x) - 30 * resorte.vx;
-      const fy = 400 * (resorte.objY - resorte.y) - 30 * resorte.vy;
-      resorte.vx += fx * dt;
-      resorte.vy += fy * dt;
-      resorte.x += resorte.vx * dt;
-      resorte.y += resorte.vy * dt;
-      pintarCursor();
-      const quieto =
-        Math.abs(resorte.objX - resorte.x) < 0.1 &&
-        Math.abs(resorte.objY - resorte.y) < 0.1 &&
-        Math.abs(resorte.vx) + Math.abs(resorte.vy) < 0.1;
-      cuadro = quieto ? null : requestAnimationFrame(paso);
-    }
-
-    fila.addEventListener('pointerenter', (e) => {
-      if (e.pointerType !== 'mouse' || !punteroFino.matches) return;
-      // Aparece donde está el puntero, sin viajar desde la esquina
-      resorte.x = resorte.objX = e.clientX;
-      resorte.y = resorte.objY = e.clientY;
-      resorte.vx = resorte.vy = 0;
-      pintarCursor();
-      cursor.classList.add('is-visible');
-    });
-    fila.addEventListener('pointermove', (e) => {
-      if (e.pointerType !== 'mouse') return;
-      resorte.objX = e.clientX;
-      resorte.objY = e.clientY;
-      if (reduceMotion.matches) {
-        resorte.x = resorte.objX;
-        resorte.y = resorte.objY;
-        pintarCursor();
-      } else if (!cuadro) {
-        ultimo = performance.now();
-        cuadro = requestAnimationFrame(paso);
-      }
-    });
-    fila.addEventListener('pointerleave', () => cursor.classList.remove('is-visible'));
 
     // ---------- Entrada sincronizada con la pantalla de inicio ----------
     function indiceDelHash() {

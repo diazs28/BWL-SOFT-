@@ -292,7 +292,6 @@ body {
 .hero {
   --vitrina-fondo: #0f0d0e;
   --vitrina-hueso: #ecebe4;
-  --cursor-color: var(--color-acento);
   position: relative;
   overflow: hidden;
   background:
@@ -464,50 +463,7 @@ html.js .vitrina:not(.is-lista) .vitrina__nombre {
   margin-top: var(--space-6);
 }
 
-.vitrina__cursor {
-  position: fixed;
-  top: -32px;
-  left: -32px;
-  z-index: 60;
-  display: grid;
-  place-items: center;
-  width: 64px;
-  height: 64px;
-  border-radius: 50%;
-  background: var(--cursor-color);
-  color: var(--vitrina-fondo);
-  pointer-events: none;
-  scale: 0;
-  opacity: 0;
-  transition:
-    background-color 0.3s,
-    scale 0.35s cubic-bezier(0.34, 1.4, 0.64, 1),
-    opacity 0.2s;
-}
-.vitrina__cursor svg {
-  width: 26px;
-  height: 26px;
-  fill: none;
-  stroke: currentColor;
-  stroke-width: 2.4;
-  stroke-linecap: round;
-  stroke-linejoin: round;
-  transform: scale(0);
-  opacity: 0;
-  transition:
-    transform 0.35s cubic-bezier(0.34, 1.4, 0.64, 1),
-    opacity 0.2s;
-}
-.vitrina__cursor.is-visible {
-  scale: 1;
-  opacity: 1;
-}
-.vitrina__cursor.is-visible svg {
-  transform: scale(1);
-  opacity: 1;
-}
-
-/* Móvil: la fila se desplaza de lado si no cabe; el círculo del cursor no existe */
+/* Móvil */
 @media (max-width: 767px) {
   .vitrina__carrusel {
     width: calc(100% + 2.5rem);
@@ -524,15 +480,8 @@ html.js .vitrina:not(.is-lista) .vitrina__nombre {
     font-size: 13vw;
   }
 }
-@media not ((hover: hover) and (pointer: fine)) {
-  .vitrina__cursor {
-    display: none;
-  }
-}
 @media (prefers-reduced-motion: reduce) {
   .vitrina__mini,
-  .vitrina__cursor,
-  .vitrina__cursor svg,
   .paso__num,
   .paso::after,
   .paso h4,

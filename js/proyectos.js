@@ -8,7 +8,7 @@
 //
 // vitrina: cómo aparece el proyecto en el inicio (miniatura + nombre gigante).
 //   nombre → texto corto en mayúsculas; color → color o degradado del texto;
-//   solido → color plano para el círculo que sigue al cursor.
+//   solido → color plano para el borde de la miniatura activa y la cortina de la ficha.
 //
 // enObra: true → muestra en la ficha un obrero pixelado martillando ("En construcción").
 window.BWL = window.BWL || {};
