@@ -2,7 +2,10 @@
 <html lang="es-CO">
   <head>
     <meta charset="utf-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta
+      name="viewport"
+      content="width=device-width, initial-scale=1, interactive-widget=resizes-content"
+    />
     <title>BWL & SOFT | Software a la medida y páginas web en Popayán</title>
     <meta
       name="description"
@@ -37,8 +40,8 @@
       href="https://fonts.googleapis.com/css2?family=Anton&family=Poppins:wght@400;500;600&display=swap"
     />
     <link rel="stylesheet" href="assets/brand/brand-tokens.css" />
-    <link rel="stylesheet" href="css/reset.css?v=2026-10-08-2" />
-    <link rel="stylesheet" href="css/style.css?v=2026-10-08-2" />
+    <link rel="stylesheet" href="css/reset.css?v=2026-10-08-5" />
+    <link rel="stylesheet" href="css/style.css?v=2026-10-08-5" />
 
     <script type="application/ld+json">
       {
@@ -66,11 +69,14 @@
       }
     </script>
     <!-- Scripts clásicos con defer (no módulos): funcionan también abriendo el archivo con doble clic -->
-    <script src="js/intro.js?v=2026-10-08-2"></script>
-    <script defer src="js/config.js?v=2026-10-08-2"></script>
-    <script defer src="js/proyectos.js?v=2026-10-08-2"></script>
-    <script defer src="js/vitrina.js?v=2026-10-08-2"></script>
-    <script defer src="js/main.js?v=2026-10-08-2"></script>
+    <script src="js/intro.js?v=2026-10-08-5"></script>
+    <script defer src="js/config.js?v=2026-10-08-5"></script>
+    <script defer src="js/proyectos.js?v=2026-10-08-5"></script>
+    <script defer src="js/letras.js?v=2026-10-08-5"></script>
+    <script defer src="js/vitrina.js?v=2026-10-08-5"></script>
+    <script defer src="js/servicios.js?v=2026-10-08-5"></script>
+    <script defer src="js/cotizar.js?v=2026-10-08-5"></script>
+    <script defer src="js/main.js?v=2026-10-08-5"></script>
   </head>
   <body>
     <!-- Pantalla de inicio: solo se ve si js/intro.js activa la clase "intro" en <html> -->
@@ -111,10 +117,11 @@
           <ul>
             <li><a href="#proyectos">Proyectos</a></li>
             <li><a href="#servicios">Servicios</a></li>
-            <li><a href="#proceso">Proceso</a></li>
             <li><a href="#contacto">Contacto</a></li>
           </ul>
-          <a class="boton boton--pequeno" href="#contacto" data-whatsapp>Cotiza tu software</a>
+          <a class="boton boton--pequeno" href="#contacto" data-whatsapp data-cotizar-abrir
+            >Cotiza tu software</a
+          >
         </nav>
       </div>
     </header>
@@ -130,17 +137,17 @@
             aria-labelledby="vitrina-guia"
             data-vitrina-fila
           ></ul>
-          <p class="vitrina__nombre" aria-hidden="true" data-vitrina-nombre>
-            <span class="vitrina__palabra">BWL &amp; SOFT</span>
+          <p class="gigante vitrina__nombre" aria-hidden="true" data-vitrina-nombre>
+            <span class="gigante__palabra">BWL &amp; SOFT</span>
           </p>
           <p class="sr" aria-live="polite" data-vitrina-anuncio></p>
 
           <div class="vitrina__portada">
             <h1 class="hero__titulo" id="hero-titulo">
-              Software a la medida que se adapta a tu negocio, no al revés.
+              Cada negocio es único, tu software también.
             </h1>
             <div class="hero__acciones">
-              <a class="boton" href="#contacto" data-whatsapp>
+              <a class="boton" href="#contacto" data-whatsapp data-cotizar-abrir>
                 <svg class="icono" aria-hidden="true" viewBox="0 0 24 24"><use href="#i-wa" /></svg>
                 Cotiza tu software
               </a>
@@ -206,183 +213,129 @@
         </div>
       </section>
 
-      <!-- Servicios -->
-      <section class="seccion servicios" id="servicios" aria-labelledby="servicios-titulo">
+      <!-- Servicios: lo que construimos y cómo trabajamos (js/servicios.js) -->
+      <section
+        class="seccion servicios"
+        id="servicios"
+        aria-labelledby="servicios-titulo"
+        data-servicios
+      >
         <div class="envoltura">
           <div class="seccion__cabeza">
-            <h2 class="seccion__titulo" id="servicios-titulo">Lo que construimos</h2>
+            <h2 class="seccion__titulo" id="servicios-titulo">Servicios</h2>
             <p class="seccion__lead">
-              Cada proyecto empieza por entender cómo trabaja tu negocio. Estas son las cuatro cosas
-              que más nos piden.
+              Cada proyecto empieza por entender cómo trabaja tu negocio. Esto es lo que más nos
+              piden y así lo hacemos realidad.
             </p>
           </div>
-          <ul class="servicios__lista">
-            <li class="servicio">
-              <svg class="servicio__icono" aria-hidden="true" viewBox="0 0 32 32">
-                <use href="#i-web" />
-              </svg>
-              <h3>Páginas web y landings</h3>
-              <p>
-                Una página clara y rápida que explica lo que haces, se ve bien en el celular y lleva
-                a tus clientes a escribirte.
+          <div class="servicios__cuerpo">
+            <div class="servicios__gigante" aria-hidden="true">
+              <p class="gigante" data-servicios-nombre>
+                <span class="gigante__palabra">WEB</span>
               </p>
-              <p class="servicio__para">Para profesionales, eventos y negocios locales.</p>
-            </li>
-            <li class="servicio">
-              <svg class="servicio__icono" aria-hidden="true" viewBox="0 0 32 32">
-                <use href="#i-tienda" />
-              </svg>
-              <h3>Tiendas en línea con pagos</h3>
-              <p>
-                Catálogo, carrito y pagos con tarjeta, PSE o Nequi a través de Wompi, con un panel
-                para manejar productos y pedidos.
-              </p>
-              <p class="servicio__para">Para comercios que ya venden por WhatsApp o en local.</p>
-            </li>
-            <li class="servicio">
-              <svg class="servicio__icono" aria-hidden="true" viewBox="0 0 32 32">
-                <use href="#i-sistema" />
-              </svg>
-              <h3>Sistemas a la medida</h3>
-              <p>
-                Puntos de venta, inventarios y paneles administrativos pensados para la forma en que
-                trabaja tu equipo.
-              </p>
-              <p class="servicio__para">Para restaurantes, bares, almacenes y consultorios.</p>
-            </li>
-            <li class="servicio">
-              <svg class="servicio__icono" aria-hidden="true" viewBox="0 0 32 32">
-                <use href="#i-app" />
-              </svg>
-              <h3>Apps web y PWA</h3>
-              <p>
-                Aplicaciones que se abren desde el navegador y se instalan en el celular sin pasar
-                por tiendas de apps. Pueden seguir funcionando sin internet.
-              </p>
-              <p class="servicio__para">Para equipos en campo, meseros y personal de ventas.</p>
-            </li>
-          </ul>
-        </div>
-      </section>
+            </div>
+            <ul class="servicios__lista">
+              <li
+                class="servicio"
+                data-servicio
+                data-nombre="WEB"
+                data-color="linear-gradient(180deg, #F2C4A4 0%, #D08A62 45%, #B06A45 100%)"
+              >
+                <svg class="servicio__icono" aria-hidden="true" viewBox="0 0 32 32">
+                  <use href="#i-web" />
+                </svg>
+                <h3>Páginas web y landings</h3>
+                <p>
+                  Una página clara y rápida que explica lo que haces, se ve bien en el celular y
+                  lleva a tus clientes a escribirte.
+                </p>
+                <p class="servicio__para">Para profesionales, eventos y negocios locales.</p>
+              </li>
+              <li
+                class="servicio"
+                data-servicio
+                data-nombre="TIENDAS"
+                data-color="linear-gradient(180deg, #F7B24A 0%, #E0662A 100%)"
+              >
+                <svg class="servicio__icono" aria-hidden="true" viewBox="0 0 32 32">
+                  <use href="#i-tienda" />
+                </svg>
+                <h3>Tiendas en línea con pagos</h3>
+                <p>
+                  Catálogo, carrito y pagos con tarjeta, PSE o Nequi a través de Wompi, con un panel
+                  para manejar productos y pedidos.
+                </p>
+                <p class="servicio__para">Para comercios que ya venden por WhatsApp o en local.</p>
+              </li>
+              <li
+                class="servicio"
+                data-servicio
+                data-nombre="SISTEMAS"
+                data-color="linear-gradient(180deg, #F48A6A 0%, #C93A2C 100%)"
+              >
+                <svg class="servicio__icono" aria-hidden="true" viewBox="0 0 32 32">
+                  <use href="#i-sistema" />
+                </svg>
+                <h3>Sistemas a la medida</h3>
+                <p>
+                  Puntos de venta, inventarios y paneles administrativos pensados para la forma en
+                  que trabaja tu equipo.
+                </p>
+                <p class="servicio__para">Para restaurantes, bares, almacenes y consultorios.</p>
+              </li>
+              <li
+                class="servicio"
+                data-servicio
+                data-nombre="APPS"
+                data-color="linear-gradient(180deg, #F5C542 0%, #F07A1A 100%)"
+              >
+                <svg class="servicio__icono" aria-hidden="true" viewBox="0 0 32 32">
+                  <use href="#i-app" />
+                </svg>
+                <h3>Apps web y PWA</h3>
+                <p>
+                  Aplicaciones que se abren desde el navegador y se instalan en el celular sin pasar
+                  por tiendas de apps. Pueden seguir funcionando sin internet.
+                </p>
+                <p class="servicio__para">Para equipos en campo, meseros y personal de ventas.</p>
+              </li>
+            </ul>
+          </div>
 
-      <!-- Proceso -->
-      <section class="seccion proceso" id="proceso" aria-labelledby="proceso-titulo">
-        <div class="envoltura">
-          <div class="seccion__cabeza">
-            <h2 class="seccion__titulo" id="proceso-titulo">Cómo trabajamos</h2>
+          <div class="proceso" id="proceso">
+            <h3 class="proceso__titulo">Cómo trabajamos</h3>
             <p class="seccion__lead">
               Cuatro pasos, siempre con alguien del equipo al otro lado del WhatsApp.
             </p>
+            <ol class="pasos" data-pasos>
+              <li class="paso">
+                <span class="paso__num" aria-hidden="true">1</span>
+                <h4>Conversamos</h4>
+                <p>
+                  Nos cuentas cómo funciona tu negocio y qué quieres resolver. Te enviamos una
+                  propuesta con alcance, tiempos y precio.
+                </p>
+              </li>
+              <li class="paso">
+                <span class="paso__num" aria-hidden="true">2</span>
+                <h4>Diseñamos</h4>
+                <p>
+                  Te mostramos cómo se verá y cómo se usará antes de programar, para ajustar lo que
+                  haga falta.
+                </p>
+              </li>
+              <li class="paso">
+                <span class="paso__num" aria-hidden="true">3</span>
+                <h4>Desarrollamos</h4>
+                <p>Construimos por etapas y te compartimos avances que puedes probar.</p>
+              </li>
+              <li class="paso">
+                <span class="paso__num" aria-hidden="true">4</span>
+                <h4>Desplegamos y acompañamos</h4>
+                <p>Publicamos, te enseñamos a usarlo y seguimos atentos a ajustes y mejoras.</p>
+              </li>
+            </ol>
           </div>
-          <ol class="pasos">
-            <li class="paso">
-              <span class="paso__num" aria-hidden="true">1</span>
-              <h3>Conversamos</h3>
-              <p>
-                Nos cuentas cómo funciona tu negocio y qué quieres resolver. Te enviamos una
-                propuesta con alcance, tiempos y precio.
-              </p>
-            </li>
-            <li class="paso">
-              <span class="paso__num" aria-hidden="true">2</span>
-              <h3>Diseñamos</h3>
-              <p>
-                Te mostramos cómo se verá y cómo se usará antes de programar, para ajustar lo que
-                haga falta.
-              </p>
-            </li>
-            <li class="paso">
-              <span class="paso__num" aria-hidden="true">3</span>
-              <h3>Desarrollamos</h3>
-              <p>Construimos por etapas y te compartimos avances que puedes probar.</p>
-            </li>
-            <li class="paso">
-              <span class="paso__num" aria-hidden="true">4</span>
-              <h3>Desplegamos y acompañamos</h3>
-              <p>Publicamos, te enseñamos a usarlo y seguimos atentos a ajustes y mejoras.</p>
-            </li>
-          </ol>
-        </div>
-      </section>
-
-      <!-- Contacto -->
-      <section class="seccion contacto" id="contacto" aria-labelledby="contacto-titulo">
-        <div class="envoltura contacto__in">
-          <div class="contacto__texto">
-            <h2 class="seccion__titulo" id="contacto-titulo">Cuéntanos qué necesitas</h2>
-            <p class="seccion__lead">
-              Llena estos tres datos y se abre WhatsApp con tu mensaje listo para enviar. Te
-              respondemos con preguntas o con una propuesta.
-            </p>
-            <dl class="contacto__datos">
-              <div>
-                <dt>WhatsApp</dt>
-                <dd>
-                  <a href="#contacto" data-whatsapp data-marca="whatsappVisible"
-                    >+57 315 822 0440</a
-                  >
-                </dd>
-              </div>
-              <div>
-                <dt>Desde</dt>
-                <dd><span data-marca="ciudad">Popayán, Cauca</span>, para toda Colombia</dd>
-              </div>
-            </dl>
-          </div>
-
-          <form class="formulario" data-formulario novalidate>
-            <div class="campo">
-              <label for="f-nombre">Tu nombre</label>
-              <input
-                id="f-nombre"
-                name="nombre"
-                type="text"
-                autocomplete="name"
-                required
-                maxlength="80"
-                aria-describedby="f-nombre-error"
-              />
-              <p class="campo__error" id="f-nombre-error" hidden>
-                Escribe tu nombre para saber cómo llamarte.
-              </p>
-            </div>
-            <div class="campo">
-              <label for="f-tipo">Tipo de proyecto</label>
-              <select id="f-tipo" name="tipo" required aria-describedby="f-tipo-error">
-                <option value="">Elige una opción</option>
-                <option>Página web o landing</option>
-                <option>Tienda en línea con pagos</option>
-                <option>Sistema a la medida (POS, panel administrativo)</option>
-                <option>App web o PWA</option>
-                <option>Todavía no lo sé</option>
-              </select>
-              <p class="campo__error" id="f-tipo-error" hidden>
-                Elige el tipo de proyecto, o «Todavía no lo sé».
-              </p>
-            </div>
-            <div class="campo">
-              <label for="f-mensaje">Cuéntanos tu idea</label>
-              <textarea
-                id="f-mensaje"
-                name="mensaje"
-                rows="5"
-                required
-                maxlength="600"
-                placeholder="Ej.: tengo una panadería y quiero recibir pedidos en línea."
-                aria-describedby="f-mensaje-error"
-              ></textarea>
-              <p class="campo__error" id="f-mensaje-error" hidden>
-                Escribe en pocas palabras qué necesitas.
-              </p>
-            </div>
-            <button class="boton boton--ancho" type="submit">
-              <svg class="icono" aria-hidden="true" viewBox="0 0 24 24"><use href="#i-wa" /></svg>
-              Enviar por WhatsApp
-            </button>
-            <p class="formulario__nota">
-              No guardamos tus datos: el mensaje sale desde tu WhatsApp.
-            </p>
-          </form>
         </div>
       </section>
     </main>
@@ -406,11 +359,10 @@
           <ul>
             <li><a href="#proyectos">Proyectos</a></li>
             <li><a href="#servicios">Servicios</a></li>
-            <li><a href="#proceso">Proceso</a></li>
             <li><a href="#contacto">Contacto</a></li>
           </ul>
           <ul data-redes>
-            <li><a href="#contacto" data-whatsapp>WhatsApp</a></li>
+            <li><a href="#" data-whatsapp>WhatsApp</a></li>
           </ul>
         </nav>
         <p class="pie__legal">
@@ -420,9 +372,140 @@
       </div>
     </footer>
 
-    <a class="flotante" href="#contacto" data-whatsapp aria-label="Escribir por WhatsApp">
-      <svg aria-hidden="true" viewBox="0 0 24 24"><use href="#i-wa" /></svg>
-    </a>
+    <!-- Cotización: el botón flotante abre un chat que arma el mensaje de WhatsApp (js/cotizar.js) -->
+    <div
+      class="cotizar"
+      id="cotizar"
+      role="dialog"
+      aria-labelledby="cotizar-titulo"
+      aria-describedby="cotizar-sub"
+      hidden
+      data-cotizar
+    >
+      <header class="cotizar__cabeza">
+        <span class="cotizar__avatar" aria-hidden="true">
+          <img src="assets/brand/favicon.svg" alt="" width="40" height="40" />
+        </span>
+        <div class="cotizar__quien">
+          <p class="cotizar__titulo" id="cotizar-titulo">BWL &amp; SOFT</p>
+          <p class="cotizar__sub" id="cotizar-sub">Cotiza por WhatsApp en tres pasos</p>
+        </div>
+        <button class="cotizar__cerrar" type="button" aria-label="Cerrar" data-cotizar-cerrar>
+          <svg aria-hidden="true" viewBox="0 0 24 24"><use href="#i-cerrar" /></svg>
+        </button>
+        <span class="cotizar__progreso" aria-hidden="true" data-cotizar-progreso></span>
+      </header>
+
+      <div class="cotizar__chat" role="log" aria-live="polite" data-cotizar-chat></div>
+
+      <form class="cotizar__form" novalidate data-cotizar-form>
+        <div class="cotizar__paso" data-paso="nombre">
+          <label class="sr" for="c-nombre">Tu nombre</label>
+          <div class="cotizar__escribir">
+            <input
+              id="c-nombre"
+              name="nombre"
+              type="text"
+              autocomplete="name"
+              maxlength="80"
+              placeholder="Escribe tu nombre"
+              aria-describedby="c-nombre-error"
+              required
+            />
+            <button class="cotizar__siguiente" type="submit" aria-label="Continuar">
+              <svg aria-hidden="true" viewBox="0 0 24 24"><use href="#i-enviar" /></svg>
+            </button>
+          </div>
+          <p class="cotizar__error" id="c-nombre-error" hidden>
+            Escribe tu nombre para saber cómo llamarte.
+          </p>
+        </div>
+
+        <div class="cotizar__paso" data-paso="tipo" hidden>
+          <p class="sr">Elige el tipo de proyecto</p>
+          <div class="cotizar__opciones">
+            <button class="cotizar__opcion" type="button" data-tipo="Página web o landing">
+              Página web o landing
+            </button>
+            <button class="cotizar__opcion" type="button" data-tipo="Tienda en línea con pagos">
+              Tienda en línea con pagos
+            </button>
+            <button
+              class="cotizar__opcion"
+              type="button"
+              data-tipo="Sistema a la medida (POS, panel administrativo)"
+            >
+              Sistema a la medida (POS, panel administrativo)
+            </button>
+            <button class="cotizar__opcion" type="button" data-tipo="App web o PWA">
+              App web o PWA
+            </button>
+            <button class="cotizar__opcion" type="button" data-tipo="Todavía no lo sé">
+              Todavía no lo sé
+            </button>
+          </div>
+        </div>
+
+        <div class="cotizar__paso" data-paso="mensaje" hidden>
+          <label class="sr" for="c-mensaje">Tu idea</label>
+          <div class="cotizar__escribir">
+            <textarea
+              id="c-mensaje"
+              name="mensaje"
+              rows="3"
+              maxlength="600"
+              placeholder="Ej.: tengo una panadería y quiero recibir pedidos en línea."
+              aria-describedby="c-mensaje-error c-mensaje-ayuda"
+              required
+            ></textarea>
+            <button class="cotizar__siguiente" type="submit" aria-label="Enviar por WhatsApp">
+              <svg aria-hidden="true" viewBox="0 0 24 24"><use href="#i-enviar" /></svg>
+            </button>
+          </div>
+          <p class="cotizar__ayuda" id="c-mensaje-ayuda">
+            Enter envía el mensaje. Shift + Enter agrega una línea.
+          </p>
+          <p class="cotizar__error" id="c-mensaje-error" hidden>
+            Escribe en pocas palabras qué necesitas.
+          </p>
+        </div>
+      </form>
+
+      <div class="cotizar__final" hidden data-cotizar-final>
+        <a
+          class="boton boton--ancho"
+          target="_blank"
+          rel="noopener noreferrer"
+          data-cotizar-reabrir
+        >
+          <svg class="icono" aria-hidden="true" viewBox="0 0 24 24"><use href="#i-wa" /></svg>
+          Abrir WhatsApp otra vez
+        </a>
+        <button class="cotizar__reiniciar" type="button" data-cotizar-reiniciar>
+          Empezar de nuevo
+        </button>
+      </div>
+
+      <p class="cotizar__nota">
+        No guardamos tus datos: el mensaje sale desde tu WhatsApp.
+        <a href="#" data-whatsapp>Escribir directo</a>
+      </p>
+    </div>
+
+    <button
+      class="flotante"
+      type="button"
+      aria-expanded="false"
+      aria-controls="cotizar"
+      aria-label="Cotizar por WhatsApp"
+      data-cotizar-boton
+    >
+      <span class="flotante__texto" aria-hidden="true">¿Cotizamos tu proyecto?</span>
+      <span class="flotante__iconos" aria-hidden="true">
+        <svg class="flotante__wa" viewBox="0 0 24 24"><use href="#i-wa" /></svg>
+        <svg class="flotante__x" viewBox="0 0 24 24"><use href="#i-cerrar" /></svg>
+      </span>
+    </button>
 
     <!-- Íconos -->
     <svg class="sr" aria-hidden="true" focusable="false">
@@ -565,6 +648,16 @@
           stroke-width="2"
         />
         <path d="M8 10.5V7.5a4 4 0 0 1 8 0v3" fill="none" stroke="currentColor" stroke-width="2" />
+      </symbol>
+      <symbol id="i-enviar" viewBox="0 0 24 24">
+        <path
+          d="M4.5 12h14M13 6l6 6-6 6"
+          fill="none"
+          stroke="currentColor"
+          stroke-width="2.2"
+          stroke-linecap="round"
+          stroke-linejoin="round"
+        />
       </symbol>
       <symbol id="i-cerrar" viewBox="0 0 24 24">
         <path

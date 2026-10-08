@@ -1,9 +1,11 @@
-// Arranque de la página: enlaces de WhatsApp, menú, vitrina de proyectos y formulario.
-// Usa lo que publican config.js, proyectos.js y vitrina.js en window.BWL.
+// Arranque de la página: enlaces de WhatsApp, menú, vitrina de proyectos, servicios y cotización.
+// Usa lo que publican config.js, proyectos.js, letras.js, vitrina.js, servicios.js y cotizar.js
+// en window.BWL.
 (function () {
   'use strict';
 
-  const { MARCA, enlaceWhatsapp, PROYECTOS, iniciarVitrina } = window.BWL;
+  const { MARCA, enlaceWhatsapp, PROYECTOS, iniciarVitrina, iniciarServicios, iniciarCotizar } =
+    window.BWL;
 
   // ---------- Datos de marca ----------
   document.querySelectorAll('[data-whatsapp]').forEach((a) => {
@@ -82,45 +84,12 @@
     enlaceDemo: (p) => enlaceWhatsapp(`Hola, BWL & SOFT. Me gustaría ver una demo de ${p.nombre}.`),
   });
 
-  // ---------- Formulario de contacto → WhatsApp ----------
-  const formulario = document.querySelector('[data-formulario]');
+  // ---------- Servicios ----------
+  iniciarServicios(document.querySelector('[data-servicios]'));
 
-  function marcarCampo(campo, valido) {
-    const error = document.getElementById(`${campo.id}-error`);
-    campo.setAttribute('aria-invalid', String(!valido));
-    if (error) error.hidden = valido;
-  }
-
-  formulario.addEventListener('submit', (e) => {
-    e.preventDefault();
-    const campos = ['nombre', 'tipo', 'mensaje'].map((n) => formulario.elements[n]);
-    let primerInvalido = null;
-
-    campos.forEach((campo) => {
-      const valido = campo.value.trim().length > 0;
-      marcarCampo(campo, valido);
-      if (!valido && !primerInvalido) primerInvalido = campo;
-    });
-
-    if (primerInvalido) {
-      primerInvalido.focus();
-      return;
-    }
-
-    const [nombre, tipo, mensaje] = campos.map((c) => c.value.trim());
-    const texto = [
-      `Hola, BWL & SOFT. Soy ${nombre}.`,
-      `Tipo de proyecto: ${tipo}.`,
-      '',
-      mensaje,
-    ].join('\n');
-
-    window.open(enlaceWhatsapp(texto), '_blank', 'noopener,noreferrer');
-  });
-
-  formulario.addEventListener('input', (e) => {
-    if (e.target.getAttribute('aria-invalid') === 'true' && e.target.value.trim()) {
-      marcarCampo(e.target, true);
-    }
+  // ---------- Cotización por WhatsApp (botón flotante) ----------
+  iniciarCotizar(document.querySelector('[data-cotizar]'), {
+    boton: document.querySelector('[data-cotizar-boton]'),
+    enlaceWhatsapp,
   });
 })();
