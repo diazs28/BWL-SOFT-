@@ -181,7 +181,8 @@
     // Escritorio: el panel crece en círculo desde el botón.
     // Celular: hoja inferior que sube desde abajo, con fondo oscurecido y la página quieta.
     const esMovil = window.matchMedia('(max-width: 767px)');
-    const forma = (r) => `circle(${r} at calc(100% - 29px) calc(100% + 41px))`;
+    // El círculo nace en el botón de WhatsApp, que queda debajo del botón CV
+    const forma = (r) => `circle(${r} at calc(100% - 29px) calc(100% + 111px))`;
     const fondo = crear('div', 'cotizar__fondo');
     fondo.hidden = true;
     panel.before(fondo);
@@ -213,6 +214,7 @@
     function abrir() {
       if (abierto) return;
       abierto = true;
+      document.dispatchEvent(new CustomEvent('bwl:panel', { detail: 'cotizar' }));
       boton.classList.remove('is-llamando');
       boton.setAttribute('aria-expanded', 'true');
       boton.setAttribute('aria-label', 'Cerrar cotización');
@@ -307,6 +309,11 @@
           cerrar({ devolverFoco: false });
         }
       }
+    });
+
+    // Si se abre otro panel flotante (hojas de vida), este se cierra
+    document.addEventListener('bwl:panel', (e) => {
+      if (e.detail !== 'cotizar') cerrar({ devolverFoco: false });
     });
 
     // "Cotiza tu software", "Contacto" y enlaces a #contacto abren el panel

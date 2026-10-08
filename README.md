@@ -23,6 +23,12 @@ WhatsApp, presente en toda la página.
   con el mensaje listo. "Cotiza tu software", "Contacto" y `#contacto` abren el mismo chat. En el
   celular (menos de 768 px) es una hoja inferior a todo el ancho: oscurece el fondo, bloquea el
   desplazamiento de la página y se cierra con la X, tocando fuera o deslizando hacia abajo.
+- **Hojas de vida (botón CV)**: sobre el botón de WhatsApp hay un botón "CV" con el mismo estilo
+  que abre "Quiénes hacen tu software": una tarjeta por ingeniero con resumen, tecnologías y
+  botones para ver el PDF o descargarlo. Se abre y se cierra como el chat (círculo en PC, hoja
+  inferior en el celular) y nunca hay dos paneles abiertos a la vez. Los PDF están en
+  `assets/cv/`; si se reemplaza uno, cámbiale el nombre (la carpeta `assets` se guarda en caché
+  un año). `#equipo` abre el panel.
 - **Servicios**: una palabra gigante fija (WEB, TIENDAS, SISTEMAS, APPS) cambia con las letras
   que se hunden y emergen según el servicio que se está leyendo, y ese servicio se ilumina. Los
   pasos de "Cómo trabajamos" se encienden uno por uno con una línea de cobre al aparecer.
@@ -128,6 +134,7 @@ js/obrero.js            Obrero pixelado que martilla: proyectos con `enObra: tru
 js/vitrina.js           Vitrina del inicio: miniaturas, nombre gigante y ficha de cada proyecto
 js/servicios.js         Palabra gigante que sigue la lectura de servicios y pasos que se encienden
 js/cotizar.js           Chat de cotización del botón flotante: arma el mensaje y abre WhatsApp
+js/equipo.js            Botón CV: panel con las hojas de vida del equipo para ver o descargar
 js/main.js              Enlaces de WhatsApp, menú y arranque de vitrina, servicios y cotización
 assets/brand/           Archivos del kit que usa la página + og-image.png (1200x630)
 assets/projects/        Capturas WebP de cada proyecto (escritorio 1280x800, móvil 585x1266)

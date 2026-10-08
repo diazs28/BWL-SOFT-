@@ -40,8 +40,8 @@
       href="https://fonts.googleapis.com/css2?family=Anton&family=Poppins:wght@400;500;600&display=swap"
     />
     <link rel="stylesheet" href="assets/brand/brand-tokens.css" />
-    <link rel="stylesheet" href="css/reset.css?v=2026-10-08-15" />
-    <link rel="stylesheet" href="css/style.css?v=2026-10-08-15" />
+    <link rel="stylesheet" href="css/reset.css?v=2026-10-08-16" />
+    <link rel="stylesheet" href="css/style.css?v=2026-10-08-16" />
 
     <script type="application/ld+json">
       {
@@ -69,15 +69,16 @@
       }
     </script>
     <!-- Scripts clásicos con defer (no módulos): funcionan también abriendo el archivo con doble clic -->
-    <script src="js/intro.js?v=2026-10-08-15"></script>
-    <script defer src="js/config.js?v=2026-10-08-15"></script>
-    <script defer src="js/proyectos.js?v=2026-10-08-15"></script>
-    <script defer src="js/letras.js?v=2026-10-08-15"></script>
-    <script defer src="js/obrero.js?v=2026-10-08-15"></script>
-    <script defer src="js/vitrina.js?v=2026-10-08-15"></script>
-    <script defer src="js/servicios.js?v=2026-10-08-15"></script>
-    <script defer src="js/cotizar.js?v=2026-10-08-15"></script>
-    <script defer src="js/main.js?v=2026-10-08-15"></script>
+    <script src="js/intro.js?v=2026-10-08-16"></script>
+    <script defer src="js/config.js?v=2026-10-08-16"></script>
+    <script defer src="js/proyectos.js?v=2026-10-08-16"></script>
+    <script defer src="js/letras.js?v=2026-10-08-16"></script>
+    <script defer src="js/obrero.js?v=2026-10-08-16"></script>
+    <script defer src="js/vitrina.js?v=2026-10-08-16"></script>
+    <script defer src="js/servicios.js?v=2026-10-08-16"></script>
+    <script defer src="js/cotizar.js?v=2026-10-08-16"></script>
+    <script defer src="js/equipo.js?v=2026-10-08-16"></script>
+    <script defer src="js/main.js?v=2026-10-08-16"></script>
   </head>
   <body>
     <!-- Pantalla de inicio (ola de cobre): solo se ve si js/intro.js activa la clase "intro" en <html> -->
@@ -492,6 +493,131 @@
       </p>
     </div>
 
+    <!-- Hojas de vida del equipo: el botón "CV" abre este panel (js/equipo.js) -->
+    <section
+      class="equipo"
+      id="equipo"
+      role="dialog"
+      aria-labelledby="equipo-titulo"
+      hidden
+      data-equipo
+    >
+      <header class="equipo__cabeza">
+        <div>
+          <h2 class="equipo__titulo" id="equipo-titulo">Quiénes hacen tu software</h2>
+          <p class="equipo__sub">Hojas de vida de los ingenieros de BWL &amp; SOFT</p>
+        </div>
+        <button class="equipo__cerrar" type="button" aria-label="Cerrar">
+          <svg aria-hidden="true" viewBox="0 0 24 24"><use href="#i-cerrar" /></svg>
+        </button>
+      </header>
+      <div class="equipo__lista">
+        <article class="persona" aria-labelledby="persona-daniel">
+          <div class="persona__hoja" aria-hidden="true">
+            <span class="persona__iniciales">DA</span>
+            <span class="persona__pdf">PDF</span>
+          </div>
+          <div class="persona__datos">
+            <h3 class="persona__nombre" id="persona-daniel">Daniel Alejandro Acosta Silva</h3>
+            <p class="persona__cargo">Desarrollador Android y web</p>
+            <p class="persona__resumen">
+              Apps móviles con Kotlin y sitios con React y Next.js. Trabaja con GitFlow y cuida la
+              calidad del diseño y del código. Estudia Ingeniería de Sistemas en la Uniautónoma del
+              Cauca.
+            </p>
+            <ul class="persona__chips" aria-label="Tecnologías">
+              <li>Kotlin</li>
+              <li>Android</li>
+              <li>React</li>
+              <li>Next.js</li>
+              <li>TypeScript</li>
+              <li>Node.js</li>
+            </ul>
+          </div>
+          <div class="persona__acciones">
+            <a
+              class="persona__ver"
+              href="assets/cv/cv-daniel-acosta.pdf"
+              target="_blank"
+              rel="noopener"
+              aria-label="Ver la hoja de vida de Daniel Alejandro Acosta Silva (abre una pestaña nueva)"
+            >
+              <svg aria-hidden="true" viewBox="0 0 24 24"><use href="#i-ojo" /></svg>
+              Ver CV
+            </a>
+            <a
+              class="boton persona__bajar"
+              href="assets/cv/cv-daniel-acosta.pdf"
+              download="CV-Daniel-Acosta-BWL-SOFT.pdf"
+              aria-label="Descargar la hoja de vida de Daniel Alejandro Acosta Silva en PDF"
+            >
+              <svg aria-hidden="true" viewBox="0 0 24 24"><use href="#i-bajar" /></svg>
+              Descargar
+            </a>
+          </div>
+        </article>
+        <article class="persona" aria-labelledby="persona-johan">
+          <div class="persona__hoja" aria-hidden="true">
+            <span class="persona__iniciales">JD</span>
+            <span class="persona__pdf">PDF</span>
+          </div>
+          <div class="persona__datos">
+            <h3 class="persona__nombre" id="persona-johan">Johan Samuel Díaz Homez</h3>
+            <p class="persona__cargo">Ingeniero de Software y Computación</p>
+            <p class="persona__resumen">
+              Proyectos web y móviles de punta a punta: interfaz, backend, bases de datos y
+              despliegue. Desarrollador freelance para clientes reales.
+            </p>
+            <ul class="persona__chips" aria-label="Tecnologías">
+              <li>Kotlin</li>
+              <li>Jetpack Compose</li>
+              <li>React</li>
+              <li>NestJS</li>
+              <li>PHP</li>
+              <li>PostgreSQL</li>
+            </ul>
+          </div>
+          <div class="persona__acciones">
+            <a
+              class="persona__ver"
+              href="assets/cv/cv-johan-diaz.pdf"
+              target="_blank"
+              rel="noopener"
+              aria-label="Ver la hoja de vida de Johan Samuel Díaz Homez (abre una pestaña nueva)"
+            >
+              <svg aria-hidden="true" viewBox="0 0 24 24"><use href="#i-ojo" /></svg>
+              Ver CV
+            </a>
+            <a
+              class="boton persona__bajar"
+              href="assets/cv/cv-johan-diaz.pdf"
+              download="CV-Johan-Diaz-BWL-SOFT.pdf"
+              aria-label="Descargar la hoja de vida de Johan Samuel Díaz Homez en PDF"
+            >
+              <svg aria-hidden="true" viewBox="0 0 24 24"><use href="#i-bajar" /></svg>
+              Descargar
+            </a>
+          </div>
+        </article>
+      </div>
+      <p class="equipo__nota">PDF de una a dos páginas.</p>
+    </section>
+
+    <button
+      class="flotante flotante--cv"
+      type="button"
+      aria-expanded="false"
+      aria-controls="equipo"
+      aria-label="Hojas de vida del equipo"
+      data-equipo-boton
+    >
+      <span class="flotante__texto" aria-hidden="true">Hojas de vida del equipo</span>
+      <span class="flotante__iconos" aria-hidden="true">
+        <span class="flotante__cv">CV</span>
+        <svg class="flotante__x" viewBox="0 0 24 24"><use href="#i-cerrar" /></svg>
+      </span>
+    </button>
+
     <button
       class="flotante"
       type="button"
@@ -652,6 +778,25 @@
       <symbol id="i-enviar" viewBox="0 0 24 24">
         <path
           d="M4.5 12h14M13 6l6 6-6 6"
+          fill="none"
+          stroke="currentColor"
+          stroke-width="2.2"
+          stroke-linecap="round"
+          stroke-linejoin="round"
+        />
+      </symbol>
+      <symbol id="i-ojo" viewBox="0 0 24 24">
+        <path
+          d="M2 12s3.6-7 10-7 10 7 10 7-3.6 7-10 7S2 12 2 12Z"
+          fill="none"
+          stroke="currentColor"
+          stroke-width="2"
+        />
+        <circle cx="12" cy="12" r="3" fill="none" stroke="currentColor" stroke-width="2" />
+      </symbol>
+      <symbol id="i-bajar" viewBox="0 0 24 24">
+        <path
+          d="M12 4v11m0 0-4.5-4.5M12 15l4.5-4.5M5 19h14"
           fill="none"
           stroke="currentColor"
           stroke-width="2.2"
