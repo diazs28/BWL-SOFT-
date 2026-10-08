@@ -219,7 +219,9 @@
 
       $('[data-ficha-tipo]').textContent = p.tipo;
       $('[data-ficha-titulo]').textContent = p.nombre;
+      $('[data-ficha-cliente]').textContent = p.cliente;
       $('[data-ficha-desc]').textContent = p.descripcion;
+      $('[data-ficha-stack]').replaceChildren(...p.stack.map((t) => crear('li', '', t)));
 
       const accion = $('[data-ficha-accion]');
       accion.replaceChildren();

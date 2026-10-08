@@ -556,10 +556,10 @@ html.js .vitrina:not(.is-lista) .vitrina__nombre {
 
 .ficha {
   display: grid;
-  justify-items: center;
-  gap: var(--space-5);
+  gap: var(--space-6);
+  align-items: center;
   width: 100%;
-  margin-top: var(--space-4);
+  margin-top: var(--space-5);
 }
 .ficha[hidden] {
   display: none;
@@ -672,9 +672,8 @@ html.js .vitrina:not(.is-lista) .vitrina__nombre {
   display: flex;
   flex-direction: column;
   align-items: center;
-  max-width: 620px;
+  max-width: 520px;
   margin-inline: auto;
-  text-align: center;
 }
 .ficha__tipo {
   display: inline-flex;
@@ -684,8 +683,7 @@ html.js .vitrina:not(.is-lista) .vitrina__nombre {
   font-weight: 500;
   color: var(--color-acento-claro);
 }
-.ficha__tipo::before,
-.ficha__tipo::after {
+.ficha__tipo::before {
   content: '';
   width: 22px;
   height: 2px;
@@ -693,11 +691,40 @@ html.js .vitrina:not(.is-lista) .vitrina__nombre {
   background: var(--proyecto, var(--color-acento));
   transition: background-color 0.4s;
 }
-.ficha__desc {
-  max-width: 54ch;
-  margin-top: var(--space-3);
+.ficha__titulo {
+  margin-top: var(--space-1);
+  font-size: var(--fs-xl);
+  font-weight: 600;
+  line-height: 1.2;
+}
+.ficha__titulo:focus {
+  outline: none;
+}
+.ficha__cliente {
+  margin-top: var(--space-1);
+  font-size: var(--fs-sm);
   color: var(--color-texto-suave);
-  text-wrap: pretty;
+}
+.ficha__desc {
+  max-width: 46ch;
+  margin-top: var(--space-4);
+  opacity: 0.92;
+}
+.chips {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: var(--space-2);
+  margin-top: var(--space-5);
+}
+.chips li {
+  padding: 4px 12px;
+  border-radius: 999px;
+  border: 1px solid var(--color-linea);
+  background: rgb(208 138 98 / 0.06);
+  font-size: var(--fs-xs);
+  font-weight: 500;
+  color: var(--color-acento-claro);
 }
 .ficha__accion {
   display: flex;
@@ -705,7 +732,7 @@ html.js .vitrina:not(.is-lista) .vitrina__nombre {
   justify-content: center;
   align-items: center;
   gap: var(--space-3);
-  margin-top: var(--space-5);
+  margin-top: var(--space-6);
 }
 .etiqueta {
   display: inline-flex;
@@ -732,7 +759,9 @@ html.js .vitrina:not(.is-lista) .vitrina__nombre {
   justify-content: center;
   gap: var(--space-3);
   width: 100%;
-  margin-top: var(--space-5);
+  margin-top: var(--space-6);
+  padding-top: var(--space-5);
+  border-top: 1px solid var(--color-linea-suave);
 }
 .ficha__contador {
   min-width: 3.5em;
@@ -790,9 +819,35 @@ html.js .vitrina:not(.is-lista) .vitrina__nombre {
   height: 16px;
 }
 
-@media (min-width: 768px) {
-  .ficha__marco {
-    width: min(100%, 700px);
+@media (min-width: 1000px) {
+  .ficha {
+    grid-template-columns: 1.35fr 1fr;
+    gap: var(--space-7);
+    margin-top: var(--space-4);
+    text-align: left;
+  }
+  .ficha__desc {
+    font-size: var(--fs-sm);
+  }
+  .ficha__accion,
+  .ficha__nav {
+    margin-top: var(--space-5);
+  }
+  .ficha__nav {
+    padding-top: var(--space-4);
+  }
+  .ficha__info {
+    align-items: flex-start;
+    margin-inline: 0;
+  }
+  .chips,
+  .ficha__accion,
+  .ficha__nav {
+    justify-content: flex-start;
+  }
+  .ficha__cerrar {
+    /* Separado de las flechas, pero lejos del botón flotante de WhatsApp */
+    margin-left: var(--space-5);
   }
 }
 
