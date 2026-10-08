@@ -118,37 +118,79 @@
       });
     if (items.length === 0) return;
 
-    // ---------- Carrusel de miniaturas ----------
-    // La fila se desliza (dedo, rueda o arrastre con el mouse). La miniatura del centro
-    // cambia el nombre gigante; un toque la centra y doble toque (o doble clic) abre su ficha.
-    let interactuo = false; // hasta que el usuario toca la fila, el nombre sigue en "BWL & SOFT"
-    let centrado = Math.floor(items.length / 2);
+    // Copias solo visuales para llenar el anillo 3D: cada proyecto aparece dos veces.
+    // Las copias no se enfocan ni se anuncian; al tocarlas actúan como su original.
+    const caras = items.map((item) => ({ boton: item.boton, img: item.img, item }));
+    items.forEach((item) => {
+      const li = crear('li', 'vitrina__item');
+      li.setAttribute('aria-hidden', 'true');
+      const boton = item.boton.cloneNode(true);
+      boton.tabIndex = -1;
+      boton.removeAttribute('aria-controls');
+      li.append(boton);
+      fila.append(li);
+      caras.push({ boton, img: boton.querySelector('img'), item });
+    });
 
-    function centrarEnFila(boton, suave = true) {
-      const centro = boton.offsetLeft + boton.offsetWidth / 2 - fila.clientWidth / 2;
-      fila.scrollTo({
-        left: centro,
-        behavior: suave && !reduceMotion.matches ? 'smooth' : 'auto',
-      });
+    // ---------- Anillo 3D de miniaturas ----------
+    // Las miniaturas giran en un anillo (360°). Gira solo y despacio hasta que alguien lo usa;
+    // se pausa con el mouse encima. Arrastrar (mouse o dedo) lo gira y al soltar encaja en la
+    // más cercana. La del frente cambia el nombre gigante; un toque la trae al frente y doble
+    // toque (o doble clic) abre su ficha. Si nadie lo toca un rato, vuelve a girar solo.
+    const N = caras.length;
+    const PASO = 360 / N;
+    const VUELTA = 30000; // ms por vuelta del giro automático
+    const REANUDAR_TRAS = 8000; // ms sin tocar para que vuelva el giro automático
+    let interactuo = false; // hasta que el usuario toca el anillo, el nombre sigue en "BWL & SOFT"
+    let centrado = 0; // proyecto que está al frente
+    let giro = 0; // grados
+    let radio = 0;
+    let destino = null; // giro objetivo al encajar
+    let pausado = false;
+    let ultimoMov = 0;
+    let frente = 0; // cara que está al frente
+    let enPantalla = true;
+
+    const norm = (g) => ((((g + 180) % 360) + 360) % 360) - 180;
+    const angulo = (k) => k * PASO + giro;
+
+    function medir() {
+      const mini = items[0].boton.offsetWidth || 72;
+      radio = (mini + 30) / (2 * Math.tan(Math.PI / N));
     }
 
-    // Índice de la miniatura más cerca del centro visible de la fila
-    function indiceCentrado() {
-      const medio = fila.scrollLeft + fila.clientWidth / 2;
+    // De las dos copias de un proyecto, la más cerca del frente
+    function caraMasCercana(i) {
       let mejor = 0;
-      let distancia = Infinity;
-      items.forEach(({ boton }, i) => {
-        const d = Math.abs(boton.parentElement.offsetLeft + boton.offsetWidth / 2 - medio);
-        if (d < distancia) {
-          distancia = d;
-          mejor = i;
+      let menor = Infinity;
+      caras.forEach((cara, k) => {
+        const d = Math.abs(norm(angulo(k)));
+        if (cara.item.i === i && d < menor) {
+          menor = d;
+          mejor = k;
         }
       });
       return mejor;
     }
+    const imgVisible = (i) => caras[caraMasCercana(i)].img;
+
+    // Gira el anillo hasta dejar ese proyecto al frente, por el camino más corto
+    function centrarEnFila(boton, suave = true) {
+      const cara = caras.find((c) => c.boton === boton);
+      if (!cara) return;
+      const objetivo = giro - norm(angulo(caraMasCercana(cara.item.i)));
+      if (suave && !reduceMotion.matches) {
+        destino = objetivo;
+      } else {
+        giro = objetivo;
+        destino = null;
+        pintar();
+      }
+    }
 
     function marcarActiva(boton, { centrar = true } = {}) {
-      items.forEach(({ boton: b }) => b.classList.toggle('is-activa', b === boton));
+      const activo = boton ? caras.find((c) => c.boton === boton)?.item : null;
+      caras.forEach((c) => c.boton.classList.toggle('is-activa', c.item === activo));
       if (boton) {
         raiz.style.setProperty('--cursor-color', boton.style.getPropertyValue('--solido'));
         if (centrar) centrarEnFila(boton);
@@ -163,7 +205,7 @@
       anuncio.textContent = `${item.p.nombre}, ${item.p.tipo}`;
     }
 
-    // Al salir de la fila vuelve a la del centro (o a "BWL & SOFT" si aún no se ha usado)
+    // Al salir del anillo vuelve a la del frente (o a "BWL & SOFT" si aún no se ha usado)
     function restaurar() {
       if (abierta) return;
       if (interactuo) {
@@ -177,51 +219,125 @@
       anuncio.textContent = '';
     }
 
-    let cuadroScroll = null;
+    function pintar() {
+      let mejor = 0;
+      let menor = Infinity;
+      caras.forEach(({ boton }, k) => {
+        const a = angulo(k);
+        const n = norm(a);
+        const cos = Math.cos((n * Math.PI) / 180);
+        // El anillo se corre hacia atrás: la del frente queda a su tamaño real
+        boton.parentElement.style.transform = `translateZ(${-radio}px) rotateY(${a}deg) translateZ(${radio}px)`;
+        boton.parentElement.style.opacity = String(0.25 + 0.75 * Math.max(0, cos));
+        if (Math.abs(n) < menor) {
+          menor = Math.abs(n);
+          mejor = k;
+        }
+      });
+      if (mejor !== frente) {
+        frente = mejor;
+        centrado = caras[frente].item.i;
+        if (interactuo && !abierta) previsualizar(items[centrado], { centrar: false });
+      }
+    }
+
+    function usar() {
+      interactuo = true;
+      ultimoMov = performance.now();
+    }
+
+    let previo = performance.now();
+    function girarAnillo(t) {
+      const dt = Math.min(t - previo, 50);
+      previo = t;
+      if (enPantalla) {
+        if (destino !== null) {
+          const resta = destino - giro;
+          giro += resta * Math.min(1, dt / 120);
+          if (Math.abs(resta) < 0.05) {
+            giro = destino;
+            destino = null;
+          }
+        } else if (!arrastre && !pausado && !abierta && !reduceMotion.matches) {
+          // Si nadie lo usa durante un rato, vuelve a "BWL & SOFT" y a girar solo
+          if (interactuo && t - ultimoMov > REANUDAR_TRAS) {
+            interactuo = false;
+            preview = null;
+            marcarActiva(null);
+            mostrar(PORDEFECTO);
+            anuncio.textContent = '';
+          }
+          if (!interactuo && raiz.classList.contains('is-lista')) giro -= (360 / VUELTA) * dt;
+        }
+        pintar();
+      }
+      requestAnimationFrame(girarAnillo);
+    }
+    // Fuera de pantalla no se anima
+    new IntersectionObserver(([e]) => {
+      enPantalla = e.isIntersecting;
+    }).observe(fila);
+
+    // Pausa con el mouse encima o con el foco del teclado
+    fila.addEventListener('pointerenter', (e) => {
+      if (e.pointerType === 'mouse') pausado = true;
+    });
+    fila.addEventListener('pointerleave', () => (pausado = false));
+    fila.addEventListener('focusin', () => {
+      pausado = true;
+      usar();
+    });
+    fila.addEventListener('focusout', () => (pausado = false));
+
+    // Rueda del mouse: avanza de a un proyecto
     fila.addEventListener(
-      'scroll',
-      () => {
-        if (cuadroScroll) return;
-        cuadroScroll = requestAnimationFrame(() => {
-          cuadroScroll = null;
-          const i = indiceCentrado();
-          if (i === centrado) return;
-          centrado = i;
-          if (interactuo && !abierta) previsualizar(items[i], { centrar: false });
-        });
+      'wheel',
+      (e) => {
+        if (Math.abs(e.deltaX) + Math.abs(e.deltaY) < 4) return;
+        e.preventDefault();
+        usar();
+        const sentido = (e.deltaY || e.deltaX) > 0 ? 1 : -1;
+        destino = giro - norm(angulo((frente + sentido + N) % N));
       },
-      { passive: true },
-    );
-    ['wheel', 'touchstart', 'keydown'].forEach((tipo) =>
-      fila.addEventListener(tipo, () => (interactuo = true), { passive: true }),
+      { passive: false },
     );
 
-    // Arrastrar con el mouse (en el celular el desplazamiento es nativo)
+    // Arrastrar con el mouse o el dedo gira el anillo
     let arrastre = null;
     let arrastro = false;
     fila.addEventListener('pointerdown', (e) => {
-      if (e.pointerType !== 'mouse' || e.button !== 0) return;
-      arrastre = { x: e.clientX, inicio: fila.scrollLeft };
+      if (e.pointerType === 'mouse' && e.button !== 0) return;
+      arrastre = { x: e.clientX, giro, id: e.pointerId };
       arrastro = false;
     });
     window.addEventListener('pointermove', (e) => {
-      if (!arrastre) return;
+      if (!arrastre || e.pointerId !== arrastre.id) return;
       const dx = e.clientX - arrastre.x;
       if (!arrastro && Math.abs(dx) > 6) {
         arrastro = true;
-        interactuo = true;
+        destino = null;
         fila.classList.add('is-arrastrando');
       }
-      if (arrastro) fila.scrollLeft = arrastre.inicio - dx;
+      if (arrastro) {
+        usar();
+        giro = arrastre.giro + dx * 0.35;
+      }
     });
-    window.addEventListener('pointerup', () => {
+    function soltarAnillo() {
       if (!arrastre) return;
       arrastre = null;
       if (arrastro) {
         fila.classList.remove('is-arrastrando');
-        centrarEnFila(items[indiceCentrado()].boton);
+        destino = giro - norm(angulo(frente)); // encaja en la más cercana
+        usar();
       }
-    });
+    }
+    window.addEventListener('pointerup', soltarAnillo);
+    window.addEventListener('pointercancel', soltarAnillo);
+
+    medir();
+    window.addEventListener('resize', medir, { passive: true });
+    requestAnimationFrame(girarAnillo);
 
     // Indicación de uso según el dispositivo
     $('[data-vitrina-guia]').textContent = punteroFino.matches
@@ -389,14 +505,15 @@
       ocupado = true;
       actual = (indice + items.length) % items.length;
       const item = items[actual];
+      const miniatura = imgVisible(actual);
 
       if (esMovil.matches) construirPista();
 
       // La miniatura y la vista previa comparten nombre: el navegador anima de una a la otra
-      item.img.style.viewTransitionName = 'vitrina-foto';
+      miniatura.style.viewTransitionName = 'vitrina-foto';
       let destino = foto;
       const actualizar = async () => {
-        item.img.style.viewTransitionName = '';
+        miniatura.style.viewTransitionName = '';
         abierta = true;
         preview = null;
         raiz.classList.add('is-abierta');
@@ -474,11 +591,12 @@
       ocupado = true;
       pendiente = null;
       const item = items[actual];
+      const miniatura = imgVisible(actual);
       const origen = imagenActiva();
       origen.style.viewTransitionName = 'vitrina-foto';
       await conTransicion(() => {
         origen.style.viewTransitionName = '';
-        item.img.style.viewTransitionName = 'vitrina-foto';
+        miniatura.style.viewTransitionName = 'vitrina-foto';
         abierta = false;
         raiz.classList.remove('is-abierta');
         ficha.hidden = true;
@@ -486,7 +604,7 @@
         marcarActiva(null);
         mostrar(PORDEFECTO, { inmediato: true });
       });
-      item.img.style.viewTransitionName = '';
+      miniatura.style.viewTransitionName = '';
       history.replaceState(null, '', location.pathname + location.search);
       anuncio.textContent = 'Ficha del proyecto cerrada';
       focoSilencioso = true;
@@ -514,16 +632,17 @@
       tipoPuntero = e.pointerType;
     });
 
-    items.forEach((item) => {
-      item.boton.addEventListener('pointerenter', (e) => {
+    caras.forEach(({ boton, item }) => {
+      boton.addEventListener('pointerenter', (e) => {
         if (e.pointerType === 'mouse' && !arrastre) previsualizar(item, { centrar: false });
       });
       // Solo el foco con teclado previsualiza; el del clic o el toque abre directamente
-      item.boton.addEventListener('focus', () => {
+      boton.addEventListener('focus', () => {
         if (!tipoPuntero && !focoSilencioso) previsualizar(item);
       });
-      item.boton.addEventListener('click', (e) => {
+      boton.addEventListener('click', (e) => {
         tipoPuntero = '';
+        ultimoMov = performance.now();
         if (arrastro) {
           arrastro = false;
           return;
@@ -548,10 +667,10 @@
         ultimoToque = { i: item.i, t: ahora };
         interactuo = true;
         preview = null;
-        // El nombre cambia ya; la miniatura se centra después, para que el segundo toque de un
-        // doble toque caiga sobre ella y no donde quedó al deslizarse
+        // El nombre cambia ya; el anillo gira después, para que el segundo toque de un
+        // doble toque caiga sobre la miniatura y no donde quedó al girar
         previsualizar(item, { centrar: false });
-        esperaCentrar = setTimeout(() => centrarEnFila(item.boton), DOBLE_TOQUE);
+        esperaCentrar = setTimeout(() => centrarEnFila(boton), DOBLE_TOQUE);
       });
     });
 
@@ -687,8 +806,9 @@
       centrarEnFila(items[centrado].boton, false);
       // Las miniaturas aparecen cuando el nombre ya casi terminó de subir
       const base = reduceMotion.matches ? 0 : DURACION + marca.length * ESCALONADO - 200;
-      items.forEach(({ boton }, i) => {
-        boton.parentElement.animate(
+      caras.forEach(({ boton, item }) => {
+        const i = item.i;
+        boton.animate(
           reduceMotion.matches
             ? [{ opacity: 0 }, { opacity: 1 }]
             : [
