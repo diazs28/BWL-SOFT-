@@ -81,8 +81,8 @@ window.BWL.PROYECTOS = [
     descripcion:
       'Landing para una noche de acid techno con un secuenciador musical que se toca en el navegador. Toda la página late al ritmo de la música que arma el visitante.',
     stack: ['HTML', 'CSS', 'JavaScript', 'Web Audio', 'GSAP'],
-    estado: 'demo',
-    url: '',
+    estado: 'en-vivo',
+    url: 'https://acid303.vercel.app',
     imagenes: {
       escritorio: 'assets/projects/acido303-desktop.webp',
       movil: 'assets/projects/acido303-movil.webp',
