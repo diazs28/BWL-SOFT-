@@ -133,10 +133,11 @@
     });
 
     // ---------- Anillo 3D de miniaturas ----------
-    // Las miniaturas giran en un anillo (360°). Gira solo y despacio hasta que alguien lo usa;
-    // se pausa con el mouse encima. Arrastrar (mouse o dedo) lo gira y al soltar encaja en la
-    // más cercana. La del frente cambia el nombre gigante; un toque la trae al frente y doble
-    // toque (o doble clic) abre su ficha. Si nadie lo toca un rato, vuelve a girar solo.
+    // Las miniaturas giran en un anillo (360°), solas y despacio; se pausa con el mouse encima.
+    // Arrastrar (mouse o dedo) lo gira y al soltar encaja en la más cercana. La del frente cambia
+    // el nombre gigante, también mientras gira solo (tras unos segundos de "BWL & SOFT" al
+    // cargar). Un toque la trae al frente y doble toque (o doble clic) abre su ficha. Si nadie lo
+    // toca un rato, vuelve a girar solo.
     const N = caras.length;
     const PASO = 360 / N;
     const VUELTA = 30000; // ms por vuelta del giro automático
@@ -150,6 +151,8 @@
     let ultimoMov = 0;
     let frente = 0; // cara que está al frente
     let enPantalla = true;
+    let siguiendo = false; // el nombre ya sigue al proyecto del frente mientras gira
+    const PAUSA_MARCA = 3000; // ms de "BWL & SOFT" al cargar antes de seguir al anillo
 
     const norm = (g) => ((((g + 180) % 360) + 360) % 360) - 180;
     const angulo = (k) => k * PASO + giro;
@@ -196,19 +199,20 @@
       }
     }
 
-    function previsualizar(item, { centrar = true } = {}) {
+    // anunciar: false en el giro automático, para no leer un proyecto cada pocos segundos
+    function previsualizar(item, { centrar = true, anunciar = true } = {}) {
       if (abierta || preview === item.boton) return;
       preview = item.boton;
       marcarActiva(item.boton, { centrar });
       mostrar(item.p.vitrina);
-      anuncio.textContent = `${item.p.nombre}, ${item.p.tipo}`;
+      if (anunciar) anuncio.textContent = `${item.p.nombre}, ${item.p.tipo}`;
     }
 
-    // Al salir del anillo vuelve a la del frente (o a "BWL & SOFT" si aún no se ha usado)
+    // Al salir del anillo vuelve a la del frente (o a "BWL & SOFT" si aún no la sigue)
     function restaurar() {
       if (abierta) return;
-      if (interactuo) {
-        previsualizar(items[centrado], { centrar: false });
+      if (interactuo || siguiendo) {
+        previsualizar(items[centrado], { centrar: false, anunciar: interactuo });
         return;
       }
       if (!preview) return;
@@ -236,7 +240,9 @@
       if (mejor !== frente) {
         frente = mejor;
         centrado = caras[frente].item.i;
-        if (interactuo && !abierta) previsualizar(items[centrado], { centrar: false });
+        if ((interactuo || siguiendo) && !abierta) {
+          previsualizar(items[centrado], { centrar: false, anunciar: interactuo });
+        }
       }
     }
 
@@ -258,14 +264,8 @@
             destino = null;
           }
         } else if (!arrastre && !pausado && !abierta && !reduceMotion.matches) {
-          // Si nadie lo usa durante un rato, vuelve a "BWL & SOFT" y a girar solo
-          if (interactuo && t - ultimoMov > REANUDAR_TRAS) {
-            interactuo = false;
-            preview = null;
-            marcarActiva(null);
-            mostrar(PORDEFECTO);
-            anuncio.textContent = '';
-          }
+          // Si nadie lo usa durante un rato, vuelve a girar solo (el nombre sigue al frente)
+          if (interactuo && t - ultimoMov > REANUDAR_TRAS) interactuo = false;
           if (!interactuo && raiz.classList.contains('is-lista')) giro -= (360 / VUELTA) * dt;
         }
         pintar();
@@ -716,7 +716,7 @@
       if (!enlace) return;
       e.preventDefault();
       raiz.scrollIntoView({ behavior: reduceMotion.matches ? 'auto' : 'smooth' });
-      if (!abierta) abrir(interactuo ? centrado : actual);
+      if (!abierta) abrir(interactuo || siguiendo ? centrado : actual);
     });
 
     // ---------- Entrada sincronizada con la pantalla de inicio ----------
@@ -736,12 +736,22 @@
       // Enlace directo a un proyecto (#proyecto-karbon): la vitrina arranca abierta
       const enlazado = indiceDelHash();
       if (enlazado >= 0) {
+        siguiendo = true;
         abrir(enlazado, { enfocar: false, animar: false });
         return;
       }
 
       mostrar(PORDEFECTO);
       centrarEnFila(items[centrado].boton, false);
+      if (!reduceMotion.matches) {
+        setTimeout(() => {
+          siguiendo = true;
+          if (!abierta && !interactuo) {
+            preview = null;
+            previsualizar(items[centrado], { centrar: false, anunciar: false });
+          }
+        }, PAUSA_MARCA);
+      }
       // Las miniaturas aparecen cuando el nombre ya casi terminó de subir
       const base = reduceMotion.matches ? 0 : DURACION + marca.length * ESCALONADO - 200;
       caras.forEach(({ boton, item }) => {
