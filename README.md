@@ -28,8 +28,7 @@ WhatsApp, presente en toda la página.
   pasos de "Cómo trabajamos" se encienden uno por uno con una línea de cobre al aparecer.
 - **Vitrina del inicio** (`js/vitrina.js`): miniaturas de los proyectos sobre «BWL & SOFT» en
   letras gigantes con textura de líneas. Al pasar el mouse, enfocar con teclado o tocar una
-  miniatura, las letras se hunden y emerge el nombre del proyecto con su color; un círculo con
-  flecha sigue al cursor. La entrada de las letras arranca justo cuando se desvanece la pantalla
+  miniatura, las letras se hunden y emerge el nombre del proyecto con su color. La entrada de las letras arranca justo cuando se desvanece la pantalla
   de inicio.
 - **Anillo de miniaturas**: en PC y celular las miniaturas giran en un anillo 3D (360°), despacio
   y solas hasta que alguien lo usa; se pausa con el mouse encima. Arrastrar (mouse o dedo) o la
@@ -183,7 +182,7 @@ docs/adr/               Decisiones de arquitectura
    ```
 
    En `vitrina`, `color` puede ser un color o un degradado (`linear-gradient(...)`) para las
-   letras, y `solido` es el color plano del círculo que sigue al cursor. Usa nombres cortos
+   letras, y `solido` es el color plano del borde de la miniatura activa y de la cortina de la ficha. Usa nombres cortos
    (hasta unos 12 caracteres); si no caben en el celular, se reducen solos.
 
 4. Listo: la miniatura, la ficha, la navegación y las etiquetas se generan solas. No hay que tocar
