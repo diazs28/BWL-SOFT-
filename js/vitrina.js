@@ -14,7 +14,7 @@
 (function () {
   'use strict';
 
-  const { letras } = window.BWL;
+  const { letras, crearObrero } = window.BWL;
   const { ESCALONADO, DURACION, CURVA } = letras;
   const UMBRAL_SWIPE = 50;
 
@@ -263,6 +263,7 @@
         const nota = crear('p', 'etiqueta');
         nota.append(icono(etiqueta.icono), etiqueta.texto);
         accion.append(nota);
+        if (p.enObra && crearObrero) accion.append(crearObrero());
         if (p.estado === 'demo') {
           const pide = crear('a', 'boton boton--borde', 'Pedir una demo');
           pide.href = enlaceDemo(p);
