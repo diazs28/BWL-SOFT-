@@ -118,36 +118,115 @@
       });
     if (items.length === 0) return;
 
-    function centrarEnFila(boton) {
-      // En el celular la fila se desplaza para que la miniatura activa se vea completa
-      if (fila.scrollWidth <= fila.clientWidth) return;
+    // ---------- Carrusel de miniaturas ----------
+    // La fila se desliza (dedo, rueda o arrastre con el mouse). La miniatura del centro
+    // cambia el nombre gigante; un toque la centra y doble toque (o doble clic) abre su ficha.
+    let interactuo = false; // hasta que el usuario toca la fila, el nombre sigue en "BWL & SOFT"
+    let centrado = Math.floor(items.length / 2);
+
+    function centrarEnFila(boton, suave = true) {
       const centro = boton.offsetLeft + boton.offsetWidth / 2 - fila.clientWidth / 2;
-      fila.scrollTo({ left: centro, behavior: reduceMotion.matches ? 'auto' : 'smooth' });
+      fila.scrollTo({
+        left: centro,
+        behavior: suave && !reduceMotion.matches ? 'smooth' : 'auto',
+      });
     }
 
-    function marcarActiva(boton) {
+    // Índice de la miniatura más cerca del centro visible de la fila
+    function indiceCentrado() {
+      const medio = fila.scrollLeft + fila.clientWidth / 2;
+      let mejor = 0;
+      let distancia = Infinity;
+      items.forEach(({ boton }, i) => {
+        const d = Math.abs(boton.parentElement.offsetLeft + boton.offsetWidth / 2 - medio);
+        if (d < distancia) {
+          distancia = d;
+          mejor = i;
+        }
+      });
+      return mejor;
+    }
+
+    function marcarActiva(boton, { centrar = true } = {}) {
       items.forEach(({ boton: b }) => b.classList.toggle('is-activa', b === boton));
       if (boton) {
         raiz.style.setProperty('--cursor-color', boton.style.getPropertyValue('--solido'));
-        centrarEnFila(boton);
+        if (centrar) centrarEnFila(boton);
       }
     }
 
-    function previsualizar(item) {
+    function previsualizar(item, { centrar = true } = {}) {
       if (abierta || preview === item.boton) return;
       preview = item.boton;
-      marcarActiva(item.boton);
+      marcarActiva(item.boton, { centrar });
       mostrar(item.p.vitrina);
       anuncio.textContent = `${item.p.nombre}, ${item.p.tipo}`;
     }
 
+    // Al salir de la fila vuelve a la del centro (o a "BWL & SOFT" si aún no se ha usado)
     function restaurar() {
-      if (abierta || !preview) return;
+      if (abierta) return;
+      if (interactuo) {
+        previsualizar(items[centrado], { centrar: false });
+        return;
+      }
+      if (!preview) return;
       preview = null;
       marcarActiva(null);
       mostrar(PORDEFECTO);
       anuncio.textContent = '';
     }
+
+    let cuadroScroll = null;
+    fila.addEventListener(
+      'scroll',
+      () => {
+        if (cuadroScroll) return;
+        cuadroScroll = requestAnimationFrame(() => {
+          cuadroScroll = null;
+          const i = indiceCentrado();
+          if (i === centrado) return;
+          centrado = i;
+          if (interactuo && !abierta) previsualizar(items[i], { centrar: false });
+        });
+      },
+      { passive: true },
+    );
+    ['wheel', 'touchstart', 'keydown'].forEach((tipo) =>
+      fila.addEventListener(tipo, () => (interactuo = true), { passive: true }),
+    );
+
+    // Arrastrar con el mouse (en el celular el desplazamiento es nativo)
+    let arrastre = null;
+    let arrastro = false;
+    fila.addEventListener('pointerdown', (e) => {
+      if (e.pointerType !== 'mouse' || e.button !== 0) return;
+      arrastre = { x: e.clientX, inicio: fila.scrollLeft };
+      arrastro = false;
+    });
+    window.addEventListener('pointermove', (e) => {
+      if (!arrastre) return;
+      const dx = e.clientX - arrastre.x;
+      if (!arrastro && Math.abs(dx) > 6) {
+        arrastro = true;
+        interactuo = true;
+        fila.classList.add('is-arrastrando');
+      }
+      if (arrastro) fila.scrollLeft = arrastre.inicio - dx;
+    });
+    window.addEventListener('pointerup', () => {
+      if (!arrastre) return;
+      arrastre = null;
+      if (arrastro) {
+        fila.classList.remove('is-arrastrando');
+        centrarEnFila(items[indiceCentrado()].boton);
+      }
+    });
+
+    // Indicación de uso según el dispositivo
+    $('[data-vitrina-guia]').textContent = punteroFino.matches
+      ? 'Arrastra nuestros proyectos y haz doble clic en uno para verlo'
+      : 'Desliza nuestros proyectos y toca dos veces uno para verlo';
 
     // ---------- Ficha del proyecto ----------
     function rellenar(p) {
@@ -198,6 +277,78 @@
       history.replaceState(null, '', `#proyecto-${p.id}`);
     }
 
+    // ---------- Celular: proyectos uno al lado del otro, se pasan deslizando ----------
+    const esMovil = window.matchMedia('(max-width: 767px)');
+    let pista = null;
+    let telefonos = [];
+
+    function construirPista() {
+      if (pista) return;
+      pista = crear('div', 'ficha__pista');
+      pista.setAttribute('aria-label', 'Vistas previas de los proyectos');
+      telefonos = items.map(({ p }) => {
+        const figura = crear('figure', 'marco ficha__tel');
+        const img = document.createElement('img');
+        img.src = p.imagenes.movil;
+        img.alt = p.alt;
+        img.width = 585;
+        img.height = 1266;
+        img.decoding = 'async';
+        img.draggable = false;
+        figura.append(img);
+        // Tocar un teléfono que asoma por el lado lo trae al centro
+        figura.addEventListener('click', () => cambiar(telefonos.indexOf(figura)));
+        pista.append(figura);
+        figura.img = img;
+        return figura;
+      });
+      marco.before(pista);
+
+      // El teléfono que queda centrado define el proyecto de la ficha
+      const observador = new IntersectionObserver(
+        (entradas) => {
+          entradas.forEach((e) => {
+            e.target.classList.toggle('is-centro', e.isIntersecting);
+            if (e.isIntersecting && abierta && !ocupado) sincronizar(telefonos.indexOf(e.target));
+          });
+        },
+        { root: pista, threshold: 0.6 },
+      );
+      telefonos.forEach((t) => observador.observe(t));
+    }
+
+    function centrarTelefono(i, suave) {
+      const tel = telefonos[i];
+      if (!tel) return;
+      pista.scrollTo({
+        left: tel.offsetLeft - (pista.clientWidth - tel.offsetWidth) / 2,
+        behavior: suave && !reduceMotion.matches ? 'smooth' : 'auto',
+      });
+    }
+
+    // Actualiza nombre, miniatura y ficha cuando el usuario desliza (sin mover la pista)
+    function sincronizar(i) {
+      if (i < 0 || i === actual) return;
+      actual = i;
+      const item = items[actual];
+      marcarActiva(item.boton);
+      mostrar(item.p.vitrina);
+      rellenar(item.p);
+      piezas.forEach((pieza) => pieza.getAnimations().forEach((a) => a.cancel()));
+      animarPiezas(true);
+      anuncio.textContent = `${item.p.nombre}, proyecto ${actual + 1} de ${items.length}`;
+    }
+
+    const usaPista = () => esMovil.matches && pista !== null;
+    const imagenActiva = () => (usaPista() ? telefonos[actual].img : foto);
+
+    esMovil.addEventListener('change', () => {
+      if (abierta && esMovil.matches) {
+        construirPista();
+        requestAnimationFrame(() => centrarTelefono(actual, false));
+      }
+    });
+
     function animarPiezas(entra, retraso = 0) {
       const quieto = reduceMotion.matches ? 'none' : null;
       let ultima = null;
@@ -238,23 +389,28 @@
       actual = (indice + items.length) % items.length;
       const item = items[actual];
 
+      if (esMovil.matches) construirPista();
+
       // La miniatura y la vista previa comparten nombre: el navegador anima de una a la otra
       item.img.style.viewTransitionName = 'vitrina-foto';
+      let destino = foto;
       const actualizar = async () => {
         item.img.style.viewTransitionName = '';
-        foto.style.viewTransitionName = 'vitrina-foto';
         abierta = true;
         preview = null;
         raiz.classList.add('is-abierta');
         ficha.hidden = false;
+        if (usaPista()) centrarTelefono(actual, false);
+        destino = imagenActiva();
+        destino.style.viewTransitionName = 'vitrina-foto';
         rellenar(item.p);
         marcarActiva(item.boton);
         mostrar(item.p.vitrina, { inmediato: true });
         if (animar) animarPiezas(true, 180);
-        await cargada(foto);
+        await cargada(destino);
       };
       await (animar ? conTransicion(actualizar) : actualizar());
-      foto.style.viewTransitionName = '';
+      destino.style.viewTransitionName = '';
       anuncio.textContent = `${item.p.nombre}, proyecto ${actual + 1} de ${items.length}`;
       if (enfocar) $('[data-ficha-titulo]').focus({ preventScroll: true });
       if (ficha.getBoundingClientRect().top > window.innerHeight * 0.7) {
@@ -270,6 +426,10 @@
         return;
       }
       if (destino === actual) return;
+      if (usaPista()) {
+        centrarTelefono(destino, true);
+        return;
+      }
       ocupado = true;
       actual = destino;
       const item = items[actual];
@@ -313,9 +473,10 @@
       ocupado = true;
       pendiente = null;
       const item = items[actual];
-      foto.style.viewTransitionName = 'vitrina-foto';
+      const origen = imagenActiva();
+      origen.style.viewTransitionName = 'vitrina-foto';
       await conTransicion(() => {
-        foto.style.viewTransitionName = '';
+        origen.style.viewTransitionName = '';
         item.img.style.viewTransitionName = 'vitrina-foto';
         abierta = false;
         raiz.classList.remove('is-abierta');
@@ -345,22 +506,51 @@
     // ---------- Eventos de las miniaturas ----------
     // Tipo del último puntero que presionó una miniatura ('' = teclado)
     let tipoPuntero = '';
+    let ultimoToque = { i: -1, t: 0 };
+    let esperaCentrar = null;
+    const DOBLE_TOQUE = 400; // ms máximos entre los dos toques
     fila.addEventListener('pointerdown', (e) => {
       tipoPuntero = e.pointerType;
     });
 
     items.forEach((item) => {
       item.boton.addEventListener('pointerenter', (e) => {
-        if (e.pointerType === 'mouse') previsualizar(item);
+        if (e.pointerType === 'mouse' && !arrastre) previsualizar(item, { centrar: false });
       });
       // Solo el foco con teclado previsualiza; el del clic o el toque abre directamente
       item.boton.addEventListener('focus', () => {
         if (!tipoPuntero && !focoSilencioso) previsualizar(item);
       });
-      item.boton.addEventListener('click', () => {
+      item.boton.addEventListener('click', (e) => {
         tipoPuntero = '';
-        if (abierta && item.i === actual) cerrar();
-        else abrir(item.i);
+        if (arrastro) {
+          arrastro = false;
+          return;
+        }
+        if (abierta) {
+          if (item.i === actual) cerrar();
+          else abrir(item.i);
+          return;
+        }
+        // Teclado (Enter o espacio): abre directo
+        if (e.detail === 0) {
+          abrir(item.i);
+          return;
+        }
+        const ahora = performance.now();
+        clearTimeout(esperaCentrar);
+        if (ultimoToque.i === item.i && ahora - ultimoToque.t < DOBLE_TOQUE) {
+          ultimoToque = { i: -1, t: 0 };
+          abrir(item.i);
+          return;
+        }
+        ultimoToque = { i: item.i, t: ahora };
+        interactuo = true;
+        preview = null;
+        // El nombre cambia ya; la miniatura se centra después, para que el segundo toque de un
+        // doble toque caiga sobre ella y no donde quedó al deslizarse
+        previsualizar(item, { centrar: false });
+        esperaCentrar = setTimeout(() => centrarEnFila(item.boton), DOBLE_TOQUE);
       });
     });
 
@@ -407,7 +597,7 @@
       if (!enlace) return;
       e.preventDefault();
       raiz.scrollIntoView({ behavior: reduceMotion.matches ? 'auto' : 'smooth' });
-      if (!abierta) abrir(actual);
+      if (!abierta) abrir(interactuo ? centrado : actual);
     });
 
     // ---------- Círculo que sigue al cursor (solo mouse) ----------
@@ -493,6 +683,7 @@
       }
 
       mostrar(PORDEFECTO);
+      centrarEnFila(items[centrado].boton, false);
       // Las miniaturas aparecen cuando el nombre ya casi terminó de subir
       const base = reduceMotion.matches ? 0 : DURACION + marca.length * ESCALONADO - 200;
       items.forEach(({ boton }, i) => {
