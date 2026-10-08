@@ -8,7 +8,7 @@
 //
 // vitrina: cómo aparece el proyecto en el inicio (miniatura + nombre gigante).
 //   nombre → texto corto en mayúsculas; color → color o degradado del texto;
-//   solido → color plano para el círculo que sigue al cursor.
+//   solido → color plano para el borde de la miniatura activa y la cortina de la ficha.
 //
 // enObra: true → muestra en la ficha un obrero pixelado martillando ("En construcción").
 window.BWL = window.BWL || {};
@@ -81,8 +81,8 @@ window.BWL.PROYECTOS = [
     descripcion:
       'Landing para una noche de acid techno con un secuenciador musical que se toca en el navegador. Toda la página late al ritmo de la música que arma el visitante.',
     stack: ['HTML', 'CSS', 'JavaScript', 'Web Audio', 'GSAP'],
-    estado: 'demo',
-    url: '',
+    estado: 'en-vivo',
+    url: 'https://acid303.vercel.app',
     imagenes: {
       escritorio: 'assets/projects/acido303-desktop.webp',
       movil: 'assets/projects/acido303-movil.webp',
