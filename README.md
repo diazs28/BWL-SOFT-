@@ -8,8 +8,8 @@ que hacemos software profesional, revise proyectos reales desde el inicio y nos 
 para cotizar.
 
 Secciones: inicio (vitrina de proyectos con ficha expandible), servicios (incluye cómo
-trabajamos), contacto (formulario que abre
-WhatsApp) y pie de página. Botón flotante de WhatsApp en toda la página.
+trabajamos) y pie de página. El contacto es un chat que se abre desde el botón flotante de
+WhatsApp, presente en toda la página.
 
 ### Dirección visual
 
@@ -17,6 +17,10 @@ WhatsApp) y pie de página. Botón flotante de WhatsApp en toda la página.
   metalizado del kit de marca. Todo el sitio va sobre grafito.
 - **Tipografía**: Poppins (400, 500 y 600), la del logo, para todo el texto. Anton solo para el
   texto gigante (nombre de la vitrina y palabra de servicios).
+- **Cotización**: el botón flotante de WhatsApp se estira una vez por visita ("¿Cotizamos tu
+  proyecto?") y al tocarlo crece en círculo hasta un chat. Pregunta de a una cosa (nombre, tipo de
+  proyecto con opciones para tocar, idea) con burbujas y "escribiendo…", y al final abre WhatsApp
+  con el mensaje listo. "Cotiza tu software", "Contacto" y `#contacto` abren el mismo chat.
 - **Servicios**: una palabra gigante fija (WEB, TIENDAS, SISTEMAS, APPS) cambia con las letras
   que se hunden y emergen según el servicio que se está leyendo, y ese servicio se ilumina. Los
   pasos de "Cómo trabajamos" se encienden uno por uno con una línea de cobre al aparecer.
@@ -113,7 +117,8 @@ js/intro.js             Activa la pantalla de inicio (una vez por pestaña)
 js/letras.js            Texto gigante letra por letra (lo usan la vitrina y los servicios)
 js/vitrina.js           Vitrina del inicio: miniaturas, nombre gigante y ficha de cada proyecto
 js/servicios.js         Palabra gigante que sigue la lectura de servicios y pasos que se encienden
-js/main.js              Enlaces de WhatsApp, menú, formulario y arranque de la vitrina
+js/cotizar.js           Chat de cotización del botón flotante: arma el mensaje y abre WhatsApp
+js/main.js              Enlaces de WhatsApp, menú y arranque de vitrina, servicios y cotización
 assets/brand/           Archivos del kit que usa la página + og-image.png (1200x630)
 assets/projects/        Capturas WebP de cada proyecto (escritorio 1280x800, móvil 585x1266)
 BWL-Soft-Kit-Logo/      Kit de marca original. No se modifica y no se publica (.vercelignore)
@@ -204,8 +209,8 @@ Git Flow: `main` (producción) ← `develop` ← `feature/<tema>` o `fix/<tema>`
 ## Seguridad
 
 - Sitio estático sin backend ni secretos; no hay `.env`.
-- El formulario no envía datos a ningún servidor: arma el texto y abre WhatsApp en el dispositivo
-  del visitante.
+- El chat de cotización no envía datos a ningún servidor: arma el texto y abre WhatsApp en el
+  dispositivo del visitante, que es quien toca "Enviar".
 - CSP estricta en `vercel.json`: solo scripts propios (`'self'`), estilos propios y de Google Fonts,
   fuentes de `fonts.gstatic.com`, sin `unsafe-inline` ni `eval`. Además HSTS,
   `X-Content-Type-Options`, `Referrer-Policy`, `Permissions-Policy`, `X-Frame-Options: DENY` y
