@@ -31,9 +31,12 @@ WhatsApp, presente en toda la página.
   miniatura, las letras se hunden y emerge el nombre del proyecto con su color; un círculo con
   flecha sigue al cursor. La entrada de las letras arranca justo cuando se desvanece la pantalla
   de inicio.
-- **Carrusel de miniaturas**: en PC y celular la fila se desliza (dedo, rueda o arrastre con el
-  mouse) con tope en cada proyecto. La miniatura del centro cambia el nombre gigante; un
-  toque la centra y doble toque o doble clic abre su ficha (con teclado, Enter la abre).
+- **Anillo de miniaturas**: en PC y celular las miniaturas giran en un anillo 3D (360°), despacio
+  y solas hasta que alguien lo usa; se pausa con el mouse encima. Arrastrar (mouse o dedo) o la
+  rueda lo giran y encaja en el proyecto más cercano. La del frente cambia el nombre gigante; un
+  toque la trae al frente y doble toque o doble clic abre su ficha (con teclado, Enter). Tras 8 s
+  sin uso vuelve a girar solo y a "BWL & SOFT". Cada proyecto aparece dos veces para llenar el
+  anillo (las copias no se enfocan ni se anuncian).
 - **Ficha del proyecto**: al hacer clic o tocar una miniatura, la imagen vuela y crece hasta la
   vista previa grande (View Transitions API) y al lado aparece su ficha: tipo, nombre, cliente,
   descripción, tecnologías y el enlace para verlo en vivo o pedir una demo. Entre proyectos se pasa con las flechas, el teclado
@@ -45,10 +48,10 @@ WhatsApp, presente en toda la página.
 - **Paleta**: `--bwl-grafito` #1C1C1F, `--bwl-grafito-2` #2A2A2E, `--bwl-cobre` #D08A62,
   `--bwl-cobre-claro` #F2C4A4, `--bwl-cobre-oscuro` #7A4128 (texto cobre sobre fondo claro),
   `--bwl-humo` #F4EFEC.
-- **Pantalla de inicio** (adaptada de PortalSalud): «BWL & SOFT» aparece palabra por palabra en
-  cobre metalizado, se desvanece y seis columnas de cobre suben de derecha a izquierda para
-  descubrir la página. Dura unos 2 s, se muestra una vez por pestaña y nunca con movimiento
-  reducido. Para volver a verla, abre la página en una pestaña nueva. Se controla en
+- **Pantalla de inicio** (adaptada del `Preloader.tsx` del equipo, sin React): «BWL & SOFT» se
+  enfoca en cobre, se difumina, sube una ola de cobre con borde suave desde la esquina inferior
+  derecha y el velo sale con desenfoque mientras emergen las letras del nombre gigante. Dura unos
+  3,4 s, se muestra una vez por pestaña y nunca con movimiento reducido. Para volver a verla, abre la página en una pestaña nueva. Se controla en
   `js/intro.js` y en la sección «Pantalla de inicio» de `css/style.css`.
 - **Detalle memorable**: el logo del hero sobre un disco de cobre torneado (anillos concéntricos)
   con un destello de luz que recorre el metal una sola vez al cargar.
@@ -122,6 +125,7 @@ js/config.js            MARCA: nombre, WhatsApp, ciudad, redes. Único lugar par
 js/proyectos.js         Datos de los proyectos. Único lugar para agregar o editar proyectos
 js/intro.js             Activa la pantalla de inicio (una vez por pestaña)
 js/letras.js            Texto gigante letra por letra (lo usan la vitrina y los servicios)
+js/obrero.js            Obrero pixelado que martilla: proyectos con `enObra: true`
 js/vitrina.js           Vitrina del inicio: miniaturas, nombre gigante y ficha de cada proyecto
 js/servicios.js         Palabra gigante que sigue la lectura de servicios y pasos que se encienden
 js/cotizar.js           Chat de cotización del botón flotante: arma el mensaje y abre WhatsApp
