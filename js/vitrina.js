@@ -1,9 +1,15 @@
 // Vitrina del inicio: miniaturas de los proyectos sobre el nombre gigante "BWL & SOFT".
-// Al pasar el mouse (o enfocar, o tocar en el celular) por una miniatura, las letras del
-// nombre se hunden y emergen las del proyecto con su color. Un círculo sigue al cursor
-// sobre la fila. Al hacer clic se baja al proyecto en el carrusel.
+//
+// Cerrada: al pasar el mouse (o enfocar con teclado) por una miniatura, las letras del
+// nombre se hunden y emergen las del proyecto con su color. Un círculo sigue al cursor.
+// Abierta: al hacer clic (o tocar), la miniatura vuela y crece hasta ser la vista previa
+// grande del proyecto (View Transitions API) y aparece su ficha: descripción, tecnologías y
+// enlace. Entre proyectos se cambia con las flechas, el teclado o deslizando; una cortina del
+// color del proyecto barre la vista previa. Esc o "Cerrar" vuelve al inicio.
+//
 // La entrada del nombre se sincroniza con el final de la pantalla de inicio (js/intro.js).
-// Inspirada en el efecto "Hover members"; implementación propia sin librerías.
+// Inspirada en el efecto "Hover members" y en las transiciones de Skiper UI; implementación
+// propia sin librerías.
 
 (function () {
   'use strict';
@@ -12,6 +18,12 @@
   const DURACION = 500;
   const CURVA = 'cubic-bezier(0.22, 1, 0.36, 1)';
   const SALIDA = 'translateY(105%)';
+  const UMBRAL_SWIPE = 50;
+
+  const ETIQUETAS = {
+    privado: { icono: 'i-candado', texto: 'Software privado' },
+    demo: { icono: 'i-candado', texto: 'Demo bajo solicitud' },
+  };
 
   function crear(tag, clase, texto) {
     const el = document.createElement(tag);
@@ -20,19 +32,56 @@
     return el;
   }
 
-  function iniciarVitrina(raiz, proyectos, { marca }) {
+  function icono(id) {
+    const svg = document.createElementNS('http://www.w3.org/2000/svg', 'svg');
+    svg.setAttribute('class', 'icono');
+    svg.setAttribute('aria-hidden', 'true');
+    svg.setAttribute('viewBox', '0 0 24 24');
+    const use = document.createElementNS('http://www.w3.org/2000/svg', 'use');
+    use.setAttribute('href', `#${id}`);
+    svg.append(use);
+    return svg;
+  }
+
+  function hostDe(url) {
+    try {
+      return new URL(url).host;
+    } catch {
+      return '';
+    }
+  }
+
+  // Espera a que la imagen esté lista, sin bloquear más de lo razonable
+  function cargada(img, limite = 600) {
+    const decodificar = img.decode ? img.decode().catch(() => {}) : Promise.resolve();
+    return Promise.race([decodificar, new Promise((r) => setTimeout(r, limite))]);
+  }
+
+  function iniciarVitrina(raiz, proyectos, { marca, enlaceDemo }) {
     if (!raiz) return;
 
-    const caja = raiz.querySelector('[data-vitrina-nombre]');
-    const fila = raiz.querySelector('[data-vitrina-fila]');
-    const anuncio = raiz.querySelector('[data-vitrina-anuncio]');
+    const $ = (sel) => raiz.querySelector(sel);
+    const caja = $('[data-vitrina-nombre]');
+    const fila = $('[data-vitrina-fila]');
+    const anuncio = $('[data-vitrina-anuncio]');
+    const ficha = $('[data-ficha]');
+    const marco = $('[data-ficha-marco]');
+    const foto = $('[data-ficha-img]');
+    const fuenteMovil = $('[data-ficha-fuente]');
+    const cortina = $('[data-ficha-cortina]');
+    const piezas = [...ficha.querySelectorAll('[data-ficha-pieza]')];
     const reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)');
     const punteroFino = window.matchMedia('(hover: hover) and (pointer: fine)');
 
-    const PORDEFECTO = { nombre: marca, color: 'var(--vitrina-hueso)', solido: '' };
+    const PORDEFECTO = { nombre: marca, color: 'var(--vitrina-hueso)' };
     let palabraActual = null;
     let claveActual = '';
-    let activa = null; // miniatura activa
+    let preview = null; // miniatura con el nombre en vista previa (vitrina cerrada)
+    let abierta = false;
+    let actual = 0;
+    let ocupado = false;
+    let pendiente = null;
+    let focoSilencioso = false; // foco devuelto por código: no previsualiza
 
     // ---------- Nombre gigante, letra por letra ----------
     function crearPalabra({ nombre, color }) {
@@ -48,14 +97,14 @@
       return palabra;
     }
 
-    // Si un nombre largo no cabe en pantallas angostas, se reduce solo ese nombre
+    // Si un nombre largo no cabe, se reduce solo ese nombre
     function ajustar(palabra) {
       palabra.style.fontSize = '';
       const disponible = caja.clientWidth;
       const ancho = palabra.scrollWidth;
       if (ancho > disponible && disponible > 0) {
-        const actual = parseFloat(getComputedStyle(palabra).fontSize);
-        palabra.style.fontSize = `${Math.floor(actual * (disponible / ancho) * 0.98)}px`;
+        const tam = parseFloat(getComputedStyle(palabra).fontSize);
+        palabra.style.fontSize = `${Math.floor(tam * (disponible / ancho) * 0.98)}px`;
       }
     }
 
@@ -79,16 +128,21 @@
       if (ultima && alTerminar) ultima.finished.then(alTerminar, alTerminar);
     }
 
-    function mostrar(item) {
-      const clave = item.nombre;
-      if (clave === claveActual) return;
-      claveActual = clave;
-
-      // La anterior se hunde mientras la nueva emerge en el mismo lugar
+    // inmediato: la palabra anterior se quita sin animar (la transición de vista ya la funde)
+    function mostrar(item, { inmediato = false } = {}) {
+      if (item.nombre === claveActual) {
+        if (palabraActual) ajustar(palabraActual);
+        return;
+      }
+      claveActual = item.nombre;
       if (palabraActual) {
         const saliente = palabraActual;
-        saliente.classList.add('is-saliendo');
-        animarLetras(saliente, false, () => saliente.remove());
+        if (inmediato) {
+          caja.querySelectorAll('.vitrina__palabra').forEach((p) => p.remove());
+        } else {
+          saliente.classList.add('is-saliendo');
+          animarLetras(saliente, false, () => saliente.remove());
+        }
       }
       palabraActual = crearPalabra(item);
       animarLetras(palabraActual, true);
@@ -97,46 +151,250 @@
     // ---------- Miniaturas ----------
     const items = proyectos
       .filter((p) => p.vitrina)
-      .map((p) => {
+      .map((p, i) => {
         const li = crear('li', 'vitrina__item');
-        const a = crear('a', 'vitrina__mini');
-        a.href = `#proyecto-${p.id}`;
-        a.setAttribute('aria-label', `${p.nombre}: ${p.tipo}. Ver proyecto`);
-        a.style.setProperty('--solido', p.vitrina.solido);
+        const boton = crear('button', 'vitrina__mini');
+        boton.type = 'button';
+        boton.setAttribute('aria-controls', 'ficha');
+        boton.setAttribute('aria-pressed', 'false');
+        boton.setAttribute('aria-label', `${p.nombre}: ${p.tipo}`);
+        boton.style.setProperty('--solido', p.vitrina.solido);
         const img = document.createElement('img');
         img.src = p.imagenes.escritorio.replace('.webp', '-800.webp');
         img.alt = '';
         img.width = 48;
         img.height = 48;
         img.decoding = 'async';
-        a.append(img);
-        li.append(a);
+        boton.append(img);
+        li.append(boton);
         fila.append(li);
-        return { a, p };
+        return { boton, img, p, i };
       });
+    if (items.length === 0) return;
 
-    function activar(item) {
-      if (activa === item.a) return;
-      if (activa) activa.classList.remove('is-activa');
-      activa = item.a;
-      activa.classList.add('is-activa');
+    function centrarEnFila(boton) {
       // En el celular la fila se desplaza para que la miniatura activa se vea completa
-      if (fila.scrollWidth > fila.clientWidth) {
-        const centro = activa.offsetLeft + activa.offsetWidth / 2 - fila.clientWidth / 2;
-        fila.scrollTo({ left: centro, behavior: reduceMotion.matches ? 'auto' : 'smooth' });
+      if (fila.scrollWidth <= fila.clientWidth) return;
+      const centro = boton.offsetLeft + boton.offsetWidth / 2 - fila.clientWidth / 2;
+      fila.scrollTo({ left: centro, behavior: reduceMotion.matches ? 'auto' : 'smooth' });
+    }
+
+    function marcarActiva(boton) {
+      items.forEach(({ boton: b }) => b.classList.toggle('is-activa', b === boton));
+      if (boton) {
+        raiz.style.setProperty('--cursor-color', boton.style.getPropertyValue('--solido'));
+        centrarEnFila(boton);
       }
-      raiz.style.setProperty('--cursor-color', item.p.vitrina.solido);
+    }
+
+    function previsualizar(item) {
+      if (abierta || preview === item.boton) return;
+      preview = item.boton;
+      marcarActiva(item.boton);
       mostrar(item.p.vitrina);
       anuncio.textContent = `${item.p.nombre}, ${item.p.tipo}`;
     }
 
     function restaurar() {
-      if (activa) activa.classList.remove('is-activa');
-      activa = null;
+      if (abierta || !preview) return;
+      preview = null;
+      marcarActiva(null);
       mostrar(PORDEFECTO);
       anuncio.textContent = '';
     }
 
+    // ---------- Ficha del proyecto ----------
+    function rellenar(p) {
+      raiz.style.setProperty('--proyecto', p.vitrina.solido);
+      $('[data-ficha-url]').textContent =
+        p.estado === 'en-vivo'
+          ? hostDe(p.url)
+          : p.estado === 'privado'
+            ? 'red local del negocio'
+            : 'demo privada';
+      fuenteMovil.srcset = p.imagenes.movil;
+      foto.srcset = `${p.imagenes.escritorio.replace('.webp', '-800.webp')} 800w, ${p.imagenes.escritorio} 1280w`;
+      foto.src = p.imagenes.escritorio;
+      foto.alt = p.alt;
+
+      $('[data-ficha-tipo]').textContent = p.tipo;
+      $('[data-ficha-titulo]').textContent = p.nombre;
+      $('[data-ficha-desc]').textContent = p.descripcion;
+
+      const accion = $('[data-ficha-accion]');
+      accion.replaceChildren();
+      if (p.estado === 'en-vivo' && p.url) {
+        const a = crear('a', 'boton');
+        a.href = p.url;
+        a.target = '_blank';
+        a.rel = 'noopener noreferrer';
+        a.append('Ver en vivo', icono('i-externo'));
+        a.setAttribute('aria-label', `Ver en vivo: ${p.nombre} (abre una pestaña nueva)`);
+        accion.append(a);
+      } else {
+        const etiqueta = ETIQUETAS[p.estado] ?? ETIQUETAS.demo;
+        const nota = crear('p', 'etiqueta');
+        nota.append(icono(etiqueta.icono), etiqueta.texto);
+        accion.append(nota);
+        if (p.estado === 'demo') {
+          const pide = crear('a', 'boton boton--borde', 'Pedir una demo');
+          pide.href = enlaceDemo(p);
+          pide.target = '_blank';
+          pide.rel = 'noopener noreferrer';
+          accion.append(pide);
+        }
+      }
+
+      $('[data-ficha-contador]').textContent = `${actual + 1} / ${items.length}`;
+      items.forEach(({ boton }, i) => boton.setAttribute('aria-pressed', String(i === actual)));
+      history.replaceState(null, '', `#proyecto-${p.id}`);
+    }
+
+    function animarPiezas(entra, retraso = 0) {
+      const quieto = reduceMotion.matches ? 'none' : null;
+      let ultima = null;
+      piezas.forEach((pieza, i) => {
+        ultima = pieza.animate(
+          entra
+            ? [
+                { opacity: 0, transform: quieto ?? 'translateY(18px)' },
+                { opacity: 1, transform: 'none' },
+              ]
+            : [
+                { opacity: 1, transform: 'none' },
+                { opacity: 0, transform: quieto ?? 'translateY(-10px)' },
+              ],
+          {
+            duration: entra ? 520 : 200,
+            delay: entra ? retraso + i * 55 : i * 20,
+            easing: CURVA,
+            fill: entra ? 'backwards' : 'forwards',
+          },
+        );
+      });
+      return ultima ? ultima.finished.catch(() => {}) : Promise.resolve();
+    }
+
+    // Transición de vista si el navegador la tiene; si no, el cambio es directo
+    function conTransicion(actualizar) {
+      if (!document.startViewTransition || reduceMotion.matches) {
+        return Promise.resolve(actualizar());
+      }
+      return document.startViewTransition(actualizar).finished.catch(() => {});
+    }
+
+    async function abrir(indice, { enfocar = true, animar = true } = {}) {
+      if (abierta) return cambiar(indice);
+      if (ocupado) return;
+      ocupado = true;
+      actual = (indice + items.length) % items.length;
+      const item = items[actual];
+
+      // La miniatura y la vista previa comparten nombre: el navegador anima de una a la otra
+      item.img.style.viewTransitionName = 'vitrina-foto';
+      const actualizar = async () => {
+        item.img.style.viewTransitionName = '';
+        foto.style.viewTransitionName = 'vitrina-foto';
+        abierta = true;
+        preview = null;
+        raiz.classList.add('is-abierta');
+        ficha.hidden = false;
+        rellenar(item.p);
+        marcarActiva(item.boton);
+        mostrar(item.p.vitrina, { inmediato: true });
+        if (animar) animarPiezas(true, 180);
+        await cargada(foto);
+      };
+      await (animar ? conTransicion(actualizar) : actualizar());
+      foto.style.viewTransitionName = '';
+      anuncio.textContent = `${item.p.nombre}, proyecto ${actual + 1} de ${items.length}`;
+      if (enfocar) $('[data-ficha-titulo]').focus({ preventScroll: true });
+      if (ficha.getBoundingClientRect().top > window.innerHeight * 0.7) {
+        fila.scrollIntoView({ behavior: reduceMotion.matches ? 'auto' : 'smooth' });
+      }
+      terminar();
+    }
+
+    async function cambiar(indice) {
+      const destino = (indice + items.length) % items.length;
+      if (ocupado) {
+        pendiente = destino;
+        return;
+      }
+      if (destino === actual) return;
+      ocupado = true;
+      actual = destino;
+      const item = items[actual];
+      marcarActiva(item.boton);
+      mostrar(item.p.vitrina);
+      anuncio.textContent = `${item.p.nombre}, proyecto ${actual + 1} de ${items.length}`;
+
+      if (reduceMotion.matches) {
+        rellenar(item.p);
+        await animarPiezas(true);
+        return terminar();
+      }
+
+      // Cortina del color del proyecto: cubre, cambia la imagen y descubre
+      cortina.style.background = item.p.vitrina.solido;
+      const salida = animarPiezas(false);
+      await cortina
+        .animate([{ clipPath: 'inset(0 100% 0 0)' }, { clipPath: 'inset(0 0 0 0)' }], {
+          duration: 380,
+          easing: 'cubic-bezier(0.65, 0, 0.35, 1)',
+          fill: 'forwards',
+        })
+        .finished.catch(() => {});
+      await salida;
+      rellenar(item.p);
+      await cargada(foto);
+      piezas.forEach((pieza) => pieza.getAnimations().forEach((a) => a.cancel()));
+      animarPiezas(true, 60);
+      await cortina
+        .animate([{ clipPath: 'inset(0 0 0 0)' }, { clipPath: 'inset(0 0 0 100%)' }], {
+          duration: 520,
+          easing: 'cubic-bezier(0.65, 0, 0.35, 1)',
+          fill: 'forwards',
+        })
+        .finished.catch(() => {});
+      terminar();
+    }
+
+    async function cerrar() {
+      if (!abierta || ocupado) return;
+      ocupado = true;
+      pendiente = null;
+      const item = items[actual];
+      foto.style.viewTransitionName = 'vitrina-foto';
+      await conTransicion(() => {
+        foto.style.viewTransitionName = '';
+        item.img.style.viewTransitionName = 'vitrina-foto';
+        abierta = false;
+        raiz.classList.remove('is-abierta');
+        ficha.hidden = true;
+        items.forEach(({ boton }) => boton.setAttribute('aria-pressed', 'false'));
+        marcarActiva(null);
+        mostrar(PORDEFECTO, { inmediato: true });
+      });
+      item.img.style.viewTransitionName = '';
+      history.replaceState(null, '', location.pathname + location.search);
+      anuncio.textContent = 'Ficha del proyecto cerrada';
+      focoSilencioso = true;
+      item.boton.focus({ preventScroll: true });
+      focoSilencioso = false;
+      ocupado = false;
+    }
+
+    function terminar() {
+      ocupado = false;
+      if (pendiente !== null) {
+        const siguiente = pendiente;
+        pendiente = null;
+        cambiar(siguiente);
+      }
+    }
+
+    // ---------- Eventos de las miniaturas ----------
     // Tipo del último puntero que presionó una miniatura ('' = teclado)
     let tipoPuntero = '';
     fila.addEventListener('pointerdown', (e) => {
@@ -144,23 +402,17 @@
     });
 
     items.forEach((item) => {
-      item.a.addEventListener('pointerenter', (e) => {
-        if (e.pointerType === 'mouse') activar(item);
+      item.boton.addEventListener('pointerenter', (e) => {
+        if (e.pointerType === 'mouse') previsualizar(item);
       });
-      // Solo el foco con teclado cuenta como hover; el del toque se maneja en el clic
-      item.a.addEventListener('focus', () => {
-        if (!tipoPuntero) activar(item);
+      // Solo el foco con teclado previsualiza; el del clic o el toque abre directamente
+      item.boton.addEventListener('focus', () => {
+        if (!tipoPuntero && !focoSilencioso) previsualizar(item);
       });
-      item.a.addEventListener('click', (e) => {
-        e.preventDefault();
-        const tactil = tipoPuntero === 'touch' || tipoPuntero === 'pen';
+      item.boton.addEventListener('click', () => {
         tipoPuntero = '';
-        // En pantallas táctiles el primer toque muestra el nombre y el segundo abre el proyecto
-        if (tactil && activa !== item.a) {
-          activar(item);
-          return;
-        }
-        irAlProyecto(item.p.id);
+        if (abierta && item.i === actual) cerrar();
+        else abrir(item.i);
       });
     });
 
@@ -168,21 +420,47 @@
     fila.addEventListener('focusout', (e) => {
       if (!fila.contains(e.relatedTarget)) restaurar();
     });
-    document.addEventListener('pointerdown', (e) => {
-      if (activa && e.pointerType !== 'mouse' && !fila.contains(e.target)) restaurar();
+
+    // Los clics rápidos se suman: cada uno avanza desde el último proyecto pedido
+    const base = () => pendiente ?? actual;
+    $('[data-ficha-ant]').addEventListener('click', () => cambiar(base() - 1));
+    $('[data-ficha-sig]').addEventListener('click', () => cambiar(base() + 1));
+    $('[data-ficha-cerrar]').addEventListener('click', cerrar);
+
+    raiz.addEventListener('keydown', (e) => {
+      if (!abierta) return;
+      if (e.key === 'Escape') {
+        e.preventDefault();
+        cerrar();
+      } else if (e.key === 'ArrowRight' || e.key === 'ArrowLeft') {
+        e.preventDefault();
+        cambiar(base() + (e.key === 'ArrowRight' ? 1 : -1));
+      }
     });
 
-    function irAlProyecto(id) {
-      document.dispatchEvent(new CustomEvent('bwl:ver-proyecto', { detail: { id } }));
-      const destino = document.getElementById('proyectos');
-      if (!destino) return;
-      destino.scrollIntoView({ behavior: reduceMotion.matches ? 'auto' : 'smooth' });
-      const slide = document.getElementById(`proyecto-${id}`);
-      if (slide) {
-        slide.tabIndex = -1;
-        slide.focus({ preventScroll: true });
-      }
-    }
+    // Deslizar la vista previa cambia de proyecto (táctil)
+    let inicioX = null;
+    marco.addEventListener('pointerdown', (e) => {
+      if (e.pointerType !== 'mouse') inicioX = e.clientX;
+    });
+    marco.addEventListener('pointerup', (e) => {
+      if (inicioX === null) return;
+      const dx = e.clientX - inicioX;
+      inicioX = null;
+      if (Math.abs(dx) > UMBRAL_SWIPE) cambiar(base() + (dx < 0 ? 1 : -1));
+    });
+    marco.addEventListener('pointercancel', () => {
+      inicioX = null;
+    });
+
+    // Enlaces "Proyectos" (menú, pie, botón del inicio): suben al inicio y abren la vitrina
+    document.addEventListener('click', (e) => {
+      const enlace = e.target.closest('a[href="#proyectos"], [data-explorar]');
+      if (!enlace) return;
+      e.preventDefault();
+      raiz.scrollIntoView({ behavior: reduceMotion.matches ? 'auto' : 'smooth' });
+      if (!abierta) abrir(actual);
+    });
 
     // ---------- Círculo que sigue al cursor (solo mouse) ----------
     const cursor = crear('div', 'vitrina__cursor');
@@ -200,37 +478,25 @@
     let cuadro = null;
     let ultimo = 0;
 
+    function pintarCursor() {
+      cursor.style.transform = `translate3d(${resorte.x}px, ${resorte.y}px, 0)`;
+    }
+
     function paso(t) {
       const dt = Math.min((t - ultimo) / 1000, 1 / 30);
       ultimo = t;
-      for (const eje of ['x', 'y']) {
-        const v = eje === 'x' ? 'vx' : 'vy';
-        const obj = eje === 'x' ? resorte.objX : resorte.objY;
-        const fuerza = 400 * (obj - resorte[eje]) - 30 * resorte[v];
-        resorte[v] += fuerza * dt;
-        resorte[eje] += resorte[v] * dt;
-      }
-      cursor.style.transform = `translate3d(${resorte.x}px, ${resorte.y}px, 0)`;
+      const fx = 400 * (resorte.objX - resorte.x) - 30 * resorte.vx;
+      const fy = 400 * (resorte.objY - resorte.y) - 30 * resorte.vy;
+      resorte.vx += fx * dt;
+      resorte.vy += fy * dt;
+      resorte.x += resorte.vx * dt;
+      resorte.y += resorte.vy * dt;
+      pintarCursor();
       const quieto =
         Math.abs(resorte.objX - resorte.x) < 0.1 &&
         Math.abs(resorte.objY - resorte.y) < 0.1 &&
         Math.abs(resorte.vx) + Math.abs(resorte.vy) < 0.1;
       cuadro = quieto ? null : requestAnimationFrame(paso);
-    }
-
-    function seguir(e) {
-      resorte.objX = e.clientX;
-      resorte.objY = e.clientY;
-      if (reduceMotion.matches) {
-        resorte.x = resorte.objX;
-        resorte.y = resorte.objY;
-        cursor.style.transform = `translate3d(${resorte.x}px, ${resorte.y}px, 0)`;
-        return;
-      }
-      if (!cuadro) {
-        ultimo = performance.now();
-        cuadro = requestAnimationFrame(paso);
-      }
     }
 
     fila.addEventListener('pointerenter', (e) => {
@@ -239,26 +505,50 @@
       resorte.x = resorte.objX = e.clientX;
       resorte.y = resorte.objY = e.clientY;
       resorte.vx = resorte.vy = 0;
-      cursor.style.transform = `translate3d(${resorte.x}px, ${resorte.y}px, 0)`;
+      pintarCursor();
       cursor.classList.add('is-visible');
     });
     fila.addEventListener('pointermove', (e) => {
-      if (e.pointerType === 'mouse') seguir(e);
+      if (e.pointerType !== 'mouse') return;
+      resorte.objX = e.clientX;
+      resorte.objY = e.clientY;
+      if (reduceMotion.matches) {
+        resorte.x = resorte.objX;
+        resorte.y = resorte.objY;
+        pintarCursor();
+      } else if (!cuadro) {
+        ultimo = performance.now();
+        cuadro = requestAnimationFrame(paso);
+      }
     });
     fila.addEventListener('pointerleave', () => cursor.classList.remove('is-visible'));
 
     // ---------- Entrada sincronizada con la pantalla de inicio ----------
+    function indiceDelHash() {
+      if (location.hash === '#proyectos') return 0;
+      const m = location.hash.match(/^#proyecto-(.+)$/);
+      return m ? items.findIndex((it) => it.p.id === m[1]) : -1;
+    }
+
     function entrar() {
       if (raiz.classList.contains('is-lista')) return;
       raiz.classList.add('is-lista');
       caja.replaceChildren();
       claveActual = '';
       palabraActual = null;
+
+      // Enlace directo a un proyecto (#proyecto-karbon): la vitrina arranca abierta
+      const enlazado = indiceDelHash();
+      if (enlazado >= 0) {
+        abrir(enlazado, { enfocar: false, animar: false });
+        return;
+      }
+
       mostrar(PORDEFECTO);
       // Las miniaturas aparecen cuando el nombre ya casi terminó de subir
       const base = reduceMotion.matches ? 0 : DURACION + marca.length * ESCALONADO - 200;
-      items.forEach(({ a }, i) => {
-        a.parentElement.animate(
+      items.forEach(({ boton }, i) => {
+        boton.parentElement.animate(
           reduceMotion.matches
             ? [{ opacity: 0 }, { opacity: 1 }]
             : [
@@ -280,6 +570,11 @@
     } else {
       entrar();
     }
+
+    window.addEventListener('hashchange', () => {
+      const i = indiceDelHash();
+      if (i >= 0) abrir(i, { enfocar: false });
+    });
 
     // Recalcula el tamaño de los nombres largos al girar o cambiar el ancho
     window.addEventListener(
