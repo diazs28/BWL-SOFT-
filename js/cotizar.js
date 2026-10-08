@@ -27,6 +27,8 @@
     const respuestas = { nombre: '', tipo: '', mensaje: '' };
     let abierto = false;
     let paso = 0;
+    // Tras enviar, el panel queda en el bloque final hasta "Empezar de nuevo"
+    let enviado = false;
     let animando = null;
 
     // ---------- Conversación ----------
@@ -91,6 +93,7 @@
     }
 
     async function avanzar() {
+      if (enviado) return;
       const actual = pasos[paso];
       const tipo = actual.dataset.paso;
 
@@ -130,6 +133,7 @@
         respuestas.mensaje,
       ].join('\n');
       const enlace = enlaceWhatsapp(texto);
+      enviado = true;
       // Se abre dentro del clic para que el navegador no lo bloquee
       window.open(enlace, '_blank', 'noopener,noreferrer');
 
@@ -149,6 +153,7 @@
 
     function reiniciar() {
       form.reset();
+      enviado = false;
       Object.keys(respuestas).forEach((k) => (respuestas[k] = ''));
       chat.replaceChildren();
       $('[data-cotizar-final]').hidden = true;
@@ -229,7 +234,13 @@
           ? 'cubic-bezier(0.22, 1, 0.36, 1)'
           : 'cubic-bezier(0.65, 0, 0.35, 1)',
       });
-      mostrarPaso(paso);
+      if (enviado) {
+        // No vuelve a mostrar el campo de la idea: evita un segundo envío
+        $('[data-cotizar-final]').querySelector('a, button').focus({ preventScroll: true });
+        alFinal();
+      } else {
+        mostrarPaso(paso);
+      }
     }
 
     function cerrar({ devolverFoco = true } = {}) {
