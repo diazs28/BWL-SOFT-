@@ -4,18 +4,33 @@
 
 Landing de **BWL & SOFT** (BWL SOFT · Binomio Web Lab), equipo de desarrollo de software a la
 medida y páginas web en Popayán, Colombia. Su trabajo es que un cliente potencial vea en segundos
-que hacemos software profesional, revise proyectos reales en un carrusel y nos escriba por WhatsApp
+que hacemos software profesional, revise proyectos reales desde el inicio y nos escriba por WhatsApp
 para cotizar.
 
-Secciones: inicio (hero), proyectos (carrusel), servicios, proceso, contacto (formulario que abre
+Secciones: inicio (vitrina de proyectos con ficha expandible), servicios (incluye cómo
+trabajamos), contacto (formulario que abre
 WhatsApp) y pie de página. Botón flotante de WhatsApp en toda la página.
 
 ### Dirección visual
 
 - **Tono**: taller de ingeniería con acabado de cobre. Fondo grafito dominante, acentos cobre
-  metalizado del kit de marca y una sección clara en humo (servicios) para dar ritmo.
-- **Tipografía**: solo Poppins (400, 500 y 600), la del logo. Titulares en 600 con tracking
-  ligeramente cerrado; el tracking amplio queda reservado al logo.
+  metalizado del kit de marca. Todo el sitio va sobre grafito.
+- **Tipografía**: Poppins (400, 500 y 600), la del logo, para todo el texto. Anton solo para el
+  texto gigante (nombre de la vitrina y palabra de servicios).
+- **Servicios**: una palabra gigante fija (WEB, TIENDAS, SISTEMAS, APPS) cambia con las letras
+  que se hunden y emergen según el servicio que se está leyendo, y ese servicio se ilumina. Los
+  pasos de "Cómo trabajamos" se encienden uno por uno con una línea de cobre al aparecer.
+- **Vitrina del inicio** (`js/vitrina.js`): miniaturas de los proyectos sobre «BWL & SOFT» en
+  letras gigantes con textura de líneas. Al pasar el mouse, enfocar con teclado o tocar una
+  miniatura, las letras se hunden y emerge el nombre del proyecto con su color; un círculo con
+  flecha sigue al cursor. La entrada de las letras arranca justo cuando se desvanece la pantalla
+  de inicio.
+- **Ficha del proyecto**: al hacer clic o tocar una miniatura, la imagen vuela y crece hasta la
+  vista previa grande (View Transitions API) y al lado aparece su ficha: tipo, nombre, cliente,
+  descripción, tecnologías y el enlace para verlo en vivo o pedir una demo. Entre proyectos se pasa con las flechas, el teclado
+  (← →) o deslizando en el celular; una cortina del color del proyecto barre la imagen. Esc o
+  "Cerrar" vuelve al inicio. Cada proyecto tiene enlace directo (`/#proyecto-karbon`). Reemplaza
+  al antiguo carrusel: los enlaces a `#proyectos` abren la vitrina.
 - **Paleta**: `--bwl-grafito` #1C1C1F, `--bwl-grafito-2` #2A2A2E, `--bwl-cobre` #D08A62,
   `--bwl-cobre-claro` #F2C4A4, `--bwl-cobre-oscuro` #7A4128 (texto cobre sobre fondo claro),
   `--bwl-humo` #F4EFEC.
@@ -53,7 +68,7 @@ WhatsApp) y pie de página. Botón flotante de WhatsApp en toda la página.
 ## Stack
 
 HTML + CSS + JavaScript vanilla (scripts clásicos con `defer`), sin build ni dependencias en producción. Fuente
-Poppins desde Google Fonts. Sin GSAP: las únicas animaciones son CSS y respetan
+Poppins y Anton desde Google Fonts. Sin GSAP: las animaciones son CSS y Web Animations API, y respetan
 `prefers-reduced-motion`. Publicación estática en Vercel.
 
 ## Requisitos
@@ -93,10 +108,12 @@ index.html              Página principal (SEO, Open Graph y JSON-LD en el <head
 css/reset.css           Reset base
 css/style.css           Sistema de diseño (tokens sobre los --bwl-* del kit) y estilos
 js/config.js            MARCA: nombre, WhatsApp, ciudad, redes. Único lugar para datos de contacto
-js/proyectos.js         Datos del carrusel. Único lugar para agregar o editar proyectos
+js/proyectos.js         Datos de los proyectos. Único lugar para agregar o editar proyectos
 js/intro.js             Activa la pantalla de inicio (una vez por pestaña)
-js/carrusel.js          Carrusel accesible (flechas, puntos, swipe, teclado, autoplay)
-js/main.js              Enlaces de WhatsApp, menú, formulario y arranque del carrusel
+js/letras.js            Texto gigante letra por letra (lo usan la vitrina y los servicios)
+js/vitrina.js           Vitrina del inicio: miniaturas, nombre gigante y ficha de cada proyecto
+js/servicios.js         Palabra gigante que sigue la lectura de servicios y pasos que se encienden
+js/main.js              Enlaces de WhatsApp, menú, formulario y arranque de la vitrina
 assets/brand/           Archivos del kit que usa la página + og-image.png (1200x630)
 assets/projects/        Capturas WebP de cada proyecto (escritorio 1280x800, móvil 585x1266)
 BWL-Soft-Kit-Logo/      Kit de marca original. No se modifica y no se publica (.vercelignore)
@@ -110,11 +127,15 @@ docs/adr/               Decisiones de arquitectura
 - **WhatsApp, ciudad, nombre, redes**: `js/config.js`. Todos los botones de WhatsApp toman el número
   de ahí. Excepción: el teléfono en el JSON-LD de `index.html` es estático (los buscadores lo leen
   sin ejecutar JS); si cambia el número, actualízalo también ahí.
-- **Textos de servicios y proceso**: directamente en `index.html`.
+- **Textos de servicios y proceso**: directamente en `index.html`. La palabra gigante y su color
+  salen de `data-nombre` y `data-color` de cada servicio.
+- **Versión de CSS y JS**: `index.html` y `404.html` cargan los archivos con `?v=AAAA-MM-DD`. Si
+  cambias algo en `css/` o `js/`, actualiza esa fecha para que los navegadores no muestren la
+  versión vieja guardada en caché.
 - **Colores**: los de marca vienen de `assets/brand/brand-tokens.css` (copia del kit; no editar).
   Los tokens de la página (`--color-*`, `--fs-*`, `--space-*`) están al inicio de `css/style.css`.
 
-### Agregar un proyecto al carrusel
+### Agregar un proyecto a la vitrina
 
 1. Toma dos capturas del proyecto:
    - Escritorio: viewport 1280x800.
@@ -140,10 +161,17 @@ docs/adr/               Decisiones de arquitectura
        movil: 'assets/projects/mi-proyecto-movil.webp',
      },
      alt: 'Descripción de lo que se ve en la captura',
+     // Miniatura y nombre gigante en el inicio (sin este campo el proyecto no se muestra)
+     vitrina: { nombre: 'MI PROYECTO', color: '#E8301C', solido: '#E8301C' },
    },
    ```
 
-4. Listo: los puntos, la navegación y las etiquetas se generan solos. No hay que tocar el HTML.
+   En `vitrina`, `color` puede ser un color o un degradado (`linear-gradient(...)`) para las
+   letras, y `solido` es el color plano del círculo que sigue al cursor. Usa nombres cortos
+   (hasta unos 12 caracteres); si no caben en el celular, se reducen solos.
+
+4. Listo: la miniatura, la ficha, la navegación y las etiquetas se generan solas. No hay que tocar
+   el HTML.
 
 > Las imágenes de `/assets` se sirven con caché de un año (`immutable`). Si reemplazas una captura,
 > cámbiale el nombre (por ejemplo `-v2.webp`) para que los navegadores descarguen la nueva.
