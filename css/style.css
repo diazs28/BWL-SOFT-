@@ -320,32 +320,6 @@ body {
   width: min(100%, 540px);
   margin-top: var(--space-2);
 }
-.vitrina__flecha {
-  display: grid;
-  place-items: center;
-  flex: none;
-  width: 42px;
-  height: 42px;
-  border: 1px solid var(--color-linea);
-  border-radius: 50%;
-  background: rgb(28 28 31 / 0.6);
-  color: var(--color-acento-claro);
-  cursor: pointer;
-  transition:
-    border-color 0.2s,
-    background 0.2s;
-}
-.vitrina__flecha:hover {
-  border-color: var(--color-acento);
-  background: var(--color-fondo-2);
-}
-.vitrina__flecha svg {
-  width: 18px;
-  height: 18px;
-}
-.vitrina__flecha--sig svg {
-  transform: scaleX(-1);
-}
 .vitrina__fila {
   /* Referencia para medir la posición de cada miniatura */
   position: relative;
@@ -534,9 +508,6 @@ html.js .vitrina:not(.is-lista) .vitrina__nombre {
 
 /* Móvil: la fila se desplaza de lado si no cabe; el círculo del cursor no existe */
 @media (max-width: 767px) {
-  .vitrina__flecha {
-    display: none;
-  }
   .vitrina__carrusel {
     width: calc(100% + 2.5rem);
     margin-inline: -1.25rem;
