@@ -1362,16 +1362,305 @@ html:not(.js) .paso::after {
   }
 }
 
+/* ---------- Botón CV (sobre el de WhatsApp) ---------- */
+.flotante--cv {
+  bottom: calc(max(1rem, env(safe-area-inset-bottom)) + 58px + 12px);
+}
+.flotante__cv {
+  font-size: 17px;
+  font-weight: 700;
+  letter-spacing: 0.04em;
+  transition:
+    transform 0.4s cubic-bezier(0.34, 1.56, 0.64, 1),
+    opacity 0.25s;
+}
+.flotante__iconos .flotante__cv {
+  grid-area: 1 / 1;
+}
+.flotante--cv[aria-expanded='true'] .flotante__cv {
+  opacity: 0;
+  transform: rotate(90deg) scale(0.4);
+}
+
+/* ---------- Panel de hojas de vida ---------- */
+.equipo {
+  position: fixed;
+  right: max(1rem, env(safe-area-inset-right));
+  bottom: calc(max(1rem, env(safe-area-inset-bottom)) + 58px * 2 + 12px * 2);
+  z-index: 61;
+  display: flex;
+  flex-direction: column;
+  width: min(440px, calc(100vw - 2rem));
+  max-height: min(640px, calc(100svh - var(--alto-nav) - 58px * 2 - 4rem));
+  overflow: hidden;
+  border-radius: var(--radio-l);
+  background: var(--color-fondo-hondo);
+  box-shadow:
+    0 0 0 1px var(--color-linea),
+    0 30px 70px -20px rgb(0 0 0 / 0.85);
+}
+.equipo[hidden] {
+  display: none;
+}
+.equipo__fondo {
+  display: none;
+}
+.equipo__cabeza {
+  position: relative;
+  display: grid;
+  grid-template-columns: 1fr auto;
+  align-items: center;
+  gap: var(--space-3);
+  padding: var(--space-4) var(--space-3) var(--space-3) var(--space-5);
+  background: var(--color-fondo-2);
+}
+.equipo__cabeza::after {
+  /* Línea de cobre bajo la cabecera */
+  content: '';
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  height: 2px;
+  background: var(--bwl-metal);
+}
+.equipo__titulo {
+  font-size: var(--fs-lg);
+  font-weight: 600;
+  line-height: 1.25;
+}
+.equipo__sub {
+  margin-top: 2px;
+  font-size: var(--fs-xs);
+  color: var(--color-texto-suave);
+}
+.equipo__cerrar {
+  display: grid;
+  place-items: center;
+  width: 44px;
+  height: 44px;
+  border: 0;
+  border-radius: 50%;
+  background: none;
+  color: var(--color-texto-suave);
+  cursor: pointer;
+  transition:
+    background 0.2s,
+    color 0.2s;
+}
+.equipo__cerrar:hover {
+  background: rgb(244 239 236 / 0.08);
+  color: var(--color-texto);
+}
+.equipo__cerrar svg {
+  width: 18px;
+  height: 18px;
+}
+.equipo__lista {
+  display: grid;
+  gap: var(--space-3);
+  padding: var(--space-4);
+  overflow-y: auto;
+  overscroll-behavior: contain;
+}
+.equipo__nota {
+  padding: 0 var(--space-5) var(--space-4);
+  font-size: var(--fs-xs);
+  color: var(--color-texto-suave);
+  text-align: center;
+}
+
+/* Tarjeta de cada ingeniero: una hoja de vida en miniatura */
+.persona {
+  display: grid;
+  grid-template-columns: auto 1fr;
+  gap: var(--space-4);
+  padding: var(--space-4);
+  border-radius: 14px;
+  background: var(--color-fondo);
+  box-shadow: inset 0 0 0 1px var(--color-linea-suave);
+}
+.persona__hoja {
+  position: relative;
+  display: grid;
+  place-items: center;
+  width: 58px;
+  height: 74px;
+  border-radius: 4px 14px 4px 4px;
+  background: linear-gradient(160deg, #f4efec, #d9d2cc);
+  box-shadow: 0 10px 24px -10px rgb(0 0 0 / 0.8);
+}
+.persona__hoja::before {
+  /* Esquina doblada de la hoja */
+  content: '';
+  position: absolute;
+  top: 0;
+  right: 0;
+  width: 14px;
+  height: 14px;
+  border-radius: 0 0 0 4px;
+  background: linear-gradient(225deg, var(--color-fondo) 50%, #bfb6ae 50%);
+}
+.persona__iniciales {
+  font-family: 'Anton', 'Impact', 'Arial Narrow', sans-serif;
+  font-size: 24px;
+  letter-spacing: 0.02em;
+  background: var(--bwl-metal);
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+}
+.persona__pdf {
+  position: absolute;
+  bottom: 6px;
+  font-size: 9px;
+  font-weight: 600;
+  letter-spacing: 0.08em;
+  color: var(--bwl-cobre-oscuro);
+}
+.persona__datos {
+  min-width: 0;
+}
+.persona__nombre {
+  font-size: var(--fs-md);
+  font-weight: 600;
+  line-height: 1.25;
+}
+.persona__cargo {
+  margin-top: 3px;
+  font-size: var(--fs-xs);
+  font-weight: 500;
+  color: var(--color-acento-claro);
+}
+.persona__resumen {
+  margin-top: var(--space-2);
+  font-size: var(--fs-xs);
+  line-height: 1.55;
+  color: var(--color-texto-suave);
+}
+.persona__chips {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+  margin-top: var(--space-3);
+}
+.persona__chips li {
+  padding: 2px 10px;
+  border: 1px solid var(--color-linea);
+  border-radius: 999px;
+  background: rgb(208 138 98 / 0.06);
+  font-size: 11.5px;
+  font-weight: 500;
+  color: var(--color-acento-claro);
+}
+.persona__acciones {
+  grid-column: 1 / -1;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: var(--space-2);
+}
+.persona__ver,
+.persona__bajar {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: var(--space-2);
+  min-height: 44px;
+  padding: 0.5rem 1rem;
+  border-radius: 999px;
+  font-size: var(--fs-sm);
+  font-weight: 600;
+}
+.persona__ver {
+  border: 1px solid var(--color-linea);
+  color: var(--color-acento-claro);
+  transition: border-color 0.2s;
+}
+.persona__ver:hover {
+  border-color: var(--color-acento);
+}
+.persona__ver svg,
+.persona__bajar svg {
+  width: 17px;
+  height: 17px;
+  flex: none;
+}
+
+/* Pantallas muy angostas: la hoja va sobre los datos y los botones uno debajo del otro */
+@media (max-width: 359px) {
+  .persona {
+    grid-template-columns: 1fr;
+  }
+  .persona__acciones {
+    grid-template-columns: 1fr;
+  }
+}
+
+/* Celular y tablet angosta: hoja inferior a todo el ancho, como el chat */
+@media (max-width: 767px) {
+  html.equipo-abierto {
+    overflow: hidden;
+  }
+  .equipo__fondo {
+    position: fixed;
+    inset: 0;
+    z-index: 60;
+    display: block;
+    background: rgb(10 9 10 / 0.6);
+    backdrop-filter: blur(3px);
+    -webkit-backdrop-filter: blur(3px);
+  }
+  .equipo__fondo[hidden] {
+    display: none;
+  }
+  .equipo {
+    left: 0;
+    right: 0;
+    bottom: 0;
+    z-index: 63;
+    width: 100%;
+    max-height: min(88svh, calc(100svh - 24px));
+    max-height: min(88dvh, calc(100dvh - 24px));
+    border-radius: var(--radio-l) var(--radio-l) 0 0;
+    padding-bottom: env(safe-area-inset-bottom);
+    box-shadow:
+      0 0 0 1px var(--color-linea),
+      0 -20px 60px -20px rgb(0 0 0 / 0.8);
+  }
+  .equipo__cabeza {
+    padding-top: var(--space-5);
+    touch-action: none;
+  }
+  .equipo__cabeza::before {
+    /* Agarradera: se arrastra hacia abajo para cerrar */
+    content: '';
+    position: absolute;
+    top: 8px;
+    left: 50%;
+    width: 40px;
+    height: 4px;
+    translate: -50% 0;
+    border-radius: 999px;
+    background: rgb(244 239 236 / 0.25);
+  }
+  .flotante--cv[aria-expanded='true'] {
+    opacity: 0;
+    pointer-events: none;
+    transform: scale(0.6);
+  }
+}
+
 /* ---------- Panel de cotización (chat) ---------- */
 .cotizar {
   position: fixed;
   right: max(1rem, env(safe-area-inset-right));
-  bottom: calc(max(1rem, env(safe-area-inset-bottom)) + 58px + 12px);
+  /* Encima de los dos botones flotantes (WhatsApp y CV) */
+  bottom: calc(max(1rem, env(safe-area-inset-bottom)) + 58px * 2 + 12px * 2);
   z-index: 61;
   display: flex;
   flex-direction: column;
   width: min(390px, calc(100vw - 2rem));
-  max-height: min(620px, calc(100svh - var(--alto-nav) - 58px - 3rem));
+  max-height: min(620px, calc(100svh - var(--alto-nav) - 58px * 2 - 4rem));
   overflow: hidden;
   border-radius: var(--radio-l);
   background: var(--color-fondo-hondo);
