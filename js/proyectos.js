@@ -1,4 +1,4 @@
-// Proyectos del carrusel. Para agregar uno nuevo, copia un bloque, cambia los datos
+// Proyectos de la vitrina del inicio. Para agregar uno nuevo, copia un bloque, cambia los datos
 // y guarda sus capturas en assets/projects/ (ver README, "Agregar un proyecto").
 //
 // estado:
@@ -13,7 +13,7 @@ window.BWL = window.BWL || {};
 window.BWL.PROYECTOS = [
   {
     id: 'portalsalud',
-    nombre: 'Portal de la Salud',
+    nombre: 'Portal Salud',
     cliente: 'Centro Naturista El Portal de la Salud',
     tipo: 'Tienda en línea con pagos',
     descripcion:
@@ -107,7 +107,7 @@ window.BWL.PROYECTOS = [
     },
     alt: 'Inicio del sitio de Karla Silva con el titular «Un espacio para hablar, pensar y encontrar claridad» y su foto',
     vitrina: {
-      nombre: 'KARLA SILVA',
+      nombre: 'LANDING PSICOLOGÍA',
       color: 'linear-gradient(180deg, #F48A6A 0%, #C93A2C 100%)',
       solido: '#E0604A',
     },
