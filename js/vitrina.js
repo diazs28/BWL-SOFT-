@@ -198,6 +198,78 @@
       history.replaceState(null, '', `#proyecto-${p.id}`);
     }
 
+    // ---------- Celular: proyectos uno al lado del otro, se pasan deslizando ----------
+    const esMovil = window.matchMedia('(max-width: 767px)');
+    let pista = null;
+    let telefonos = [];
+
+    function construirPista() {
+      if (pista) return;
+      pista = crear('div', 'ficha__pista');
+      pista.setAttribute('aria-label', 'Vistas previas de los proyectos');
+      telefonos = items.map(({ p }) => {
+        const figura = crear('figure', 'marco ficha__tel');
+        const img = document.createElement('img');
+        img.src = p.imagenes.movil;
+        img.alt = p.alt;
+        img.width = 585;
+        img.height = 1266;
+        img.decoding = 'async';
+        img.draggable = false;
+        figura.append(img);
+        // Tocar un teléfono que asoma por el lado lo trae al centro
+        figura.addEventListener('click', () => cambiar(telefonos.indexOf(figura)));
+        pista.append(figura);
+        figura.img = img;
+        return figura;
+      });
+      marco.before(pista);
+
+      // El teléfono que queda centrado define el proyecto de la ficha
+      const observador = new IntersectionObserver(
+        (entradas) => {
+          entradas.forEach((e) => {
+            e.target.classList.toggle('is-centro', e.isIntersecting);
+            if (e.isIntersecting && abierta && !ocupado) sincronizar(telefonos.indexOf(e.target));
+          });
+        },
+        { root: pista, threshold: 0.6 },
+      );
+      telefonos.forEach((t) => observador.observe(t));
+    }
+
+    function centrarTelefono(i, suave) {
+      const tel = telefonos[i];
+      if (!tel) return;
+      pista.scrollTo({
+        left: tel.offsetLeft - (pista.clientWidth - tel.offsetWidth) / 2,
+        behavior: suave && !reduceMotion.matches ? 'smooth' : 'auto',
+      });
+    }
+
+    // Actualiza nombre, miniatura y ficha cuando el usuario desliza (sin mover la pista)
+    function sincronizar(i) {
+      if (i < 0 || i === actual) return;
+      actual = i;
+      const item = items[actual];
+      marcarActiva(item.boton);
+      mostrar(item.p.vitrina);
+      rellenar(item.p);
+      piezas.forEach((pieza) => pieza.getAnimations().forEach((a) => a.cancel()));
+      animarPiezas(true);
+      anuncio.textContent = `${item.p.nombre}, proyecto ${actual + 1} de ${items.length}`;
+    }
+
+    const usaPista = () => esMovil.matches && pista !== null;
+    const imagenActiva = () => (usaPista() ? telefonos[actual].img : foto);
+
+    esMovil.addEventListener('change', () => {
+      if (abierta && esMovil.matches) {
+        construirPista();
+        requestAnimationFrame(() => centrarTelefono(actual, false));
+      }
+    });
+
     function animarPiezas(entra, retraso = 0) {
       const quieto = reduceMotion.matches ? 'none' : null;
       let ultima = null;
@@ -238,23 +310,28 @@
       actual = (indice + items.length) % items.length;
       const item = items[actual];
 
+      if (esMovil.matches) construirPista();
+
       // La miniatura y la vista previa comparten nombre: el navegador anima de una a la otra
       item.img.style.viewTransitionName = 'vitrina-foto';
+      let destino = foto;
       const actualizar = async () => {
         item.img.style.viewTransitionName = '';
-        foto.style.viewTransitionName = 'vitrina-foto';
         abierta = true;
         preview = null;
         raiz.classList.add('is-abierta');
         ficha.hidden = false;
+        if (usaPista()) centrarTelefono(actual, false);
+        destino = imagenActiva();
+        destino.style.viewTransitionName = 'vitrina-foto';
         rellenar(item.p);
         marcarActiva(item.boton);
         mostrar(item.p.vitrina, { inmediato: true });
         if (animar) animarPiezas(true, 180);
-        await cargada(foto);
+        await cargada(destino);
       };
       await (animar ? conTransicion(actualizar) : actualizar());
-      foto.style.viewTransitionName = '';
+      destino.style.viewTransitionName = '';
       anuncio.textContent = `${item.p.nombre}, proyecto ${actual + 1} de ${items.length}`;
       if (enfocar) $('[data-ficha-titulo]').focus({ preventScroll: true });
       if (ficha.getBoundingClientRect().top > window.innerHeight * 0.7) {
@@ -270,6 +347,10 @@
         return;
       }
       if (destino === actual) return;
+      if (usaPista()) {
+        centrarTelefono(destino, true);
+        return;
+      }
       ocupado = true;
       actual = destino;
       const item = items[actual];
@@ -313,9 +394,10 @@
       ocupado = true;
       pendiente = null;
       const item = items[actual];
-      foto.style.viewTransitionName = 'vitrina-foto';
+      const origen = imagenActiva();
+      origen.style.viewTransitionName = 'vitrina-foto';
       await conTransicion(() => {
-        foto.style.viewTransitionName = '';
+        origen.style.viewTransitionName = '';
         item.img.style.viewTransitionName = 'vitrina-foto';
         abierta = false;
         raiz.classList.remove('is-abierta');
