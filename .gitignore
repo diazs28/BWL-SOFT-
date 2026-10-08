@@ -20,3 +20,14 @@ coverage/
 .DS_Store
 Thumbs.db
 *.log
+
+# Entornos locales y configuración personal
+.venv/
+venv/
+__pycache__/
+.vscode/
+.idea/
+.vercel/
+.claude/settings.local.json
+.claude/*.local.*
+npm-debug.log*
