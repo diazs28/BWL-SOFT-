@@ -177,8 +177,38 @@
     });
     $('[data-cotizar-reiniciar]').addEventListener('click', reiniciar);
 
-    // ---------- Abrir y cerrar: el panel crece en círculo desde el botón ----------
+    // ---------- Abrir y cerrar ----------
+    // Escritorio: el panel crece en círculo desde el botón.
+    // Celular: hoja inferior que sube desde abajo, con fondo oscurecido y la página quieta.
+    const esMovil = window.matchMedia('(max-width: 767px)');
     const forma = (r) => `circle(${r} at calc(100% - 29px) calc(100% + 41px))`;
+    const fondo = crear('div', 'cotizar__fondo');
+    fondo.hidden = true;
+    panel.before(fondo);
+
+    function fotogramas(entra) {
+      let cuadros;
+      if (reduceMotion.matches) cuadros = [{ opacity: 0 }, { opacity: 1 }];
+      else if (esMovil.matches)
+        cuadros = [{ transform: 'translateY(100%)' }, { transform: 'none' }];
+      else cuadros = [{ clipPath: forma('0px') }, { clipPath: forma('150%') }];
+      return entra ? cuadros : [...cuadros].reverse();
+    }
+
+    function animarFondo(entra) {
+      fondo.hidden = false;
+      fondo
+        .animate([{ opacity: entra ? 0 : 1 }, { opacity: entra ? 1 : 0 }], {
+          duration: entra ? 300 : 260,
+          fill: 'forwards',
+        })
+        .finished.then(
+          () => {
+            if (!entra && !abierto) fondo.hidden = true;
+          },
+          () => {},
+        );
+    }
 
     function abrir() {
       if (abierto) return;
@@ -186,14 +216,17 @@
       boton.classList.remove('is-llamando');
       boton.setAttribute('aria-expanded', 'true');
       boton.setAttribute('aria-label', 'Cerrar cotización');
+      document.documentElement.classList.add('cotizar-abierto');
       panel.hidden = false;
+      panel.style.transform = '';
+      animarFondo(true);
       if (animando) animando.cancel();
-      animando = panel.animate(
-        reduceMotion.matches
-          ? [{ opacity: 0 }, { opacity: 1 }]
-          : [{ clipPath: forma('0px') }, { clipPath: forma('150%') }],
-        { duration: reduceMotion.matches ? 150 : 560, easing: 'cubic-bezier(0.65, 0, 0.35, 1)' },
-      );
+      animando = panel.animate(fotogramas(true), {
+        duration: reduceMotion.matches ? 150 : esMovil.matches ? 460 : 560,
+        easing: esMovil.matches
+          ? 'cubic-bezier(0.22, 1, 0.36, 1)'
+          : 'cubic-bezier(0.65, 0, 0.35, 1)',
+      });
       mostrarPaso(paso);
     }
 
@@ -202,21 +235,61 @@
       abierto = false;
       boton.setAttribute('aria-expanded', 'false');
       boton.setAttribute('aria-label', 'Cotizar por WhatsApp');
+      document.documentElement.classList.remove('cotizar-abierto');
+      animarFondo(false);
       if (animando) animando.cancel();
-      animando = panel.animate(
-        reduceMotion.matches
-          ? [{ opacity: 1 }, { opacity: 0 }]
-          : [{ clipPath: forma('150%') }, { clipPath: forma('0px') }],
-        { duration: reduceMotion.matches ? 120 : 420, easing: 'cubic-bezier(0.65, 0, 0.35, 1)' },
-      );
+      const desde = panel.style.transform; // si se estaba arrastrando, sale desde ahí
+      const cuadros = fotogramas(false);
+      if (desde && esMovil.matches && !reduceMotion.matches) cuadros[0] = { transform: desde };
+      animando = panel.animate(cuadros, {
+        duration: reduceMotion.matches ? 120 : esMovil.matches ? 320 : 420,
+        easing: 'cubic-bezier(0.65, 0, 0.35, 1)',
+      });
       animando.finished.then(
         () => {
-          if (!abierto) panel.hidden = true;
+          if (!abierto) {
+            panel.hidden = true;
+            panel.style.transform = '';
+          }
         },
         () => {},
       );
       if (devolverFoco) boton.focus({ preventScroll: true });
     }
+
+    // Celular: arrastrar la cabecera hacia abajo cierra la hoja
+    const cabeza = $('.cotizar__cabeza');
+    let arrastre = null;
+    cabeza.addEventListener('pointerdown', (e) => {
+      if (!esMovil.matches || e.pointerType === 'mouse' || e.target.closest('button')) return;
+      arrastre = { y: e.clientY, dy: 0 };
+      try {
+        cabeza.setPointerCapture(e.pointerId);
+      } catch {
+        // Sin captura el arrastre igual funciona mientras el dedo siga sobre la cabecera
+      }
+    });
+    cabeza.addEventListener('pointermove', (e) => {
+      if (!arrastre) return;
+      arrastre.dy = Math.max(0, e.clientY - arrastre.y);
+      panel.style.transform = `translateY(${arrastre.dy}px)`;
+    });
+    const soltar = () => {
+      if (!arrastre) return;
+      const { dy } = arrastre;
+      arrastre = null;
+      if (dy > 90) {
+        cerrar();
+      } else {
+        panel.animate([{ transform: panel.style.transform }, { transform: 'none' }], {
+          duration: 220,
+          easing: 'cubic-bezier(0.22, 1, 0.36, 1)',
+        });
+        panel.style.transform = '';
+      }
+    };
+    cabeza.addEventListener('pointerup', soltar);
+    cabeza.addEventListener('pointercancel', soltar);
 
     boton.addEventListener('click', (e) => {
       e.preventDefault();

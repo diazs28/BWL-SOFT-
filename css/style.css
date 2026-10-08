@@ -1566,12 +1566,71 @@ html:not(.js) .paso::after {
   text-underline-offset: 3px;
 }
 
-@media (max-width: 599px) {
+/* Fondo oscurecido detrás de la hoja (solo celular) */
+.cotizar__fondo {
+  display: none;
+}
+
+/* Celular y tablet angosta: hoja inferior a todo el ancho */
+@media (max-width: 767px) {
+  html.cotizar-abierto {
+    overflow: hidden;
+  }
+  .cotizar__fondo {
+    position: fixed;
+    inset: 0;
+    z-index: 60;
+    display: block;
+    background: rgb(10 9 10 / 0.6);
+    backdrop-filter: blur(3px);
+    -webkit-backdrop-filter: blur(3px);
+  }
+  .cotizar__fondo[hidden] {
+    display: none;
+  }
   .cotizar {
-    left: max(0.75rem, env(safe-area-inset-left));
-    right: max(0.75rem, env(safe-area-inset-right));
-    width: auto;
-    max-height: calc(100svh - var(--alto-nav) - 58px - 2.5rem);
+    left: 0;
+    right: 0;
+    bottom: 0;
+    z-index: 63;
+    width: 100%;
+    max-height: min(88svh, calc(100svh - 24px));
+    max-height: min(88dvh, calc(100dvh - 24px));
+    border-radius: var(--radio-l) var(--radio-l) 0 0;
+    padding-bottom: env(safe-area-inset-bottom);
+    box-shadow:
+      0 0 0 1px var(--color-linea),
+      0 -20px 60px -20px rgb(0 0 0 / 0.8);
+  }
+  .cotizar__cabeza {
+    padding-top: var(--space-5);
+    touch-action: none;
+  }
+  .cotizar__cabeza::before {
+    /* Agarradera: se arrastra hacia abajo para cerrar */
+    content: '';
+    position: absolute;
+    top: 8px;
+    left: 50%;
+    width: 40px;
+    height: 4px;
+    translate: -50% 0;
+    border-radius: 999px;
+    background: rgb(244 239 236 / 0.25);
+  }
+  .cotizar__chat {
+    min-height: 140px;
+  }
+  /* Con la hoja abierta el botón flotante se aparta: se cierra con la X o deslizando */
+  .flotante[aria-expanded='true'] {
+    opacity: 0;
+    pointer-events: none;
+    transform: scale(0.6);
+  }
+  .flotante {
+    transition:
+      transform 0.25s var(--ease),
+      opacity 0.2s;
   }
 }
 

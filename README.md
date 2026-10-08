@@ -20,7 +20,9 @@ WhatsApp, presente en toda la página.
 - **Cotización**: el botón flotante de WhatsApp se estira una vez por visita ("¿Cotizamos tu
   proyecto?") y al tocarlo crece en círculo hasta un chat. Pregunta de a una cosa (nombre, tipo de
   proyecto con opciones para tocar, idea) con burbujas y "escribiendo…", y al final abre WhatsApp
-  con el mensaje listo. "Cotiza tu software", "Contacto" y `#contacto` abren el mismo chat.
+  con el mensaje listo. "Cotiza tu software", "Contacto" y `#contacto` abren el mismo chat. En el
+  celular (menos de 768 px) es una hoja inferior a todo el ancho: oscurece el fondo, bloquea el
+  desplazamiento de la página y se cierra con la X, tocando fuera o deslizando hacia abajo.
 - **Servicios**: una palabra gigante fija (WEB, TIENDAS, SISTEMAS, APPS) cambia con las letras
   que se hunden y emergen según el servicio que se está leyendo, y ese servicio se ilumina. Los
   pasos de "Cómo trabajamos" se encienden uno por uno con una línea de cobre al aparecer.
