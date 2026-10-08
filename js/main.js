@@ -4,8 +4,15 @@
 (function () {
   'use strict';
 
-  const { MARCA, enlaceWhatsapp, PROYECTOS, iniciarVitrina, iniciarServicios, iniciarCotizar } =
-    window.BWL;
+  const {
+    MARCA,
+    enlaceWhatsapp,
+    PROYECTOS,
+    iniciarVitrina,
+    iniciarServicios,
+    iniciarCotizar,
+    iniciarEquipo,
+  } = window.BWL;
 
   // ---------- Datos de marca ----------
   document.querySelectorAll('[data-whatsapp]').forEach((a) => {
@@ -91,5 +98,10 @@
   iniciarCotizar(document.querySelector('[data-cotizar]'), {
     boton: document.querySelector('[data-cotizar-boton]'),
     enlaceWhatsapp,
+  });
+
+  // ---------- Hojas de vida del equipo (botón CV) ----------
+  iniciarEquipo(document.querySelector('[data-equipo]'), {
+    boton: document.querySelector('[data-equipo-boton]'),
   });
 })();
