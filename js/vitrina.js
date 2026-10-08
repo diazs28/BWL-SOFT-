@@ -119,7 +119,7 @@
     if (items.length === 0) return;
 
     // ---------- Carrusel de miniaturas ----------
-    // La fila se desliza (dedo, rueda, arrastre con el mouse o flechas). La miniatura del centro
+    // La fila se desliza (dedo, rueda o arrastre con el mouse). La miniatura del centro
     // cambia el nombre gigante; un toque la centra y doble toque (o doble clic) abre su ficha.
     let interactuo = false; // hasta que el usuario toca la fila, el nombre sigue en "BWL & SOFT"
     let centrado = Math.floor(items.length / 2);
@@ -222,19 +222,6 @@
         centrarEnFila(items[indiceCentrado()].boton);
       }
     });
-
-    // Flechas a los lados de la fila (en PC)
-    function moverCarrusel(paso) {
-      interactuo = true;
-      const destino = Math.min(items.length - 1, Math.max(0, centrado + paso));
-      if (abierta) cambiar(destino);
-      else {
-        preview = null;
-        previsualizar(items[destino]);
-      }
-    }
-    raiz.querySelector('[data-carrusel-ant]').addEventListener('click', () => moverCarrusel(-1));
-    raiz.querySelector('[data-carrusel-sig]').addEventListener('click', () => moverCarrusel(1));
 
     // Indicación de uso según el dispositivo
     $('[data-vitrina-guia]').textContent = punteroFino.matches
