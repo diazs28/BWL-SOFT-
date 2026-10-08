@@ -118,36 +118,128 @@
       });
     if (items.length === 0) return;
 
-    function centrarEnFila(boton) {
-      // En el celular la fila se desplaza para que la miniatura activa se vea completa
-      if (fila.scrollWidth <= fila.clientWidth) return;
+    // ---------- Carrusel de miniaturas ----------
+    // La fila se desliza (dedo, rueda, arrastre con el mouse o flechas). La miniatura del centro
+    // cambia el nombre gigante; un toque la centra y doble toque (o doble clic) abre su ficha.
+    let interactuo = false; // hasta que el usuario toca la fila, el nombre sigue en "BWL & SOFT"
+    let centrado = Math.floor(items.length / 2);
+
+    function centrarEnFila(boton, suave = true) {
       const centro = boton.offsetLeft + boton.offsetWidth / 2 - fila.clientWidth / 2;
-      fila.scrollTo({ left: centro, behavior: reduceMotion.matches ? 'auto' : 'smooth' });
+      fila.scrollTo({
+        left: centro,
+        behavior: suave && !reduceMotion.matches ? 'smooth' : 'auto',
+      });
     }
 
-    function marcarActiva(boton) {
+    // Índice de la miniatura más cerca del centro visible de la fila
+    function indiceCentrado() {
+      const medio = fila.scrollLeft + fila.clientWidth / 2;
+      let mejor = 0;
+      let distancia = Infinity;
+      items.forEach(({ boton }, i) => {
+        const d = Math.abs(boton.parentElement.offsetLeft + boton.offsetWidth / 2 - medio);
+        if (d < distancia) {
+          distancia = d;
+          mejor = i;
+        }
+      });
+      return mejor;
+    }
+
+    function marcarActiva(boton, { centrar = true } = {}) {
       items.forEach(({ boton: b }) => b.classList.toggle('is-activa', b === boton));
       if (boton) {
         raiz.style.setProperty('--cursor-color', boton.style.getPropertyValue('--solido'));
-        centrarEnFila(boton);
+        if (centrar) centrarEnFila(boton);
       }
     }
 
-    function previsualizar(item) {
+    function previsualizar(item, { centrar = true } = {}) {
       if (abierta || preview === item.boton) return;
       preview = item.boton;
-      marcarActiva(item.boton);
+      marcarActiva(item.boton, { centrar });
       mostrar(item.p.vitrina);
       anuncio.textContent = `${item.p.nombre}, ${item.p.tipo}`;
     }
 
+    // Al salir de la fila vuelve a la del centro (o a "BWL & SOFT" si aún no se ha usado)
     function restaurar() {
-      if (abierta || !preview) return;
+      if (abierta) return;
+      if (interactuo) {
+        previsualizar(items[centrado], { centrar: false });
+        return;
+      }
+      if (!preview) return;
       preview = null;
       marcarActiva(null);
       mostrar(PORDEFECTO);
       anuncio.textContent = '';
     }
+
+    let cuadroScroll = null;
+    fila.addEventListener(
+      'scroll',
+      () => {
+        if (cuadroScroll) return;
+        cuadroScroll = requestAnimationFrame(() => {
+          cuadroScroll = null;
+          const i = indiceCentrado();
+          if (i === centrado) return;
+          centrado = i;
+          if (interactuo && !abierta) previsualizar(items[i], { centrar: false });
+        });
+      },
+      { passive: true },
+    );
+    ['wheel', 'touchstart', 'keydown'].forEach((tipo) =>
+      fila.addEventListener(tipo, () => (interactuo = true), { passive: true }),
+    );
+
+    // Arrastrar con el mouse (en el celular el desplazamiento es nativo)
+    let arrastre = null;
+    let arrastro = false;
+    fila.addEventListener('pointerdown', (e) => {
+      if (e.pointerType !== 'mouse' || e.button !== 0) return;
+      arrastre = { x: e.clientX, inicio: fila.scrollLeft };
+      arrastro = false;
+    });
+    window.addEventListener('pointermove', (e) => {
+      if (!arrastre) return;
+      const dx = e.clientX - arrastre.x;
+      if (!arrastro && Math.abs(dx) > 6) {
+        arrastro = true;
+        interactuo = true;
+        fila.classList.add('is-arrastrando');
+      }
+      if (arrastro) fila.scrollLeft = arrastre.inicio - dx;
+    });
+    window.addEventListener('pointerup', () => {
+      if (!arrastre) return;
+      arrastre = null;
+      if (arrastro) {
+        fila.classList.remove('is-arrastrando');
+        centrarEnFila(items[indiceCentrado()].boton);
+      }
+    });
+
+    // Flechas a los lados de la fila (en PC)
+    function moverCarrusel(paso) {
+      interactuo = true;
+      const destino = Math.min(items.length - 1, Math.max(0, centrado + paso));
+      if (abierta) cambiar(destino);
+      else {
+        preview = null;
+        previsualizar(items[destino]);
+      }
+    }
+    raiz.querySelector('[data-carrusel-ant]').addEventListener('click', () => moverCarrusel(-1));
+    raiz.querySelector('[data-carrusel-sig]').addEventListener('click', () => moverCarrusel(1));
+
+    // Indicación de uso según el dispositivo
+    $('[data-vitrina-guia]').textContent = punteroFino.matches
+      ? 'Arrastra nuestros proyectos y haz doble clic en uno para verlo'
+      : 'Desliza nuestros proyectos y toca dos veces uno para verlo';
 
     // ---------- Ficha del proyecto ----------
     function rellenar(p) {
@@ -427,22 +519,45 @@
     // ---------- Eventos de las miniaturas ----------
     // Tipo del último puntero que presionó una miniatura ('' = teclado)
     let tipoPuntero = '';
+    let ultimoToque = { i: -1, t: 0 };
     fila.addEventListener('pointerdown', (e) => {
       tipoPuntero = e.pointerType;
     });
 
     items.forEach((item) => {
       item.boton.addEventListener('pointerenter', (e) => {
-        if (e.pointerType === 'mouse') previsualizar(item);
+        if (e.pointerType === 'mouse' && !arrastre) previsualizar(item, { centrar: false });
       });
       // Solo el foco con teclado previsualiza; el del clic o el toque abre directamente
       item.boton.addEventListener('focus', () => {
         if (!tipoPuntero && !focoSilencioso) previsualizar(item);
       });
-      item.boton.addEventListener('click', () => {
+      item.boton.addEventListener('click', (e) => {
         tipoPuntero = '';
-        if (abierta && item.i === actual) cerrar();
-        else abrir(item.i);
+        if (arrastro) {
+          arrastro = false;
+          return;
+        }
+        if (abierta) {
+          if (item.i === actual) cerrar();
+          else abrir(item.i);
+          return;
+        }
+        // Teclado (Enter o espacio): abre directo
+        if (e.detail === 0) {
+          abrir(item.i);
+          return;
+        }
+        const ahora = performance.now();
+        if (ultimoToque.i === item.i && ahora - ultimoToque.t < 450) {
+          ultimoToque = { i: -1, t: 0 };
+          abrir(item.i);
+          return;
+        }
+        ultimoToque = { i: item.i, t: ahora };
+        interactuo = true;
+        preview = null;
+        previsualizar(item);
       });
     });
 
@@ -489,7 +604,7 @@
       if (!enlace) return;
       e.preventDefault();
       raiz.scrollIntoView({ behavior: reduceMotion.matches ? 'auto' : 'smooth' });
-      if (!abierta) abrir(actual);
+      if (!abierta) abrir(interactuo ? centrado : actual);
     });
 
     // ---------- Círculo que sigue al cursor (solo mouse) ----------
@@ -575,6 +690,7 @@
       }
 
       mostrar(PORDEFECTO);
+      centrarEnFila(items[centrado].boton, false);
       // Las miniaturas aparecen cuando el nombre ya casi terminó de subir
       const base = reduceMotion.matches ? 0 : DURACION + marca.length * ESCALONADO - 200;
       items.forEach(({ boton }, i) => {

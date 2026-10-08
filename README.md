@@ -31,6 +31,9 @@ WhatsApp, presente en toda la página.
   miniatura, las letras se hunden y emerge el nombre del proyecto con su color; un círculo con
   flecha sigue al cursor. La entrada de las letras arranca justo cuando se desvanece la pantalla
   de inicio.
+- **Carrusel de miniaturas**: en PC y celular la fila se desliza (dedo, rueda, arrastre con el
+  mouse o flechas) con tope en cada proyecto. La miniatura del centro cambia el nombre gigante; un
+  toque la centra y doble toque o doble clic abre su ficha (con teclado, Enter la abre).
 - **Ficha del proyecto**: al hacer clic o tocar una miniatura, la imagen vuela y crece hasta la
   vista previa grande (View Transitions API) y al lado aparece su ficha: tipo, nombre, cliente,
   descripción, tecnologías y el enlace para verlo en vivo o pedir una demo. Entre proyectos se pasa con las flechas, el teclado
