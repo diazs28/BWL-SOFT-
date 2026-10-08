@@ -510,8 +510,16 @@ html.js .vitrina:not(.is-lista) .vitrina__nombre {
   .paso__num,
   .paso::after,
   .paso h4,
-  .paso p {
+  .paso p,
+  .flotante,
+  .flotante__texto,
+  .flotante__iconos svg,
+  .cotizar__progreso {
     transition: none;
+  }
+  .flotante.is-llamando::after,
+  .burbuja--escribiendo span {
+    animation: none;
   }
 }
 
@@ -1128,112 +1136,6 @@ html:not(.js) .paso::after {
   }
 }
 
-/* ---------- Contacto ---------- */
-.contacto {
-  border-top: 1px solid var(--color-linea-suave);
-}
-.contacto__in {
-  display: grid;
-  gap: var(--space-7);
-}
-@media (min-width: 900px) {
-  .contacto__in {
-    grid-template-columns: 1fr 1.1fr;
-    align-items: start;
-  }
-}
-.contacto__datos {
-  display: grid;
-  gap: var(--space-4);
-  margin-top: var(--space-6);
-}
-.contacto__datos dt {
-  font-size: var(--fs-sm);
-  color: var(--color-texto-suave);
-}
-.contacto__datos dd {
-  font-size: var(--fs-lg);
-  font-weight: 500;
-}
-.contacto__datos a {
-  color: var(--color-acento-claro);
-  text-decoration: underline;
-  text-decoration-color: var(--color-linea);
-  text-underline-offset: 5px;
-}
-.contacto__datos a:hover {
-  text-decoration-color: currentColor;
-}
-
-.formulario {
-  display: grid;
-  gap: var(--space-5);
-  padding: clamp(1.25rem, 4vw, 2.5rem);
-  border-radius: var(--radio-l);
-  background: var(--color-fondo-2);
-  box-shadow: inset 0 0 0 1px var(--color-linea-suave);
-}
-.campo {
-  display: grid;
-  gap: var(--space-2);
-}
-.campo label {
-  font-size: var(--fs-sm);
-  font-weight: 500;
-}
-.campo input,
-.campo select,
-.campo textarea {
-  width: 100%;
-  min-height: 48px;
-  padding: 0.7rem 0.9rem;
-  border: 1px solid #4a4a50;
-  border-radius: var(--radio-s);
-  background: var(--color-fondo);
-  color: var(--color-texto);
-  font-size: 1rem;
-  transition: border-color 0.2s;
-}
-.campo textarea {
-  resize: vertical;
-  min-height: 120px;
-}
-.campo select {
-  appearance: none;
-  background-image:
-    linear-gradient(45deg, transparent 50%, var(--color-acento) 50%),
-    linear-gradient(135deg, var(--color-acento) 50%, transparent 50%);
-  background-position:
-    calc(100% - 20px) 50%,
-    calc(100% - 15px) 50%;
-  background-size: 5px 5px;
-  background-repeat: no-repeat;
-  padding-right: 2.5rem;
-}
-.campo input::placeholder,
-.campo textarea::placeholder {
-  color: #8f8884;
-}
-.campo input:focus-visible,
-.campo select:focus-visible,
-.campo textarea:focus-visible {
-  outline: none;
-  border-color: var(--color-acento-claro);
-  box-shadow: 0 0 0 3px rgb(242 196 164 / 0.2);
-}
-.campo [aria-invalid='true'] {
-  border-color: #ff9b8a;
-}
-.campo__error {
-  font-size: var(--fs-sm);
-  color: #ffb4a6;
-}
-.formulario__nota {
-  font-size: var(--fs-xs);
-  color: var(--color-texto-suave);
-  text-align: center;
-}
-
 /* ---------- Pie ---------- */
 .pie {
   padding-block: var(--space-8) var(--space-6);
@@ -1292,31 +1194,385 @@ html:not(.js) .paso::after {
   }
 }
 
-/* ---------- Botón flotante de WhatsApp ---------- */
+/* ---------- Botón flotante de WhatsApp ----------
+   Abre el panel de cotización. Una vez por visita se estira con un texto para llamar la
+   atención; abierto, el ícono de WhatsApp gira y se vuelve una X. */
 .flotante {
   position: fixed;
   right: max(1rem, env(safe-area-inset-right));
   bottom: max(1rem, env(safe-area-inset-bottom));
-  z-index: 60;
-  display: grid;
-  place-items: center;
-  width: 58px;
+  z-index: 62;
+  display: flex;
+  align-items: center;
   height: 58px;
-  border-radius: 50%;
+  padding: 0;
+  border: 0;
+  border-radius: 999px;
   background: var(--color-boton);
   color: var(--color-texto-oscuro);
+  font: inherit;
+  cursor: pointer;
   box-shadow:
     inset 0 1px 0 rgb(255 255 255 / 0.5),
     0 10px 28px -8px rgb(0 0 0 / 0.7),
     0 0 0 1px rgb(122 65 40 / 0.4);
-  transition: transform 0.2s var(--ease);
+  transition: transform 0.25s var(--ease);
 }
 .flotante:hover {
-  transform: scale(1.06);
+  transform: translateY(-2px);
 }
-.flotante svg {
+.flotante__texto {
+  max-width: 0;
+  overflow: hidden;
+  padding-left: 0;
+  font-size: var(--fs-sm);
+  font-weight: 600;
+  white-space: nowrap;
+  opacity: 0;
+  transition:
+    max-width 0.55s cubic-bezier(0.22, 1, 0.36, 1),
+    padding 0.55s cubic-bezier(0.22, 1, 0.36, 1),
+    opacity 0.3s;
+}
+.flotante.is-llamando .flotante__texto,
+.flotante[aria-expanded='false']:hover .flotante__texto,
+.flotante[aria-expanded='false']:focus-visible .flotante__texto {
+  max-width: 240px;
+  padding-left: 22px;
+  opacity: 1;
+}
+.flotante__iconos {
+  display: grid;
+  place-items: center;
+  width: 58px;
+  height: 58px;
+  flex: none;
+}
+.flotante__iconos svg {
+  grid-area: 1 / 1;
   width: 28px;
   height: 28px;
+  transition:
+    transform 0.4s cubic-bezier(0.34, 1.56, 0.64, 1),
+    opacity 0.25s;
+}
+.flotante__x {
+  opacity: 0;
+  transform: rotate(-90deg) scale(0.4);
+}
+.flotante[aria-expanded='true'] .flotante__wa {
+  opacity: 0;
+  transform: rotate(90deg) scale(0.4);
+}
+.flotante[aria-expanded='true'] .flotante__x {
+  opacity: 1;
+  transform: none;
+}
+.flotante.is-llamando::after {
+  /* Onda que sale del botón mientras se estira */
+  content: '';
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+  box-shadow: 0 0 0 0 rgb(242 196 164 / 0.55);
+  animation: llamado 1.6s ease-out 2;
+  pointer-events: none;
+}
+@keyframes llamado {
+  to {
+    box-shadow: 0 0 0 16px rgb(242 196 164 / 0);
+  }
+}
+
+/* ---------- Panel de cotización (chat) ---------- */
+.cotizar {
+  position: fixed;
+  right: max(1rem, env(safe-area-inset-right));
+  bottom: calc(max(1rem, env(safe-area-inset-bottom)) + 58px + 12px);
+  z-index: 61;
+  display: flex;
+  flex-direction: column;
+  width: min(390px, calc(100vw - 2rem));
+  max-height: min(620px, calc(100svh - var(--alto-nav) - 58px - 3rem));
+  overflow: hidden;
+  border-radius: var(--radio-l);
+  background: var(--color-fondo-hondo);
+  box-shadow:
+    0 0 0 1px var(--color-linea),
+    0 30px 70px -20px rgb(0 0 0 / 0.85);
+}
+.cotizar[hidden] {
+  display: none;
+}
+
+.cotizar__cabeza {
+  position: relative;
+  display: grid;
+  grid-template-columns: auto 1fr auto;
+  align-items: center;
+  gap: var(--space-3);
+  padding: var(--space-3) var(--space-3) var(--space-3) var(--space-4);
+  background: var(--color-fondo-2);
+}
+.cotizar__avatar {
+  display: grid;
+  place-items: center;
+  width: 42px;
+  height: 42px;
+  border-radius: 50%;
+  background: var(--color-fondo);
+  box-shadow: inset 0 0 0 1px var(--color-linea);
+}
+.cotizar__avatar img {
+  width: 24px;
+  height: 24px;
+}
+.cotizar__titulo {
+  font-weight: 600;
+  line-height: 1.2;
+}
+.cotizar__sub {
+  font-size: var(--fs-xs);
+  color: var(--color-texto-suave);
+}
+.cotizar__cerrar {
+  display: grid;
+  place-items: center;
+  width: 44px;
+  height: 44px;
+  border: 0;
+  border-radius: 50%;
+  background: none;
+  color: var(--color-texto-suave);
+  cursor: pointer;
+  transition:
+    background 0.2s,
+    color 0.2s;
+}
+.cotizar__cerrar:hover {
+  background: rgb(244 239 236 / 0.08);
+  color: var(--color-texto);
+}
+.cotizar__cerrar svg {
+  width: 18px;
+  height: 18px;
+}
+.cotizar__progreso {
+  /* Avance de los tres pasos, bajo la cabecera */
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  height: 2px;
+  background: var(--bwl-metal);
+  transform: scaleX(var(--avance, 0));
+  transform-origin: left;
+  transition: transform 0.6s cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+.cotizar__chat {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-2);
+  min-height: 170px;
+  overflow-y: auto;
+  padding: var(--space-4);
+  /* Fondo de puntos de cobre, como el papel tapiz de un chat */
+  background-image: radial-gradient(rgb(208 138 98 / 0.09) 1px, transparent 1.2px);
+  background-size: 18px 18px;
+  overscroll-behavior: contain;
+}
+.burbuja {
+  max-width: 86%;
+  padding: 0.6rem 0.9rem;
+  border-radius: 16px;
+  font-size: var(--fs-sm);
+  line-height: 1.45;
+  white-space: pre-wrap;
+  overflow-wrap: anywhere;
+}
+.burbuja--equipo {
+  align-self: flex-start;
+  border-bottom-left-radius: 4px;
+  background: var(--color-fondo-2);
+}
+.burbuja--cliente {
+  align-self: flex-end;
+  border-bottom-right-radius: 4px;
+  background: var(--color-boton);
+  color: var(--color-texto-oscuro);
+  font-weight: 500;
+}
+.burbuja--escribiendo {
+  display: inline-flex;
+  gap: 4px;
+  padding-block: 0.85rem;
+}
+.burbuja--escribiendo span {
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: var(--color-texto-suave);
+  animation: escribiendo 1s ease-in-out infinite;
+}
+.burbuja--escribiendo span:nth-child(2) {
+  animation-delay: 0.15s;
+}
+.burbuja--escribiendo span:nth-child(3) {
+  animation-delay: 0.3s;
+}
+@keyframes escribiendo {
+  0%,
+  60%,
+  100% {
+    transform: none;
+    opacity: 0.5;
+  }
+  30% {
+    transform: translateY(-4px);
+    opacity: 1;
+  }
+}
+
+.cotizar__form {
+  padding: var(--space-3) var(--space-3) 0;
+  border-top: 1px solid var(--color-linea-suave);
+}
+.cotizar__escribir {
+  display: flex;
+  align-items: flex-end;
+  gap: var(--space-2);
+}
+.cotizar__escribir input,
+.cotizar__escribir textarea {
+  flex: 1;
+  min-width: 0;
+  min-height: 48px;
+  padding: 0.7rem 1.1rem;
+  border: 1px solid #4a4a50;
+  border-radius: 24px;
+  background: var(--color-fondo-2);
+  color: var(--color-texto);
+  font-size: 1rem;
+  transition: border-color 0.2s;
+}
+.cotizar__escribir textarea {
+  resize: none;
+  border-radius: 18px;
+  max-height: 140px;
+}
+.cotizar__escribir input::placeholder,
+.cotizar__escribir textarea::placeholder {
+  color: #8f8884;
+}
+.cotizar__escribir input:focus-visible,
+.cotizar__escribir textarea:focus-visible {
+  outline: none;
+  border-color: var(--color-acento-claro);
+  box-shadow: 0 0 0 3px rgb(242 196 164 / 0.2);
+}
+.cotizar__escribir [aria-invalid='true'] {
+  border-color: #ff9b8a;
+}
+.cotizar__siguiente {
+  display: grid;
+  place-items: center;
+  flex: none;
+  width: 48px;
+  height: 48px;
+  border: 0;
+  border-radius: 50%;
+  background: var(--color-boton);
+  color: var(--color-texto-oscuro);
+  cursor: pointer;
+  transition: transform 0.2s var(--ease);
+}
+.cotizar__siguiente:hover {
+  transform: scale(1.06);
+}
+.cotizar__siguiente svg {
+  width: 22px;
+  height: 22px;
+}
+.cotizar__opciones {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-2);
+}
+.cotizar__opcion {
+  min-height: 44px;
+  padding: 0.55rem 1rem;
+  border: 1px solid var(--color-linea);
+  border-radius: 999px;
+  background: rgb(208 138 98 / 0.08);
+  color: var(--color-acento-claro);
+  font: inherit;
+  font-size: var(--fs-sm);
+  font-weight: 500;
+  text-align: left;
+  cursor: pointer;
+  transition:
+    background 0.2s,
+    border-color 0.2s,
+    transform 0.2s var(--ease);
+}
+.cotizar__opcion:hover {
+  border-color: var(--color-acento);
+  background: rgb(208 138 98 / 0.18);
+  transform: translateY(-1px);
+}
+.cotizar__error,
+.cotizar__ayuda {
+  margin-top: var(--space-2);
+  padding-inline: var(--space-3);
+  font-size: var(--fs-xs);
+}
+.cotizar__error {
+  color: #ffb4a6;
+}
+.cotizar__ayuda {
+  color: var(--color-texto-suave);
+}
+.cotizar__final {
+  display: grid;
+  gap: var(--space-1);
+  padding: var(--space-3) var(--space-3) 0;
+  border-top: 1px solid var(--color-linea-suave);
+}
+.cotizar__final[hidden] {
+  display: none;
+}
+.cotizar__reiniciar {
+  min-height: 44px;
+  border: 0;
+  background: none;
+  color: var(--color-acento-claro);
+  font: inherit;
+  font-size: var(--fs-sm);
+  text-decoration: underline;
+  text-underline-offset: 3px;
+  cursor: pointer;
+}
+.cotizar__nota {
+  padding: var(--space-3) var(--space-4) var(--space-4);
+  font-size: var(--fs-xs);
+  color: var(--color-texto-suave);
+  text-align: center;
+}
+.cotizar__nota a {
+  color: var(--color-acento-claro);
+  text-decoration: underline;
+  text-underline-offset: 3px;
+}
+
+@media (max-width: 599px) {
+  .cotizar {
+    left: max(0.75rem, env(safe-area-inset-left));
+    right: max(0.75rem, env(safe-area-inset-right));
+    width: auto;
+    max-height: calc(100svh - var(--alto-nav) - 58px - 2.5rem);
+  }
 }
 
 /* ---------- Pantalla de inicio ----------
