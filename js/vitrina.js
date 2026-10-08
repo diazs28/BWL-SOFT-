@@ -520,6 +520,8 @@
     // Tipo del último puntero que presionó una miniatura ('' = teclado)
     let tipoPuntero = '';
     let ultimoToque = { i: -1, t: 0 };
+    let esperaCentrar = null;
+    const DOBLE_TOQUE = 400; // ms máximos entre los dos toques
     fila.addEventListener('pointerdown', (e) => {
       tipoPuntero = e.pointerType;
     });
@@ -549,7 +551,8 @@
           return;
         }
         const ahora = performance.now();
-        if (ultimoToque.i === item.i && ahora - ultimoToque.t < 450) {
+        clearTimeout(esperaCentrar);
+        if (ultimoToque.i === item.i && ahora - ultimoToque.t < DOBLE_TOQUE) {
           ultimoToque = { i: -1, t: 0 };
           abrir(item.i);
           return;
@@ -557,7 +560,10 @@
         ultimoToque = { i: item.i, t: ahora };
         interactuo = true;
         preview = null;
-        previsualizar(item);
+        // El nombre cambia ya; la miniatura se centra después, para que el segundo toque de un
+        // doble toque caiga sobre ella y no donde quedó al deslizarse
+        previsualizar(item, { centrar: false });
+        esperaCentrar = setTimeout(() => centrarEnFila(item.boton), DOBLE_TOQUE);
       });
     });
 
