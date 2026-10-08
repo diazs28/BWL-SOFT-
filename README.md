@@ -122,6 +122,7 @@ js/config.js            MARCA: nombre, WhatsApp, ciudad, redes. Único lugar par
 js/proyectos.js         Datos de los proyectos. Único lugar para agregar o editar proyectos
 js/intro.js             Activa la pantalla de inicio (una vez por pestaña)
 js/letras.js            Texto gigante letra por letra (lo usan la vitrina y los servicios)
+js/obrero.js            Obrero pixelado que martilla: proyectos con `enObra: true`
 js/vitrina.js           Vitrina del inicio: miniaturas, nombre gigante y ficha de cada proyecto
 js/servicios.js         Palabra gigante que sigue la lectura de servicios y pasos que se encienden
 js/cotizar.js           Chat de cotización del botón flotante: arma el mensaje y abre WhatsApp

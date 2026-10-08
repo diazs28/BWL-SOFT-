@@ -9,6 +9,8 @@
 // vitrina: cómo aparece el proyecto en el inicio (miniatura + nombre gigante).
 //   nombre → texto corto en mayúsculas; color → color o degradado del texto;
 //   solido → color plano para el círculo que sigue al cursor.
+//
+// enObra: true → muestra en la ficha un obrero pixelado martillando ("En construcción").
 window.BWL = window.BWL || {};
 window.BWL.PROYECTOS = [
   {
@@ -41,6 +43,7 @@ window.BWL.PROYECTOS = [
       'Punto de venta que funciona sin internet: plano de mesas, caja, inventario por receta y reportes en el computador; app para que los meseros pidan desde el celular y pantalla de cocina con tiempos.',
     stack: ['React', 'Electron', 'NestJS', 'PostgreSQL', 'PWA'],
     estado: 'privado',
+    enObra: true,
     url: '',
     imagenes: {
       escritorio: 'assets/projects/karbon-desktop.webp',
