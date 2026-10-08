@@ -9,8 +9,8 @@
     ciudad: 'Popayán, Cauca',
     pais: 'Colombia',
     // Solo dígitos, con indicativo de país (57) y sin "+".
-    whatsapp: '573158220440',
-    whatsappVisible: '+57 315 822 0440',
+    whatsapp: '573209367458',
+    whatsappVisible: '+57 320 936 7458',
     mensajeWhatsapp: 'Hola, BWL & SOFT. Quiero cotizar un software para mi negocio.',
     // Deja vacío lo que todavía no exista: no se muestra en la página.
     correo: '',
