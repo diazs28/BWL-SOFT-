@@ -14,10 +14,8 @@
 (function () {
   'use strict';
 
-  const ESCALONADO = 40; // ms entre letras
-  const DURACION = 500;
-  const CURVA = 'cubic-bezier(0.22, 1, 0.36, 1)';
-  const SALIDA = 'translateY(105%)';
+  const { letras } = window.BWL;
+  const { ESCALONADO, DURACION, CURVA } = letras;
   const UMBRAL_SWIPE = 50;
 
   const ETIQUETAS = {
@@ -83,50 +81,8 @@
     let pendiente = null;
     let focoSilencioso = false; // foco devuelto por código: no previsualiza
 
-    // ---------- Nombre gigante, letra por letra ----------
-    function crearPalabra({ nombre, color }) {
-      const palabra = crear('span', 'vitrina__palabra');
-      palabra.style.setProperty('--relleno', color);
-      for (const caracter of nombre) {
-        const letra = crear('span', 'vitrina__letra', caracter === ' ' ? ' ' : caracter);
-        if (caracter === ' ') letra.classList.add('vitrina__letra--espacio');
-        palabra.append(letra);
-      }
-      caja.append(palabra);
-      ajustar(palabra);
-      return palabra;
-    }
-
-    // Si un nombre largo no cabe, se reduce solo ese nombre
-    function ajustar(palabra) {
-      palabra.style.fontSize = '';
-      const disponible = caja.clientWidth;
-      const ancho = palabra.scrollWidth;
-      if (ancho > disponible && disponible > 0) {
-        const tam = parseFloat(getComputedStyle(palabra).fontSize);
-        palabra.style.fontSize = `${Math.floor(tam * (disponible / ancho) * 0.98)}px`;
-      }
-    }
-
-    function animarLetras(palabra, entra, alTerminar) {
-      const letras = [...palabra.children];
-      let ultima = null;
-      letras.forEach((letra, i) => {
-        const fotogramas = reduceMotion.matches
-          ? [{ opacity: entra ? 0 : 1 }, { opacity: entra ? 1 : 0 }]
-          : [
-              { transform: entra ? SALIDA : 'translateY(0)' },
-              { transform: entra ? 'translateY(0)' : SALIDA },
-            ];
-        ultima = letra.animate(fotogramas, {
-          duration: reduceMotion.matches ? 200 : DURACION,
-          delay: reduceMotion.matches ? 0 : i * ESCALONADO,
-          easing: CURVA,
-          fill: 'both',
-        });
-      });
-      if (ultima && alTerminar) ultima.finished.then(alTerminar, alTerminar);
-    }
+    // ---------- Nombre gigante, letra por letra (js/letras.js) ----------
+    const ajustar = (palabra) => letras.ajustar(caja, palabra);
 
     // inmediato: la palabra anterior se quita sin animar (la transición de vista ya la funde)
     function mostrar(item, { inmediato = false } = {}) {
@@ -135,17 +91,7 @@
         return;
       }
       claveActual = item.nombre;
-      if (palabraActual) {
-        const saliente = palabraActual;
-        if (inmediato) {
-          caja.querySelectorAll('.vitrina__palabra').forEach((p) => p.remove());
-        } else {
-          saliente.classList.add('is-saliendo');
-          animarLetras(saliente, false, () => saliente.remove());
-        }
-      }
-      palabraActual = crearPalabra(item);
-      animarLetras(palabraActual, true);
+      palabraActual = letras.reemplazar(caja, palabraActual, item, { inmediato });
     }
 
     // ---------- Miniaturas ----------

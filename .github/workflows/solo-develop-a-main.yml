@@ -1,0 +1,29 @@
+# Git Flow del equipo: a main (producción) solo entran cambios desde develop.
+# Este control falla cualquier PR hacia main que venga de otra rama. Para que bloquee la
+# fusión, el dueño del repo debe marcarlo como obligatorio en la regla de la rama main
+# (ver README, sección "Ramas").
+name: Reglas de ramas
+
+on:
+  pull_request:
+    branches: [main]
+    types: [opened, reopened, synchronize, edited]
+
+permissions: {}
+
+jobs:
+  solo-develop-a-main:
+    name: solo-develop-a-main
+    runs-on: ubuntu-latest
+    steps:
+      - name: Verifica que el PR venga de develop de este mismo repositorio
+        env:
+          ORIGEN: ${{ github.head_ref }}
+          REPO_ORIGEN: ${{ github.event.pull_request.head.repo.full_name }}
+          REPO: ${{ github.repository }}
+        run: |
+          if [ "$ORIGEN" != "develop" ] || [ "$REPO_ORIGEN" != "$REPO" ]; then
+            echo "::error::A main solo entran PR desde develop. Este viene de '$REPO_ORIGEN:$ORIGEN'. Cambia la base del PR a develop."
+            exit 1
+          fi
+          echo "PR desde develop: permitido."

@@ -7,15 +7,25 @@ medida y páginas web en Popayán, Colombia. Su trabajo es que un cliente potenc
 que hacemos software profesional, revise proyectos reales desde el inicio y nos escriba por WhatsApp
 para cotizar.
 
-Secciones: inicio (vitrina de proyectos con ficha expandible), servicios, proceso, contacto (formulario que abre
-WhatsApp) y pie de página. Botón flotante de WhatsApp en toda la página.
+Secciones: inicio (vitrina de proyectos con ficha expandible), servicios (incluye cómo
+trabajamos) y pie de página. El contacto es un chat que se abre desde el botón flotante de
+WhatsApp, presente en toda la página.
 
 ### Dirección visual
 
 - **Tono**: taller de ingeniería con acabado de cobre. Fondo grafito dominante, acentos cobre
-  metalizado del kit de marca y una sección clara en humo (servicios) para dar ritmo.
+  metalizado del kit de marca. Todo el sitio va sobre grafito.
 - **Tipografía**: Poppins (400, 500 y 600), la del logo, para todo el texto. Anton solo para el
-  nombre gigante de la vitrina del inicio.
+  texto gigante (nombre de la vitrina y palabra de servicios).
+- **Cotización**: el botón flotante de WhatsApp se estira una vez por visita ("¿Cotizamos tu
+  proyecto?") y al tocarlo crece en círculo hasta un chat. Pregunta de a una cosa (nombre, tipo de
+  proyecto con opciones para tocar, idea) con burbujas y "escribiendo…", y al final abre WhatsApp
+  con el mensaje listo. "Cotiza tu software", "Contacto" y `#contacto` abren el mismo chat. En el
+  celular (menos de 768 px) es una hoja inferior a todo el ancho: oscurece el fondo, bloquea el
+  desplazamiento de la página y se cierra con la X, tocando fuera o deslizando hacia abajo.
+- **Servicios**: una palabra gigante fija (WEB, TIENDAS, SISTEMAS, APPS) cambia con las letras
+  que se hunden y emergen según el servicio que se está leyendo, y ese servicio se ilumina. Los
+  pasos de "Cómo trabajamos" se encienden uno por uno con una línea de cobre al aparecer.
 - **Vitrina del inicio** (`js/vitrina.js`): miniaturas de los proyectos sobre «BWL & SOFT» en
   letras gigantes con textura de líneas. Al pasar el mouse, enfocar con teclado o tocar una
   miniatura, las letras se hunden y emerge el nombre del proyecto con su color; un círculo con
@@ -106,8 +116,11 @@ css/style.css           Sistema de diseño (tokens sobre los --bwl-* del kit) y 
 js/config.js            MARCA: nombre, WhatsApp, ciudad, redes. Único lugar para datos de contacto
 js/proyectos.js         Datos de los proyectos. Único lugar para agregar o editar proyectos
 js/intro.js             Activa la pantalla de inicio (una vez por pestaña)
+js/letras.js            Texto gigante letra por letra (lo usan la vitrina y los servicios)
 js/vitrina.js           Vitrina del inicio: miniaturas, nombre gigante y ficha de cada proyecto
-js/main.js              Enlaces de WhatsApp, menú, formulario y arranque de la vitrina
+js/servicios.js         Palabra gigante que sigue la lectura de servicios y pasos que se encienden
+js/cotizar.js           Chat de cotización del botón flotante: arma el mensaje y abre WhatsApp
+js/main.js              Enlaces de WhatsApp, menú y arranque de vitrina, servicios y cotización
 assets/brand/           Archivos del kit que usa la página + og-image.png (1200x630)
 assets/projects/        Capturas WebP de cada proyecto (escritorio 1280x800, móvil 585x1266)
 BWL-Soft-Kit-Logo/      Kit de marca original. No se modifica y no se publica (.vercelignore)
@@ -121,7 +134,8 @@ docs/adr/               Decisiones de arquitectura
 - **WhatsApp, ciudad, nombre, redes**: `js/config.js`. Todos los botones de WhatsApp toman el número
   de ahí. Excepción: el teléfono en el JSON-LD de `index.html` es estático (los buscadores lo leen
   sin ejecutar JS); si cambia el número, actualízalo también ahí.
-- **Textos de servicios y proceso**: directamente en `index.html`.
+- **Textos de servicios y proceso**: directamente en `index.html`. La palabra gigante y su color
+  salen de `data-nombre` y `data-color` de cada servicio.
 - **Versión de CSS y JS**: `index.html` y `404.html` cargan los archivos con `?v=AAAA-MM-DD`. Si
   cambias algo en `css/` o `js/`, actualiza esa fecha para que los navegadores no muestren la
   versión vieja guardada en caché.
@@ -182,11 +196,23 @@ En Vercel, como sitio estático sin build:
 
 Con la CLI: `npx vercel` (vista previa) y `npx vercel --prod`.
 
+## Ramas
+
+Git Flow: `main` (producción) ← `develop` ← `feature/<tema>` o `fix/<tema>`.
+
+- **Nunca** se hace push ni PR directo a `main`. Todo cambio va en su propia rama y entra por PR a
+  `develop`; solo un PR de `develop` pasa a `main`.
+- El workflow `.github/workflows/solo-develop-a-main.yml` falla cualquier PR hacia `main` que no
+  venga de `develop`.
+- Para que GitHub bloquee la fusión, el dueño del repo activa una regla (ruleset) en `main`:
+  exigir PR, exigir el check `solo-develop-a-main`, sin push forzado ni borrado. Conviene además
+  dejar `develop` como rama por defecto para que los PR apunten ahí solos.
+
 ## Seguridad
 
 - Sitio estático sin backend ni secretos; no hay `.env`.
-- El formulario no envía datos a ningún servidor: arma el texto y abre WhatsApp en el dispositivo
-  del visitante.
+- El chat de cotización no envía datos a ningún servidor: arma el texto y abre WhatsApp en el
+  dispositivo del visitante, que es quien toca "Enviar".
 - CSP estricta en `vercel.json`: solo scripts propios (`'self'`), estilos propios y de Google Fonts,
   fuentes de `fonts.gstatic.com`, sin `unsafe-inline` ni `eval`. Además HSTS,
   `X-Content-Type-Options`, `Referrer-Policy`, `Permissions-Policy`, `X-Frame-Options: DENY` y
