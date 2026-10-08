@@ -1,0 +1,13 @@
+# Revisa cada semana las dependencias de desarrollo (npm) y abre PR hacia develop.
+version: 2
+updates:
+  - package-ecosystem: npm
+    directory: /
+    target-branch: develop
+    schedule:
+      interval: weekly
+    groups:
+      herramientas:
+        patterns: ['*']
+    commit-message:
+      prefix: 'chore(deps)'

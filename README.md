@@ -201,3 +201,6 @@ Con la CLI: `npx vercel` (vista previa) y `npx vercel --prod`.
 - Los datos de proyectos se pintan con `textContent` y nodos del DOM, nunca con `innerHTML`
   (ESLint lo bloquea).
 - Enlaces externos con `rel="noopener noreferrer"`.
+- Repositorio público: sin secretos en el historial, `.gitignore` cubre `.env`, llaves, `.venv/` y
+  la configuración local de editores y de Claude. Dependabot revisa las dependencias cada semana
+  y los reportes de vulnerabilidades se hacen en privado (ver [SECURITY.md](SECURITY.md)).
