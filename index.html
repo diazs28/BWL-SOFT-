@@ -34,12 +34,11 @@
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link
       rel="stylesheet"
-      href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600&display=swap"
+      href="https://fonts.googleapis.com/css2?family=Anton&family=Poppins:wght@400;500;600&display=swap"
     />
     <link rel="stylesheet" href="assets/brand/brand-tokens.css" />
     <link rel="stylesheet" href="css/reset.css" />
     <link rel="stylesheet" href="css/style.css" />
-    <link rel="preload" as="image" href="assets/brand/bwl-soft-logo-cobre-metal-transparente.svg" />
 
     <script type="application/ld+json">
       {
@@ -71,6 +70,7 @@
     <script defer src="js/config.js"></script>
     <script defer src="js/proyectos.js"></script>
     <script defer src="js/carrusel.js"></script>
+    <script defer src="js/vitrina.js"></script>
     <script defer src="js/main.js"></script>
   </head>
   <body>
@@ -121,40 +121,24 @@
     </header>
 
     <main id="contenido">
-      <!-- Hero -->
-      <section class="hero" id="inicio" aria-labelledby="hero-titulo">
+      <!-- Hero: vitrina de proyectos sobre el nombre gigante (js/vitrina.js) -->
+      <section class="hero vitrina" id="inicio" aria-labelledby="hero-titulo" data-vitrina>
         <div class="hero__in envoltura">
-          <div class="hero__texto">
-            <p class="hero__lugar">
-              <span>Desarrollo de software en <span data-marca="ciudad">Popayán</span></span>
-            </p>
-            <h1 class="hero__titulo" id="hero-titulo">
-              Software a la medida que se adapta a tu negocio, no al revés.
-            </h1>
-            <p class="hero__lead">
-              Diseñamos y programamos páginas web, tiendas en línea y sistemas como puntos de venta
-              y paneles administrativos. Te mostramos avances en cada etapa y seguimos contigo
-              después de publicar.
-            </p>
-            <div class="hero__acciones">
-              <a class="boton" href="#contacto" data-whatsapp>
-                <svg class="icono" aria-hidden="true" viewBox="0 0 24 24"><use href="#i-wa" /></svg>
-                Cotiza tu software
-              </a>
-              <a class="boton boton--borde" href="#proyectos">Ver proyectos</a>
-            </div>
-          </div>
-          <div class="hero__marca" aria-hidden="true">
-            <div class="hero__disco"></div>
-            <div class="hero__logo">
-              <img
-                src="assets/brand/bwl-soft-logo-cobre-metal-transparente.svg"
-                alt=""
-                width="860"
-                height="1073"
-                fetchpriority="high"
-              />
-            </div>
+          <p class="vitrina__guia" id="vitrina-guia">Algunos proyectos que hemos construido</p>
+          <ul class="vitrina__fila" aria-labelledby="vitrina-guia" data-vitrina-fila></ul>
+          <p class="vitrina__nombre" aria-hidden="true" data-vitrina-nombre>
+            <span class="vitrina__palabra">BWL &amp; SOFT</span>
+          </p>
+          <p class="sr" aria-live="polite" data-vitrina-anuncio></p>
+          <h1 class="hero__titulo" id="hero-titulo">
+            Software a la medida que se adapta a tu negocio, no al revés.
+          </h1>
+          <div class="hero__acciones">
+            <a class="boton" href="#contacto" data-whatsapp>
+              <svg class="icono" aria-hidden="true" viewBox="0 0 24 24"><use href="#i-wa" /></svg>
+              Cotiza tu software
+            </a>
+            <a class="boton boton--borde" href="#proyectos">Ver proyectos</a>
           </div>
         </div>
       </section>

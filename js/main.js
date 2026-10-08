@@ -1,9 +1,9 @@
-// Arranque de la página: enlaces de WhatsApp, menú, carrusel y formulario.
-// Usa lo que publican config.js, proyectos.js y carrusel.js en window.BWL.
+// Arranque de la página: enlaces de WhatsApp, menú, carrusel, vitrina y formulario.
+// Usa lo que publican config.js, proyectos.js, carrusel.js y vitrina.js en window.BWL.
 (function () {
   'use strict';
 
-  const { MARCA, enlaceWhatsapp, PROYECTOS, iniciarCarrusel } = window.BWL;
+  const { MARCA, enlaceWhatsapp, PROYECTOS, iniciarCarrusel, iniciarVitrina } = window.BWL;
 
   // ---------- Datos de marca ----------
   document.querySelectorAll('[data-whatsapp]').forEach((a) => {
@@ -80,6 +80,9 @@
   iniciarCarrusel(document.querySelector('[data-carrusel]'), PROYECTOS, {
     enlaceDemo: (p) => enlaceWhatsapp(`Hola, BWL & SOFT. Me gustaría ver una demo de ${p.nombre}.`),
   });
+
+  // ---------- Vitrina del inicio ----------
+  iniciarVitrina(document.querySelector('[data-vitrina]'), PROYECTOS, { marca: MARCA.nombre });
 
   // ---------- Formulario de contacto → WhatsApp ----------
   const formulario = document.querySelector('[data-formulario]');

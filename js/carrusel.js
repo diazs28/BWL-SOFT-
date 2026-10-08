@@ -231,6 +231,12 @@
       }
     }
 
+    // La vitrina del inicio pide mostrar un proyecto concreto
+    document.addEventListener('bwl:ver-proyecto', (e) => {
+      const indice = proyectos.findIndex((p) => p.id === e.detail.id);
+      if (indice >= 0) irA(indice);
+    });
+
     anterior.addEventListener('click', () => irA(actual - 1));
     siguiente.addEventListener('click', () => irA(actual + 1));
     pausa.addEventListener('click', () => {

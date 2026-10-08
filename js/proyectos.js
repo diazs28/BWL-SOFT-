@@ -5,6 +5,10 @@
 //   'en-vivo'  → muestra el botón "Ver en vivo" (requiere url)
 //   'privado'  → etiqueta "Software privado"
 //   'demo'     → etiqueta "Demo bajo solicitud"
+//
+// vitrina: cómo aparece el proyecto en el inicio (miniatura + nombre gigante).
+//   nombre → texto corto en mayúsculas; color → color o degradado del texto;
+//   solido → color plano para el círculo que sigue al cursor.
 window.BWL = window.BWL || {};
 window.BWL.PROYECTOS = [
   {
@@ -22,6 +26,11 @@ window.BWL.PROYECTOS = [
       movil: 'assets/projects/portalsalud-movil.webp',
     },
     alt: 'Página de inicio de la tienda Portal Salud, con el logo del centro naturista sobre un bloque verde',
+    vitrina: {
+      nombre: 'PORTAL SALUD',
+      color: 'linear-gradient(180deg, #F7B24A 0%, #E0662A 100%)',
+      solido: '#EC8A36',
+    },
   },
   {
     id: 'karbon',
@@ -38,6 +47,11 @@ window.BWL.PROYECTOS = [
       movil: 'assets/projects/karbon-movil.webp',
     },
     alt: 'Plano de mesas de Karbon POS con mesas libres, ocupadas y esperando cuenta',
+    vitrina: {
+      nombre: 'KARBON',
+      color: 'linear-gradient(180deg, #F2C4A4 0%, #D08A62 45%, #B06A45 100%)',
+      solido: '#D08A62',
+    },
   },
   {
     id: 'technosur',
@@ -54,6 +68,7 @@ window.BWL.PROYECTOS = [
       movil: 'assets/projects/technosur-movil.webp',
     },
     alt: 'Portada de NOCTURNA con el título en letras grandes rojas y blancas y una cuenta regresiva',
+    vitrina: { nombre: 'NOCTURNA', color: '#E8301C', solido: '#E8301C' },
   },
   {
     id: 'acido303',
@@ -70,6 +85,11 @@ window.BWL.PROYECTOS = [
       movil: 'assets/projects/acido303-movil.webp',
     },
     alt: 'Portada de ÁCIDO 303 con el título en blanco y verde ácido y una carita sonriente amarilla',
+    vitrina: {
+      nombre: 'ÁCIDO 303',
+      color: 'linear-gradient(180deg, #F5C542 0%, #F07A1A 100%)',
+      solido: '#F5A12E',
+    },
   },
   {
     id: 'psicologa-kds',
@@ -86,5 +106,10 @@ window.BWL.PROYECTOS = [
       movil: 'assets/projects/psicologa-kds-movil.webp',
     },
     alt: 'Inicio del sitio de Karla Silva con el titular «Un espacio para hablar, pensar y encontrar claridad» y su foto',
+    vitrina: {
+      nombre: 'KARLA SILVA',
+      color: 'linear-gradient(180deg, #F48A6A 0%, #C93A2C 100%)',
+      solido: '#E0604A',
+    },
   },
 ];
