@@ -189,6 +189,18 @@ En Vercel, como sitio estático sin build:
 
 Con la CLI: `npx vercel` (vista previa) y `npx vercel --prod`.
 
+## Ramas
+
+Git Flow: `main` (producción) ← `develop` ← `feature/<tema>` o `fix/<tema>`.
+
+- **Nunca** se hace push ni PR directo a `main`. Todo cambio va en su propia rama y entra por PR a
+  `develop`; solo un PR de `develop` pasa a `main`.
+- El workflow `.github/workflows/solo-develop-a-main.yml` falla cualquier PR hacia `main` que no
+  venga de `develop`.
+- Para que GitHub bloquee la fusión, el dueño del repo activa una regla (ruleset) en `main`:
+  exigir PR, exigir el check `solo-develop-a-main`, sin push forzado ni borrado. Conviene además
+  dejar `develop` como rama por defecto para que los PR apunten ahí solos.
+
 ## Seguridad
 
 - Sitio estático sin backend ni secretos; no hay `.env`.
