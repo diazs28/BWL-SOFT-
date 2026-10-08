@@ -35,7 +35,9 @@ WhatsApp, presente en toda la página.
   vista previa grande (View Transitions API) y al lado aparece su ficha: tipo, nombre, cliente,
   descripción, tecnologías y el enlace para verlo en vivo o pedir una demo. Entre proyectos se pasa con las flechas, el teclado
   (← →) o deslizando en el celular; una cortina del color del proyecto barre la imagen. Esc o
-  "Cerrar" vuelve al inicio. Cada proyecto tiene enlace directo (`/#proyecto-karbon`). Reemplaza
+  "Cerrar" vuelve al inicio. En el celular los proyectos quedan uno al lado del otro en
+  teléfonos que se deslizan de lado con tope en cada uno; el que queda en el centro actualiza el
+  nombre gigante, la ficha y la miniatura activa. Cada proyecto tiene enlace directo (`/#proyecto-karbon`). Reemplaza
   al antiguo carrusel: los enlaces a `#proyectos` abren la vitrina.
 - **Paleta**: `--bwl-grafito` #1C1C1F, `--bwl-grafito-2` #2A2A2E, `--bwl-cobre` #D08A62,
   `--bwl-cobre-claro` #F2C4A4, `--bwl-cobre-oscuro` #7A4128 (texto cobre sobre fondo claro),

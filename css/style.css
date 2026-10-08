@@ -599,6 +599,50 @@ html.js .vitrina:not(.is-lista) .vitrina__nombre {
 .marco__barra {
   display: none;
 }
+/* Celular: pista de teléfonos que se desliza de lado (la arma js/vitrina.js) */
+.ficha__pista {
+  display: none;
+}
+@media (max-width: 767px) {
+  .ficha__marco {
+    display: none;
+  }
+  .ficha__pista {
+    display: flex;
+    gap: var(--space-4);
+    /* A todo el ancho de la pantalla, con el teléfono centrado y los vecinos asomando */
+    width: calc(100% + 2.5rem);
+    margin-inline: -1.25rem;
+    padding: var(--space-3) calc(50% - min(32vw, 125px)) var(--space-5);
+    overflow-x: auto;
+    overscroll-behavior-x: contain;
+    scroll-snap-type: x mandatory;
+    scrollbar-width: none;
+  }
+  .ficha__pista::-webkit-scrollbar {
+    display: none;
+  }
+  .ficha__tel {
+    flex: none;
+    scroll-snap-align: center;
+    scroll-snap-stop: always;
+    touch-action: auto;
+    cursor: pointer;
+    opacity: 0.45;
+    transform: scale(0.9);
+    transition:
+      opacity 0.35s var(--ease),
+      transform 0.35s var(--ease);
+  }
+  .ficha__tel.is-centro {
+    opacity: 1;
+    transform: none;
+    cursor: default;
+  }
+  .ficha__tel img {
+    pointer-events: none;
+  }
+}
 .ficha__cortina {
   position: absolute;
   inset: 0;
