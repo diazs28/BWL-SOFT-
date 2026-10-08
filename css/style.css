@@ -1706,10 +1706,26 @@ html:not(.js) .paso::after {
 }
 
 /* ---------- Pantalla de inicio ----------
-   Adaptada de la pantalla de carga de PortalSalud: el nombre aparece palabra por palabra,
-   se desvanece y seis columnas de cobre suben de derecha a izquierda para descubrir la
-   página. Dura unos 2 s. js/intro.js decide si se muestra (una vez por pestaña, nunca con
-   movimiento reducido) y la retira al terminar. */
+   Adaptada del Preloader.tsx del equipo (ola difuminada), en cobre de la marca y sin librerías:
+   "BWL & SOFT" se enfoca y se difumina, sube una ola de cobre de borde suave desde la esquina
+   inferior derecha y todo el velo sale con desenfoque. Dura unos 3,4 s. Cuando empieza la salida
+   (animación "intro-fuera") la vitrina hace subir las letras del nombre gigante.
+   js/intro.js decide si se muestra (una vez por pestaña, nunca con movimiento reducido). */
+@property --borde {
+  syntax: '<percentage>';
+  inherits: true;
+  initial-value: -70%;
+}
+:root {
+  --intro-ola: radial-gradient(
+    130% 100% at 85% 100%,
+    #ffe9da 0%,
+    var(--bwl-cobre-claro) 30%,
+    var(--bwl-cobre) 62%,
+    var(--bwl-cobre-oscuro) 100%
+  );
+  --intro-curva: cubic-bezier(0.22, 1, 0.36, 1);
+}
 .intro-capa {
   display: none;
 }
@@ -1720,117 +1736,108 @@ html.intro .intro-capa {
   position: fixed;
   inset: 0;
   z-index: 200;
-  display: flex;
-  align-items: center;
-  justify-content: center;
+  display: grid;
+  place-items: center;
   overflow: hidden;
-  background: radial-gradient(ellipse at 50% 20%, var(--bwl-grafito-2) 0%, var(--bwl-grafito) 70%);
-  animation: intro-fuera 0.15s 1.95s ease-out forwards;
+  background: radial-gradient(80% 60% at 30% 20%, #3a3d42 0%, #1b1c1f 70%);
+  animation: intro-fuera 0.8s 2.6s var(--intro-curva) forwards;
 }
-.intro-capa__nombre {
-  display: flex;
-  flex-wrap: wrap;
-  justify-content: center;
-  gap: 0 0.45em;
+.intro-capa__texto {
+  position: relative;
+  z-index: 1;
   padding-inline: var(--space-5);
-  font-size: clamp(2.25rem, 1.2rem + 5vw, 4.25rem);
-  font-weight: 500;
-  letter-spacing: var(--bwl-tracking-logo);
-  line-height: 1.1;
-}
-.intro-capa__nombre span {
-  background: var(--bwl-metal);
+  font-size: clamp(1.5rem, 3.2vw, 2.75rem);
+  font-weight: 600;
+  letter-spacing: 0.35em;
+  text-transform: uppercase;
+  text-align: center;
+  background: linear-gradient(180deg, var(--bwl-cobre-claro) 0%, var(--bwl-cobre) 100%);
   -webkit-background-clip: text;
   background-clip: text;
   color: transparent;
   opacity: 0;
 }
-html.intro .intro-capa__nombre span {
+html.intro .intro-capa__texto {
   animation:
-    intro-palabra-entra 0.4s var(--intro-entra) both,
-    intro-palabra-sale 0.3s var(--intro-sale) forwards;
+    intro-texto-entra 0.7s var(--intro-curva) forwards,
+    intro-texto-sale 0.7s 1.1s var(--intro-curva) forwards;
 }
-html.intro .intro-capa__nombre span:nth-child(1) {
-  animation-delay: 0s, 0.97s;
-}
-html.intro .intro-capa__nombre span:nth-child(2) {
-  animation-delay: 0.06s, 1.01s;
-}
-html.intro .intro-capa__nombre span:nth-child(3) {
-  animation-delay: 0.12s, 1.05s;
-}
-.intro-capa__columnas {
+.intro-capa__ola,
+.intro-capa__brillo {
   position: absolute;
   inset: 0;
-  display: flex;
-  pointer-events: none;
+  background: var(--intro-ola);
 }
-.intro-capa__columnas span {
-  flex: 1;
-  height: 100%;
-  margin-left: -1px;
-  background: var(--bwl-metal);
-  transform: translateY(100%);
+/* Borde de la ola: de opaco a transparente en un 45 % de la pantalla, sin escalones */
+.intro-capa__ola {
+  -webkit-mask-image: linear-gradient(
+    to top left,
+    #000 var(--borde),
+    transparent calc(var(--borde) + 45%)
+  );
+  mask-image: linear-gradient(to top left, #000 var(--borde), transparent calc(var(--borde) + 45%));
 }
-html.intro .intro-capa__columnas span {
-  animation: intro-columna 0.45s cubic-bezier(0.65, 0, 0.35, 1) both;
+/* Brillo que va por delante de la ola, más difuminado */
+.intro-capa__brillo {
+  opacity: 0.55;
+  filter: blur(40px);
+  -webkit-mask-image: linear-gradient(
+    to top left,
+    #000 calc(var(--borde) + 18%),
+    transparent calc(var(--borde) + 80%)
+  );
+  mask-image: linear-gradient(
+    to top left,
+    #000 calc(var(--borde) + 18%),
+    transparent calc(var(--borde) + 80%)
+  );
 }
-/* De derecha a izquierda */
-html.intro .intro-capa__columnas span:nth-child(6) {
-  animation-delay: 1.25s;
+html.intro .intro-capa__ola,
+html.intro .intro-capa__brillo {
+  animation: intro-ola 1.3s 1.3s cubic-bezier(0.65, 0, 0.35, 1) forwards;
 }
-html.intro .intro-capa__columnas span:nth-child(5) {
-  animation-delay: 1.3s;
-}
-html.intro .intro-capa__columnas span:nth-child(4) {
-  animation-delay: 1.35s;
-}
-html.intro .intro-capa__columnas span:nth-child(3) {
-  animation-delay: 1.4s;
-}
-html.intro .intro-capa__columnas span:nth-child(2) {
-  animation-delay: 1.45s;
-}
-html.intro .intro-capa__columnas span:nth-child(1) {
-  animation-delay: 1.5s;
-}
-:root {
-  --intro-entra: cubic-bezier(0.25, 0.46, 0.45, 0.94);
-  --intro-sale: cubic-bezier(0.25, 0.46, 0.45, 0.94);
-}
-@keyframes intro-palabra-entra {
+@keyframes intro-texto-entra {
   from {
     opacity: 0;
-    filter: blur(8px);
-    transform: translateY(6px);
+    filter: blur(10px);
+    letter-spacing: 0.6em;
   }
   to {
+    opacity: 1;
+    filter: blur(0);
+    letter-spacing: 0.35em;
+  }
+}
+@keyframes intro-texto-sale {
+  from {
     opacity: 1;
     filter: blur(0);
     transform: none;
   }
-}
-@keyframes intro-palabra-sale {
-  from {
-    opacity: 1;
-    filter: blur(0);
-  }
   to {
     opacity: 0;
-    filter: blur(6px);
+    filter: blur(14px);
+    transform: scale(1.06);
   }
 }
-@keyframes intro-columna {
+@keyframes intro-ola {
   from {
-    transform: translateY(100%);
+    --borde: -70%;
   }
   to {
-    transform: translateY(0);
+    --borde: 115%;
   }
 }
 @keyframes intro-fuera {
+  from {
+    opacity: 1;
+    filter: blur(0);
+    transform: none;
+  }
   to {
     opacity: 0;
+    filter: blur(24px);
+    transform: scale(1.04);
     visibility: hidden;
   }
 }
