@@ -7,15 +7,19 @@ medida y páginas web en Popayán, Colombia. Su trabajo es que un cliente potenc
 que hacemos software profesional, revise proyectos reales desde el inicio y nos escriba por WhatsApp
 para cotizar.
 
-Secciones: inicio (vitrina de proyectos con ficha expandible), servicios, proceso, contacto (formulario que abre
+Secciones: inicio (vitrina de proyectos con ficha expandible), servicios (incluye cómo
+trabajamos), contacto (formulario que abre
 WhatsApp) y pie de página. Botón flotante de WhatsApp en toda la página.
 
 ### Dirección visual
 
 - **Tono**: taller de ingeniería con acabado de cobre. Fondo grafito dominante, acentos cobre
-  metalizado del kit de marca y una sección clara en humo (servicios) para dar ritmo.
+  metalizado del kit de marca. Todo el sitio va sobre grafito.
 - **Tipografía**: Poppins (400, 500 y 600), la del logo, para todo el texto. Anton solo para el
-  nombre gigante de la vitrina del inicio.
+  texto gigante (nombre de la vitrina y palabra de servicios).
+- **Servicios**: una palabra gigante fija (WEB, TIENDAS, SISTEMAS, APPS) cambia con las letras
+  que se hunden y emergen según el servicio que se está leyendo, y ese servicio se ilumina. Los
+  pasos de "Cómo trabajamos" se encienden uno por uno con una línea de cobre al aparecer.
 - **Vitrina del inicio** (`js/vitrina.js`): miniaturas de los proyectos sobre «BWL & SOFT» en
   letras gigantes con textura de líneas. Al pasar el mouse, enfocar con teclado o tocar una
   miniatura, las letras se hunden y emerge el nombre del proyecto con su color; un círculo con
@@ -106,7 +110,9 @@ css/style.css           Sistema de diseño (tokens sobre los --bwl-* del kit) y 
 js/config.js            MARCA: nombre, WhatsApp, ciudad, redes. Único lugar para datos de contacto
 js/proyectos.js         Datos de los proyectos. Único lugar para agregar o editar proyectos
 js/intro.js             Activa la pantalla de inicio (una vez por pestaña)
+js/letras.js            Texto gigante letra por letra (lo usan la vitrina y los servicios)
 js/vitrina.js           Vitrina del inicio: miniaturas, nombre gigante y ficha de cada proyecto
+js/servicios.js         Palabra gigante que sigue la lectura de servicios y pasos que se encienden
 js/main.js              Enlaces de WhatsApp, menú, formulario y arranque de la vitrina
 assets/brand/           Archivos del kit que usa la página + og-image.png (1200x630)
 assets/projects/        Capturas WebP de cada proyecto (escritorio 1280x800, móvil 585x1266)
@@ -121,7 +127,8 @@ docs/adr/               Decisiones de arquitectura
 - **WhatsApp, ciudad, nombre, redes**: `js/config.js`. Todos los botones de WhatsApp toman el número
   de ahí. Excepción: el teléfono en el JSON-LD de `index.html` es estático (los buscadores lo leen
   sin ejecutar JS); si cambia el número, actualízalo también ahí.
-- **Textos de servicios y proceso**: directamente en `index.html`.
+- **Textos de servicios y proceso**: directamente en `index.html`. La palabra gigante y su color
+  salen de `data-nombre` y `data-color` de cada servicio.
 - **Versión de CSS y JS**: `index.html` y `404.html` cargan los archivos con `?v=AAAA-MM-DD`. Si
   cambias algo en `css/` o `js/`, actualiza esa fecha para que los navegadores no muestren la
   versión vieja guardada en caché.

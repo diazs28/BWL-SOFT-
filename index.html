@@ -37,8 +37,8 @@
       href="https://fonts.googleapis.com/css2?family=Anton&family=Poppins:wght@400;500;600&display=swap"
     />
     <link rel="stylesheet" href="assets/brand/brand-tokens.css" />
-    <link rel="stylesheet" href="css/reset.css?v=2026-10-08-2" />
-    <link rel="stylesheet" href="css/style.css?v=2026-10-08-2" />
+    <link rel="stylesheet" href="css/reset.css?v=2026-10-08-3" />
+    <link rel="stylesheet" href="css/style.css?v=2026-10-08-3" />
 
     <script type="application/ld+json">
       {
@@ -66,11 +66,13 @@
       }
     </script>
     <!-- Scripts clásicos con defer (no módulos): funcionan también abriendo el archivo con doble clic -->
-    <script src="js/intro.js?v=2026-10-08-2"></script>
-    <script defer src="js/config.js?v=2026-10-08-2"></script>
-    <script defer src="js/proyectos.js?v=2026-10-08-2"></script>
-    <script defer src="js/vitrina.js?v=2026-10-08-2"></script>
-    <script defer src="js/main.js?v=2026-10-08-2"></script>
+    <script src="js/intro.js?v=2026-10-08-3"></script>
+    <script defer src="js/config.js?v=2026-10-08-3"></script>
+    <script defer src="js/proyectos.js?v=2026-10-08-3"></script>
+    <script defer src="js/letras.js?v=2026-10-08-3"></script>
+    <script defer src="js/vitrina.js?v=2026-10-08-3"></script>
+    <script defer src="js/servicios.js?v=2026-10-08-3"></script>
+    <script defer src="js/main.js?v=2026-10-08-3"></script>
   </head>
   <body>
     <!-- Pantalla de inicio: solo se ve si js/intro.js activa la clase "intro" en <html> -->
@@ -111,7 +113,6 @@
           <ul>
             <li><a href="#proyectos">Proyectos</a></li>
             <li><a href="#servicios">Servicios</a></li>
-            <li><a href="#proceso">Proceso</a></li>
             <li><a href="#contacto">Contacto</a></li>
           </ul>
           <a class="boton boton--pequeno" href="#contacto" data-whatsapp>Cotiza tu software</a>
@@ -130,14 +131,14 @@
             aria-labelledby="vitrina-guia"
             data-vitrina-fila
           ></ul>
-          <p class="vitrina__nombre" aria-hidden="true" data-vitrina-nombre>
-            <span class="vitrina__palabra">BWL &amp; SOFT</span>
+          <p class="gigante vitrina__nombre" aria-hidden="true" data-vitrina-nombre>
+            <span class="gigante__palabra">BWL &amp; SOFT</span>
           </p>
           <p class="sr" aria-live="polite" data-vitrina-anuncio></p>
 
           <div class="vitrina__portada">
             <h1 class="hero__titulo" id="hero-titulo">
-              Software a la medida que se adapta a tu negocio, no al revés.
+              Cada negocio es único, tu software también.
             </h1>
             <div class="hero__acciones">
               <a class="boton" href="#contacto" data-whatsapp>
@@ -206,102 +207,129 @@
         </div>
       </section>
 
-      <!-- Servicios -->
-      <section class="seccion servicios" id="servicios" aria-labelledby="servicios-titulo">
+      <!-- Servicios: lo que construimos y cómo trabajamos (js/servicios.js) -->
+      <section
+        class="seccion servicios"
+        id="servicios"
+        aria-labelledby="servicios-titulo"
+        data-servicios
+      >
         <div class="envoltura">
           <div class="seccion__cabeza">
-            <h2 class="seccion__titulo" id="servicios-titulo">Lo que construimos</h2>
+            <h2 class="seccion__titulo" id="servicios-titulo">Servicios</h2>
             <p class="seccion__lead">
-              Cada proyecto empieza por entender cómo trabaja tu negocio. Estas son las cuatro cosas
-              que más nos piden.
+              Cada proyecto empieza por entender cómo trabaja tu negocio. Esto es lo que más nos
+              piden y así lo hacemos realidad.
             </p>
           </div>
-          <ul class="servicios__lista">
-            <li class="servicio">
-              <svg class="servicio__icono" aria-hidden="true" viewBox="0 0 32 32">
-                <use href="#i-web" />
-              </svg>
-              <h3>Páginas web y landings</h3>
-              <p>
-                Una página clara y rápida que explica lo que haces, se ve bien en el celular y lleva
-                a tus clientes a escribirte.
+          <div class="servicios__cuerpo">
+            <div class="servicios__gigante" aria-hidden="true">
+              <p class="gigante" data-servicios-nombre>
+                <span class="gigante__palabra">WEB</span>
               </p>
-              <p class="servicio__para">Para profesionales, eventos y negocios locales.</p>
-            </li>
-            <li class="servicio">
-              <svg class="servicio__icono" aria-hidden="true" viewBox="0 0 32 32">
-                <use href="#i-tienda" />
-              </svg>
-              <h3>Tiendas en línea con pagos</h3>
-              <p>
-                Catálogo, carrito y pagos con tarjeta, PSE o Nequi a través de Wompi, con un panel
-                para manejar productos y pedidos.
-              </p>
-              <p class="servicio__para">Para comercios que ya venden por WhatsApp o en local.</p>
-            </li>
-            <li class="servicio">
-              <svg class="servicio__icono" aria-hidden="true" viewBox="0 0 32 32">
-                <use href="#i-sistema" />
-              </svg>
-              <h3>Sistemas a la medida</h3>
-              <p>
-                Puntos de venta, inventarios y paneles administrativos pensados para la forma en que
-                trabaja tu equipo.
-              </p>
-              <p class="servicio__para">Para restaurantes, bares, almacenes y consultorios.</p>
-            </li>
-            <li class="servicio">
-              <svg class="servicio__icono" aria-hidden="true" viewBox="0 0 32 32">
-                <use href="#i-app" />
-              </svg>
-              <h3>Apps web y PWA</h3>
-              <p>
-                Aplicaciones que se abren desde el navegador y se instalan en el celular sin pasar
-                por tiendas de apps. Pueden seguir funcionando sin internet.
-              </p>
-              <p class="servicio__para">Para equipos en campo, meseros y personal de ventas.</p>
-            </li>
-          </ul>
-        </div>
-      </section>
+            </div>
+            <ul class="servicios__lista">
+              <li
+                class="servicio"
+                data-servicio
+                data-nombre="WEB"
+                data-color="linear-gradient(180deg, #F2C4A4 0%, #D08A62 45%, #B06A45 100%)"
+              >
+                <svg class="servicio__icono" aria-hidden="true" viewBox="0 0 32 32">
+                  <use href="#i-web" />
+                </svg>
+                <h3>Páginas web y landings</h3>
+                <p>
+                  Una página clara y rápida que explica lo que haces, se ve bien en el celular y
+                  lleva a tus clientes a escribirte.
+                </p>
+                <p class="servicio__para">Para profesionales, eventos y negocios locales.</p>
+              </li>
+              <li
+                class="servicio"
+                data-servicio
+                data-nombre="TIENDAS"
+                data-color="linear-gradient(180deg, #F7B24A 0%, #E0662A 100%)"
+              >
+                <svg class="servicio__icono" aria-hidden="true" viewBox="0 0 32 32">
+                  <use href="#i-tienda" />
+                </svg>
+                <h3>Tiendas en línea con pagos</h3>
+                <p>
+                  Catálogo, carrito y pagos con tarjeta, PSE o Nequi a través de Wompi, con un panel
+                  para manejar productos y pedidos.
+                </p>
+                <p class="servicio__para">Para comercios que ya venden por WhatsApp o en local.</p>
+              </li>
+              <li
+                class="servicio"
+                data-servicio
+                data-nombre="SISTEMAS"
+                data-color="linear-gradient(180deg, #F48A6A 0%, #C93A2C 100%)"
+              >
+                <svg class="servicio__icono" aria-hidden="true" viewBox="0 0 32 32">
+                  <use href="#i-sistema" />
+                </svg>
+                <h3>Sistemas a la medida</h3>
+                <p>
+                  Puntos de venta, inventarios y paneles administrativos pensados para la forma en
+                  que trabaja tu equipo.
+                </p>
+                <p class="servicio__para">Para restaurantes, bares, almacenes y consultorios.</p>
+              </li>
+              <li
+                class="servicio"
+                data-servicio
+                data-nombre="APPS"
+                data-color="linear-gradient(180deg, #F5C542 0%, #F07A1A 100%)"
+              >
+                <svg class="servicio__icono" aria-hidden="true" viewBox="0 0 32 32">
+                  <use href="#i-app" />
+                </svg>
+                <h3>Apps web y PWA</h3>
+                <p>
+                  Aplicaciones que se abren desde el navegador y se instalan en el celular sin pasar
+                  por tiendas de apps. Pueden seguir funcionando sin internet.
+                </p>
+                <p class="servicio__para">Para equipos en campo, meseros y personal de ventas.</p>
+              </li>
+            </ul>
+          </div>
 
-      <!-- Proceso -->
-      <section class="seccion proceso" id="proceso" aria-labelledby="proceso-titulo">
-        <div class="envoltura">
-          <div class="seccion__cabeza">
-            <h2 class="seccion__titulo" id="proceso-titulo">Cómo trabajamos</h2>
+          <div class="proceso" id="proceso">
+            <h3 class="proceso__titulo">Cómo trabajamos</h3>
             <p class="seccion__lead">
               Cuatro pasos, siempre con alguien del equipo al otro lado del WhatsApp.
             </p>
+            <ol class="pasos" data-pasos>
+              <li class="paso">
+                <span class="paso__num" aria-hidden="true">1</span>
+                <h4>Conversamos</h4>
+                <p>
+                  Nos cuentas cómo funciona tu negocio y qué quieres resolver. Te enviamos una
+                  propuesta con alcance, tiempos y precio.
+                </p>
+              </li>
+              <li class="paso">
+                <span class="paso__num" aria-hidden="true">2</span>
+                <h4>Diseñamos</h4>
+                <p>
+                  Te mostramos cómo se verá y cómo se usará antes de programar, para ajustar lo que
+                  haga falta.
+                </p>
+              </li>
+              <li class="paso">
+                <span class="paso__num" aria-hidden="true">3</span>
+                <h4>Desarrollamos</h4>
+                <p>Construimos por etapas y te compartimos avances que puedes probar.</p>
+              </li>
+              <li class="paso">
+                <span class="paso__num" aria-hidden="true">4</span>
+                <h4>Desplegamos y acompañamos</h4>
+                <p>Publicamos, te enseñamos a usarlo y seguimos atentos a ajustes y mejoras.</p>
+              </li>
+            </ol>
           </div>
-          <ol class="pasos">
-            <li class="paso">
-              <span class="paso__num" aria-hidden="true">1</span>
-              <h3>Conversamos</h3>
-              <p>
-                Nos cuentas cómo funciona tu negocio y qué quieres resolver. Te enviamos una
-                propuesta con alcance, tiempos y precio.
-              </p>
-            </li>
-            <li class="paso">
-              <span class="paso__num" aria-hidden="true">2</span>
-              <h3>Diseñamos</h3>
-              <p>
-                Te mostramos cómo se verá y cómo se usará antes de programar, para ajustar lo que
-                haga falta.
-              </p>
-            </li>
-            <li class="paso">
-              <span class="paso__num" aria-hidden="true">3</span>
-              <h3>Desarrollamos</h3>
-              <p>Construimos por etapas y te compartimos avances que puedes probar.</p>
-            </li>
-            <li class="paso">
-              <span class="paso__num" aria-hidden="true">4</span>
-              <h3>Desplegamos y acompañamos</h3>
-              <p>Publicamos, te enseñamos a usarlo y seguimos atentos a ajustes y mejoras.</p>
-            </li>
-          </ol>
         </div>
       </section>
 
@@ -406,7 +434,6 @@
           <ul>
             <li><a href="#proyectos">Proyectos</a></li>
             <li><a href="#servicios">Servicios</a></li>
-            <li><a href="#proceso">Proceso</a></li>
             <li><a href="#contacto">Contacto</a></li>
           </ul>
           <ul data-redes>
