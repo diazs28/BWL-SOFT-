@@ -7,6 +7,8 @@
 
   const CLAVE = 'bwl:intro';
   const raiz = document.documentElement;
+  // Con JavaScript, la vitrina del inicio esconde el nombre hasta animar su entrada
+  raiz.classList.add('js');
 
   function yaVista() {
     try {
@@ -37,6 +39,7 @@
     if ('scrollRestoration' in history) history.scrollRestoration = 'auto';
     const capa = document.querySelector('[data-intro]');
     if (capa) capa.remove();
+    document.dispatchEvent(new Event('bwl:intro-fin'));
   }
 
   document.addEventListener('animationend', function (e) {
