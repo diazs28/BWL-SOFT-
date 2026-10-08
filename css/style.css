@@ -1073,6 +1073,140 @@ body {
   height: 28px;
 }
 
+/* ---------- Pantalla de inicio ----------
+   Adaptada de la pantalla de carga de PortalSalud: el nombre aparece palabra por palabra,
+   se desvanece y seis columnas de cobre suben de derecha a izquierda para descubrir la
+   página. Dura unos 2 s. js/intro.js decide si se muestra (una vez por pestaña, nunca con
+   movimiento reducido) y la retira al terminar. */
+.intro-capa {
+  display: none;
+}
+html.intro-bloqueo {
+  overflow: hidden;
+}
+html.intro .intro-capa {
+  position: fixed;
+  inset: 0;
+  z-index: 200;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
+  background: radial-gradient(ellipse at 50% 20%, var(--bwl-grafito-2) 0%, var(--bwl-grafito) 70%);
+  animation: intro-fuera 0.15s 1.95s ease-out forwards;
+}
+.intro-capa__nombre {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 0 0.45em;
+  padding-inline: var(--space-5);
+  font-size: clamp(2.25rem, 1.2rem + 5vw, 4.25rem);
+  font-weight: 500;
+  letter-spacing: var(--bwl-tracking-logo);
+  line-height: 1.1;
+}
+.intro-capa__nombre span {
+  background: var(--bwl-metal);
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+  opacity: 0;
+}
+html.intro .intro-capa__nombre span {
+  animation:
+    intro-palabra-entra 0.4s var(--intro-entra) both,
+    intro-palabra-sale 0.3s var(--intro-sale) forwards;
+}
+html.intro .intro-capa__nombre span:nth-child(1) {
+  animation-delay: 0s, 0.97s;
+}
+html.intro .intro-capa__nombre span:nth-child(2) {
+  animation-delay: 0.06s, 1.01s;
+}
+html.intro .intro-capa__nombre span:nth-child(3) {
+  animation-delay: 0.12s, 1.05s;
+}
+.intro-capa__columnas {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  pointer-events: none;
+}
+.intro-capa__columnas span {
+  flex: 1;
+  height: 100%;
+  margin-left: -1px;
+  background: var(--bwl-metal);
+  transform: translateY(100%);
+}
+html.intro .intro-capa__columnas span {
+  animation: intro-columna 0.45s cubic-bezier(0.65, 0, 0.35, 1) both;
+}
+/* De derecha a izquierda */
+html.intro .intro-capa__columnas span:nth-child(6) {
+  animation-delay: 1.25s;
+}
+html.intro .intro-capa__columnas span:nth-child(5) {
+  animation-delay: 1.3s;
+}
+html.intro .intro-capa__columnas span:nth-child(4) {
+  animation-delay: 1.35s;
+}
+html.intro .intro-capa__columnas span:nth-child(3) {
+  animation-delay: 1.4s;
+}
+html.intro .intro-capa__columnas span:nth-child(2) {
+  animation-delay: 1.45s;
+}
+html.intro .intro-capa__columnas span:nth-child(1) {
+  animation-delay: 1.5s;
+}
+/* El destello del logo espera a que se retire la pantalla de inicio */
+html.intro .hero__logo::after {
+  animation-delay: 2.2s;
+}
+:root {
+  --intro-entra: cubic-bezier(0.25, 0.46, 0.45, 0.94);
+  --intro-sale: cubic-bezier(0.25, 0.46, 0.45, 0.94);
+}
+@keyframes intro-palabra-entra {
+  from {
+    opacity: 0;
+    filter: blur(8px);
+    transform: translateY(6px);
+  }
+  to {
+    opacity: 1;
+    filter: blur(0);
+    transform: none;
+  }
+}
+@keyframes intro-palabra-sale {
+  from {
+    opacity: 1;
+    filter: blur(0);
+  }
+  to {
+    opacity: 0;
+    filter: blur(6px);
+  }
+}
+@keyframes intro-columna {
+  from {
+    transform: translateY(100%);
+  }
+  to {
+    transform: translateY(0);
+  }
+}
+@keyframes intro-fuera {
+  to {
+    opacity: 0;
+    visibility: hidden;
+  }
+}
+
 /* ---------- Movimiento reducido ---------- */
 @media (prefers-reduced-motion: reduce) {
   html {

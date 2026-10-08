@@ -8,7 +8,7 @@ export default [
   js.configs.recommended,
   {
     files: ['js/**/*.js'],
-    languageOptions: { ecmaVersion: 2023, sourceType: 'module', globals: globals.browser },
+    languageOptions: { ecmaVersion: 2023, sourceType: 'script', globals: globals.browser },
     rules: {
       // Seguridad: nada de HTML crudo ni eval; los datos se pintan como texto
       'no-eval': 'error',
