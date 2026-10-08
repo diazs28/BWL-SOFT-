@@ -30,12 +30,12 @@ WhatsApp, presente en toda la página.
   letras gigantes con textura de líneas. Al pasar el mouse, enfocar con teclado o tocar una
   miniatura, las letras se hunden y emerge el nombre del proyecto con su color. La entrada de las letras arranca justo cuando se desvanece la pantalla
   de inicio.
-- **Anillo de miniaturas**: en PC y celular las miniaturas giran en un anillo 3D (360°), despacio
-  y solas hasta que alguien lo usa; se pausa con el mouse encima. Arrastrar (mouse o dedo) o la
-  rueda lo giran y encaja en el proyecto más cercano. La del frente cambia el nombre gigante; un
-  toque la trae al frente y doble toque o doble clic abre su ficha (con teclado, Enter). Tras 8 s
-  sin uso vuelve a girar solo y a "BWL & SOFT". Cada proyecto aparece dos veces para llenar el
-  anillo (las copias no se enfocan ni se anuncian).
+- **Anillo de miniaturas**: en PC y celular las miniaturas giran en un anillo 3D (360°), solas y
+  despacio; se pausa con el mouse encima. Arrastrar (mouse o dedo) o la rueda lo giran y encaja
+  en el proyecto más cercano. La del frente cambia el nombre gigante, también mientras gira solo
+  (al cargar se ven unos 3 s de "BWL & SOFT"). Un toque la trae al frente y doble toque o doble
+  clic abre su ficha (con teclado, Enter). Tras 8 s sin uso vuelve a girar solo. Cada proyecto
+  aparece dos veces para llenar el anillo (las copias no se enfocan ni se anuncian).
 - **Ficha del proyecto**: al hacer clic o tocar una miniatura, la imagen vuela y crece hasta la
   vista previa grande (View Transitions API) y al lado aparece su ficha: tipo, nombre, cliente,
   descripción, tecnologías y el enlace para verlo en vivo o pedir una demo. Entre proyectos se pasa con las flechas, el teclado
