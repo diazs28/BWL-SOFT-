@@ -28,6 +28,5 @@ __pycache__/
 .vscode/
 .idea/
 .vercel/
-.claude/settings.local.json
-.claude/*.local.*
+*.local.json
 npm-debug.log*
