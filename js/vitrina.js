@@ -387,6 +387,18 @@
           accion.append(pide);
         }
       }
+      if (p.repo) {
+        const repo = crear('a', 'boton boton--borde');
+        repo.href = p.repo;
+        repo.target = '_blank';
+        repo.rel = 'noopener noreferrer';
+        repo.append(icono('i-github'), 'Ver en GitHub');
+        repo.setAttribute(
+          'aria-label',
+          `Ver el código de ${p.nombre} en GitHub (abre una pestaña nueva)`,
+        );
+        accion.append(repo);
+      }
 
       $('[data-ficha-contador]').textContent = `${actual + 1} / ${items.length}`;
       items.forEach(({ boton }, i) => boton.setAttribute('aria-pressed', String(i === actual)));
