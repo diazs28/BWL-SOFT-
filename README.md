@@ -178,6 +178,7 @@ docs/adr/               Decisiones de arquitectura
      stack: ['React', 'Node.js'],
      estado: 'en-vivo', // 'en-vivo' | 'privado' | 'demo'
      url: 'https://...', // solo si estado es 'en-vivo'
+     repo: 'https://github.com/...', // opcional: repositorio público → botón "Ver en GitHub"
      imagenes: {
        escritorio: 'assets/projects/mi-proyecto-desktop.webp',
        movil: 'assets/projects/mi-proyecto-movil.webp',

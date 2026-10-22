@@ -11,6 +11,9 @@
 //   solido → color plano para el borde de la miniatura activa y la cortina de la ficha.
 //
 // enObra: true → muestra en la ficha un obrero pixelado martillando ("En construcción").
+//
+// repo: enlace al repositorio público en GitHub → muestra el botón "Ver en GitHub".
+//   Déjalo vacío si el repositorio es privado o aún no existe.
 window.BWL = window.BWL || {};
 window.BWL.PROYECTOS = [
   {
@@ -66,6 +69,7 @@ window.BWL.PROYECTOS = [
     stack: ['HTML', 'CSS', 'JavaScript', 'GSAP'],
     estado: 'en-vivo',
     url: 'https://technosurlandingpage.vercel.app',
+    repo: 'https://github.com/dante312w/TechnoSurLandingPage',
     imagenes: {
       escritorio: 'assets/projects/technosur-desktop.webp',
       movil: 'assets/projects/technosur-movil.webp',
@@ -83,6 +87,7 @@ window.BWL.PROYECTOS = [
     stack: ['HTML', 'CSS', 'JavaScript', 'Web Audio', 'GSAP'],
     estado: 'en-vivo',
     url: 'https://acid303.vercel.app',
+    repo: 'https://github.com/dante312w/ACID303',
     imagenes: {
       escritorio: 'assets/projects/acido303-desktop.webp',
       movil: 'assets/projects/acido303-movil.webp',
@@ -104,6 +109,7 @@ window.BWL.PROYECTOS = [
     stack: ['HTML', 'CSS', 'JavaScript'],
     estado: 'en-vivo',
     url: 'https://landing-page-psycologic.vercel.app',
+    repo: 'https://github.com/dante312w/LandingPagePsycologic',
     imagenes: {
       escritorio: 'assets/projects/psicologa-kds-desktop.webp',
       movil: 'assets/projects/psicologa-kds-movil.webp',
@@ -113,6 +119,72 @@ window.BWL.PROYECTOS = [
       nombre: 'LANDING PSICOLOGÍA',
       color: 'linear-gradient(180deg, #F48A6A 0%, #C93A2C 100%)',
       solido: '#E0604A',
+    },
+  },
+  {
+    id: 'diaz-massages',
+    nombre: 'Valeria Castaño, fisioterapeuta',
+    cliente: 'Consulta de fisioterapia en Popayán',
+    tipo: 'Sitio de profesional',
+    descripcion:
+      'Sitio para una fisioterapeuta: presenta sus enfoques de tratamiento, su trayectoria y su formación, deja descargar la hoja de vida y lleva a agendar una valoración.',
+    stack: ['HTML', 'CSS', 'JavaScript'],
+    estado: 'en-vivo',
+    url: 'https://diaz-massages.vercel.app',
+    repo: 'https://github.com/diazs28/Diaz-Massages',
+    imagenes: {
+      escritorio: 'assets/projects/diaz-massages-desktop.webp',
+      movil: 'assets/projects/diaz-massages-movil.webp',
+    },
+    alt: 'Inicio del sitio de Valeria Castaño con el titular «Movimiento que sana, cuerpo que recuerda» y una ilustración de una mujer en movimiento',
+    vitrina: {
+      nombre: 'FISIOTERAPIA',
+      color: 'linear-gradient(180deg, #7FF0C8 0%, #3FB8A0 100%)',
+      solido: '#4FD1B0',
+    },
+  },
+  {
+    id: 'hotel-recuerdo',
+    nombre: 'Hotel El Recuerdo',
+    cliente: 'Hotel, restaurante y pizzería familiar en Popayán',
+    tipo: 'Sitio web y sistema de reservas',
+    descripcion:
+      'Sitio de un hotel familiar que cuenta su historia desde 1979, muestra las habitaciones en 3D y recibe solicitudes de disponibilidad. Incluye un panel para que el personal gestione habitaciones, camas y solicitudes.',
+    stack: ['React', 'TypeScript', 'Tailwind', 'Three.js', 'GSAP'],
+    estado: 'en-vivo',
+    url: 'https://hotelrecuerdo.vercel.app',
+    repo: 'https://github.com/diazs28/HotelRecuerdo',
+    imagenes: {
+      escritorio: 'assets/projects/hotel-recuerdo-desktop.webp',
+      movil: 'assets/projects/hotel-recuerdo-movil.webp',
+    },
+    alt: 'Portada de Hotel El Recuerdo con el nombre en letras grandes sobre el dibujo en líneas de la fachada del hotel',
+    vitrina: {
+      nombre: 'EL RECUERDO',
+      color: 'linear-gradient(180deg, #FFD08A 0%, #E8963A 100%)',
+      solido: '#F0A64A',
+    },
+  },
+  {
+    id: 'barber-diaz',
+    nombre: 'Magia Barber',
+    cliente: 'Barbería en el centro de Popayán',
+    tipo: 'Landing con agenda de citas',
+    descripcion:
+      'Página de una barbería con el plano del local: el cliente ve qué barbero está libre, revisa sus horas de la semana y aparta su turno sin hacer fila, o escribe por WhatsApp.',
+    stack: ['HTML', 'CSS', 'JavaScript', 'Zod'],
+    estado: 'en-vivo',
+    url: 'https://barber-diaz.vercel.app',
+    repo: 'https://github.com/diazs28/Barber-Diaz',
+    imagenes: {
+      escritorio: 'assets/projects/barber-diaz-desktop.webp',
+      movil: 'assets/projects/barber-diaz-movil.webp',
+    },
+    alt: 'Portada de Magia Barber con el nombre en letras grandes y la ilustración de un barbero cortando el cabello a un cliente',
+    vitrina: {
+      nombre: 'MAGIA BARBER',
+      color: 'linear-gradient(180deg, #F4E9D2 0%, #C9B48C 100%)',
+      solido: '#D9C7A0',
     },
   },
 ];
