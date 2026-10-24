@@ -24,8 +24,8 @@ window.BWL.PROYECTOS = [
     descripcion:
       'Catálogo de productos naturales, carrito, cuentas de cliente y pagos en línea con Wompi. Incluye panel para que el centro naturista gestione productos, ofertas y pedidos.',
     stack: ['React', 'Node.js', 'Express', 'PostgreSQL', 'Wompi'],
-    estado: 'demo',
-    url: '',
+    estado: 'en-vivo',
+    url: 'https://portalsalud.com.co',
     imagenes: {
       escritorio: 'assets/projects/portalsalud-desktop.webp',
       movil: 'assets/projects/portalsalud-movil.webp',

@@ -77,10 +77,8 @@ WhatsApp, presente en toda la página.
 
 ## Pendiente
 
-- **PortalSalud**: no está desplegado. Sale como «Demo bajo solicitud». La captura se tomó del
-  build local sin backend (por eso no aparecen productos en la parte baja).
 - **ÁCIDO 303**: no está desplegado. Sale como «Demo bajo solicitud».
-- Cuando cualquiera de los dos tenga URL, cambia en `js/proyectos.js` su `estado` a `'en-vivo'` y
+- Cuando tenga URL, cambia en `js/proyectos.js` su `estado` a `'en-vivo'` y
   llena `url`.
 - Confirmar el dominio definitivo (ver Supuestos).
 
@@ -237,5 +235,5 @@ Git Flow: `main` (producción) ← `develop` ← `feature/<tema>` o `fix/<tema>`
   (ESLint lo bloquea).
 - Enlaces externos con `rel="noopener noreferrer"`.
 - Repositorio público: sin secretos en el historial, `.gitignore` cubre `.env`, llaves, `.venv/` y
-  la configuración local de editores y de Claude. Dependabot revisa las dependencias cada semana
+  la configuración local de editores y herramientas. Dependabot revisa las dependencias cada semana
   y los reportes de vulnerabilidades se hacen en privado (ver [SECURITY.md](SECURITY.md)).
