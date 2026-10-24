@@ -77,10 +77,8 @@ WhatsApp, presente en toda la página.
 
 ## Pendiente
 
-- **PortalSalud**: no está desplegado. Sale como «Demo bajo solicitud». La captura se tomó del
-  build local sin backend (por eso no aparecen productos en la parte baja).
 - **ÁCIDO 303**: no está desplegado. Sale como «Demo bajo solicitud».
-- Cuando cualquiera de los dos tenga URL, cambia en `js/proyectos.js` su `estado` a `'en-vivo'` y
+- Cuando tenga URL, cambia en `js/proyectos.js` su `estado` a `'en-vivo'` y
   llena `url`.
 - Confirmar el dominio definitivo (ver Supuestos).
 
