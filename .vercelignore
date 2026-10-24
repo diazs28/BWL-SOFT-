@@ -3,7 +3,7 @@ BWL-Soft-Kit-Logo/
 
 # Herramientas de desarrollo
 node_modules/
-.claude/
+.*/
 docs/
 package.json
 package-lock.json

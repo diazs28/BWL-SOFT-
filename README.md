@@ -235,5 +235,5 @@ Git Flow: `main` (producción) ← `develop` ← `feature/<tema>` o `fix/<tema>`
   (ESLint lo bloquea).
 - Enlaces externos con `rel="noopener noreferrer"`.
 - Repositorio público: sin secretos en el historial, `.gitignore` cubre `.env`, llaves, `.venv/` y
-  la configuración local de editores y de Claude. Dependabot revisa las dependencias cada semana
+  la configuración local de editores y herramientas. Dependabot revisa las dependencias cada semana
   y los reportes de vulnerabilidades se hacen en privado (ver [SECURITY.md](SECURITY.md)).
