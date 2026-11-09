@@ -120,10 +120,12 @@ No usa. Todo el contenido es público y estático.
 ## Estructura
 
 ```
-index.html              Página principal (SEO, Open Graph y JSON-LD en el <head>)
+index.html              Página principal en español (SEO, Open Graph y JSON-LD en el <head>)
+en/index.html           Versión en inglés (/en): mismo diseño y scripts, textos traducidos
 404.html                Página de error con la misma marca
 css/reset.css           Reset base
 css/style.css           Sistema de diseño (tokens sobre los --bwl-* del kit) y estilos
+js/idioma.js            Idioma de la página según <html lang> y ayudante BWL.t(es, en)
 js/config.js            MARCA: nombre, WhatsApp, ciudad, redes. Único lugar para datos de contacto
 js/proyectos.js         Datos de los proyectos. Único lugar para agregar o editar proyectos
 js/intro.js             Activa la pantalla de inicio (una vez por pestaña)
@@ -191,11 +193,35 @@ docs/adr/               Decisiones de arquitectura
    letras, y `solido` es el color plano del borde de la miniatura activa y de la cortina de la ficha. Usa nombres cortos
    (hasta unos 12 caracteres); si no caben en el celular, se reducen solos.
 
+   Para la versión en inglés agrega un bloque `en` con los textos traducidos (lo que falte se
+   muestra en español):
+
+   ```js
+   en: {
+     cliente: 'Who it was built for',
+     tipo: 'Online store with payments',
+     descripcion: 'What it does, in one or two plain sentences.',
+     alt: 'What the screenshot shows',
+     vitrina: { nombre: 'MY PROJECT' }, // opcional
+   },
+   ```
+
 4. Listo: la miniatura, la ficha, la navegación y las etiquetas se generan solas. No hay que tocar
    el HTML.
 
 > Las imágenes de `/assets` se sirven con caché de un año (`immutable`). Si reemplazas una captura,
 > cámbiale el nombre (por ejemplo `-v2.webp`) para que los navegadores descarguen la nueva.
+
+### Versión en inglés
+
+- La página en inglés es `en/index.html` y se publica en `/en`. El botón **EN / ES** del menú
+  cambia entre las dos; ambas se enlazan con `hreflang` y están en `sitemap.xml`.
+- **Si cambias un texto en `index.html`, cámbialo también en `en/index.html`.** Las rutas de esa
+  página suben una carpeta (`../css/`, `../js/`, `../assets/`).
+- Los mensajes que arman los scripts (chat de cotización, ficha de proyectos, menú) usan
+  `BWL.t('español', 'English')` de `js/idioma.js`; el idioma sale de `<html lang>`.
+- La versión en inglés ofrece pagos con Stripe o Square en lugar de Wompi, que solo opera en
+  Colombia.
 
 ## Despliegue
 
