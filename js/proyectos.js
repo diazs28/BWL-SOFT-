@@ -14,6 +14,9 @@
 //
 // repo: enlace al repositorio público en GitHub → muestra el botón "Ver en GitHub".
 //   Déjalo vacío si el repositorio es privado o aún no existe.
+//
+// en: textos para la versión en inglés (en/index.html). Reemplazan a los de arriba cuando la página
+//   está en inglés; lo que falte se muestra en español. Puede traer vitrina.nombre propio.
 window.BWL = window.BWL || {};
 window.BWL.PROYECTOS = [
   {
@@ -35,6 +38,13 @@ window.BWL.PROYECTOS = [
       nombre: 'PORTAL SALUD',
       color: 'linear-gradient(180deg, #F7B24A 0%, #E0662A 100%)',
       solido: '#EC8A36',
+    },
+    en: {
+      cliente: 'El Portal de la Salud natural health store',
+      tipo: 'Online store with payments',
+      descripcion:
+        'Natural products catalog, cart, customer accounts and online payments with Wompi. Includes an admin panel for the store to manage products, offers and orders.',
+      alt: 'Home page of the Portal Salud store, with the natural health store logo over a green block',
     },
   },
   {
@@ -58,6 +68,13 @@ window.BWL.PROYECTOS = [
       color: 'linear-gradient(180deg, #F2C4A4 0%, #D08A62 45%, #B06A45 100%)',
       solido: '#D08A62',
     },
+    en: {
+      cliente: 'Our own product for restaurants and bars',
+      tipo: 'Custom POS system',
+      descripcion:
+        'Point of sale that works offline: table map, cash register, recipe-based inventory and reports on the computer; an app for waiters to place orders from their phone and a kitchen display with timers.',
+      alt: 'Karbon POS table map showing free, occupied and waiting-for-check tables',
+    },
   },
   {
     id: 'technosur',
@@ -76,6 +93,13 @@ window.BWL.PROYECTOS = [
     },
     alt: 'Portada de NOCTURNA con el título en letras grandes rojas y blancas y una cuenta regresiva',
     vitrina: { nombre: 'NOCTURNA', color: '#E8301C', solido: '#E8301C' },
+    en: {
+      cliente: 'TechnoSur',
+      tipo: 'Event landing page',
+      descripcion:
+        'Launch page for a techno night in Bogotá: countdown, artist lineup, ticket sales and an animated background that reacts to the visitor.',
+      alt: 'NOCTURNA cover with the title in large red and white letters and a countdown',
+    },
   },
   {
     id: 'acido303',
@@ -97,6 +121,13 @@ window.BWL.PROYECTOS = [
       nombre: 'ÁCIDO 303',
       color: 'linear-gradient(180deg, #F5C542 0%, #F07A1A 100%)',
       solido: '#F5A12E',
+    },
+    en: {
+      cliente: 'Portfolio project',
+      tipo: 'Interactive event landing page',
+      descripcion:
+        'Landing page for an acid techno night with a music sequencer you can play in the browser. The whole page pulses to the beat the visitor creates.',
+      alt: 'ÁCIDO 303 cover with the title in white and acid green and a yellow smiley face',
     },
   },
   {
@@ -120,6 +151,15 @@ window.BWL.PROYECTOS = [
       color: 'linear-gradient(180deg, #F48A6A 0%, #C93A2C 100%)',
       solido: '#E0604A',
     },
+    en: {
+      nombre: 'Karla Silva, psychologist',
+      cliente: 'Clinical and educational psychology practice',
+      tipo: 'Professional website',
+      descripcion:
+        'Website for a psychologist in Pasto who sees clients in person and online: it presents her specialties, explains how sessions work and leads visitors to book on WhatsApp.',
+      alt: 'Karla Silva’s website home with the headline «A space to talk, think and find clarity» and her photo',
+      vitrina: { nombre: 'PSYCHOLOGY' },
+    },
   },
   {
     id: 'diaz-massages',
@@ -141,6 +181,15 @@ window.BWL.PROYECTOS = [
       nombre: 'FISIOTERAPIA',
       color: 'linear-gradient(180deg, #7FF0C8 0%, #3FB8A0 100%)',
       solido: '#4FD1B0',
+    },
+    en: {
+      nombre: 'Valeria Castaño, physiotherapist',
+      cliente: 'Physiotherapy practice in Popayán',
+      tipo: 'Professional website',
+      descripcion:
+        'Website for a physiotherapist: it presents her treatment approaches, experience and training, lets visitors download her résumé and leads them to book an assessment.',
+      alt: 'Valeria Castaño’s website home with the headline «Movement that heals, a body that remembers» and an illustration of a woman in motion',
+      vitrina: { nombre: 'PHYSIOTHERAPY' },
     },
   },
   {
@@ -164,6 +213,13 @@ window.BWL.PROYECTOS = [
       color: 'linear-gradient(180deg, #FFD08A 0%, #E8963A 100%)',
       solido: '#F0A64A',
     },
+    en: {
+      cliente: 'Family-run hotel, restaurant and pizzeria in Popayán',
+      tipo: 'Website and booking system',
+      descripcion:
+        'Website for a family hotel that tells its story since 1979, shows the rooms in 3D and receives availability requests. Includes a panel for staff to manage rooms, beds and requests.',
+      alt: 'Hotel El Recuerdo cover with the name in large letters over a line drawing of the hotel facade',
+    },
   },
   {
     id: 'barber-diaz',
@@ -185,6 +241,13 @@ window.BWL.PROYECTOS = [
       nombre: 'MAGIA BARBER',
       color: 'linear-gradient(180deg, #F4E9D2 0%, #C9B48C 100%)',
       solido: '#D9C7A0',
+    },
+    en: {
+      cliente: 'Barbershop in downtown Popayán',
+      tipo: 'Landing page with online booking',
+      descripcion:
+        'Barbershop page with a floor plan of the shop: clients see which barber is free, check their hours for the week and book a slot without waiting in line, or message on WhatsApp.',
+      alt: 'Magia Barber cover with the name in large letters and an illustration of a barber cutting a client’s hair',
     },
   },
 ];

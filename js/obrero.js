@@ -5,6 +5,8 @@
 (function () {
   'use strict';
 
+  const { t } = window.BWL;
+
   // Pixel art de 20 x 16. Cada letra es un color; el punto es vacío.
   const COLORES = {
     H: '#D08A62', // casco cobre
@@ -114,7 +116,7 @@
     const obra = document.createElement('span');
     obra.className = 'obra';
     obra.setAttribute('role', 'img');
-    obra.setAttribute('aria-label', 'Proyecto en construcción');
+    obra.setAttribute('aria-label', t('Proyecto en construcción', 'Project under construction'));
 
     const svg = document.createElementNS(NS, 'svg');
     svg.setAttribute('class', 'obra__obrero');
@@ -131,7 +133,7 @@
     const texto = document.createElement('span');
     texto.className = 'obra__texto';
     texto.setAttribute('aria-hidden', 'true');
-    texto.textContent = 'En construcción';
+    texto.textContent = t('En construcción', 'Under construction');
 
     obra.append(svg, texto);
     return obra;

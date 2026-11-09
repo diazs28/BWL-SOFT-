@@ -12,6 +12,8 @@
     iniciarServicios,
     iniciarCotizar,
     iniciarEquipo,
+    idioma,
+    t,
   } = window.BWL;
 
   // ---------- Datos de marca ----------
@@ -63,13 +65,15 @@
   function cerrarMenu() {
     menu.classList.remove('is-open');
     botonMenu.setAttribute('aria-expanded', 'false');
-    botonMenu.querySelector('.sr').textContent = 'Abrir menú';
+    botonMenu.querySelector('.sr').textContent = t('Abrir menú', 'Open menu');
   }
 
   botonMenu.addEventListener('click', () => {
     const abierto = menu.classList.toggle('is-open');
     botonMenu.setAttribute('aria-expanded', String(abierto));
-    botonMenu.querySelector('.sr').textContent = abierto ? 'Cerrar menú' : 'Abrir menú';
+    botonMenu.querySelector('.sr').textContent = abierto
+      ? t('Cerrar menú', 'Close menu')
+      : t('Abrir menú', 'Open menu');
   });
   menu.addEventListener('click', (e) => {
     if (e.target.closest('a')) cerrarMenu();
@@ -86,9 +90,30 @@
   requestAnimationFrame(marcarScroll);
 
   // ---------- Vitrina de proyectos del inicio ----------
-  iniciarVitrina(document.querySelector('[data-vitrina]'), PROYECTOS, {
+  // En inglés, cada proyecto toma los textos de su bloque "en" (ver js/proyectos.js). La página
+  // vive en en/, así que las capturas suben una carpeta para encontrar assets/.
+  const proyectos =
+    idioma === 'en'
+      ? PROYECTOS.map(({ en = {}, ...p }) => ({
+          ...p,
+          ...en,
+          vitrina: { ...p.vitrina, ...en.vitrina },
+          imagenes: {
+            escritorio: `../${p.imagenes.escritorio}`,
+            movil: `../${p.imagenes.movil}`,
+          },
+        }))
+      : PROYECTOS;
+
+  iniciarVitrina(document.querySelector('[data-vitrina]'), proyectos, {
     marca: MARCA.nombre,
-    enlaceDemo: (p) => enlaceWhatsapp(`Hola, BWL & SOFT. Me gustaría ver una demo de ${p.nombre}.`),
+    enlaceDemo: (p) =>
+      enlaceWhatsapp(
+        t(
+          `Hola, BWL & SOFT. Me gustaría ver una demo de ${p.nombre}.`,
+          `Hi, BWL & SOFT. I would like to see a demo of ${p.nombre}.`,
+        ),
+      ),
   });
 
   // ---------- Servicios ----------
