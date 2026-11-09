@@ -7,6 +7,8 @@
 (function () {
   'use strict';
 
+  const { t } = window.BWL;
+
   function iniciarEquipo(panel, { boton }) {
     if (!panel || !boton) return;
 
@@ -53,7 +55,7 @@
       abierto = true;
       document.dispatchEvent(new CustomEvent('bwl:panel', { detail: 'equipo' }));
       boton.setAttribute('aria-expanded', 'true');
-      boton.setAttribute('aria-label', 'Cerrar hojas de vida');
+      boton.setAttribute('aria-label', t('Cerrar hojas de vida', 'Close team résumés'));
       document.documentElement.classList.add('equipo-abierto');
       panel.hidden = false;
       panel.style.transform = '';
@@ -87,7 +89,7 @@
       if (!abierto) return;
       abierto = false;
       boton.setAttribute('aria-expanded', 'false');
-      boton.setAttribute('aria-label', 'Hojas de vida del equipo');
+      boton.setAttribute('aria-label', t('Hojas de vida del equipo', 'Team résumés'));
       document.documentElement.classList.remove('equipo-abierto');
       animarFondo(false);
       if (animando) animando.cancel();

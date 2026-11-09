@@ -14,14 +14,22 @@
 (function () {
   'use strict';
 
-  const { letras, crearObrero } = window.BWL;
+  const { letras, crearObrero, t } = window.BWL;
   const { ESCALONADO, DURACION, CURVA } = letras;
   const UMBRAL_SWIPE = 50;
 
   const ETIQUETAS = {
-    privado: { icono: 'i-candado', texto: 'Software privado' },
-    demo: { icono: 'i-candado', texto: 'Demo bajo solicitud' },
+    privado: { icono: 'i-candado', texto: t('Software privado', 'Private software') },
+    demo: { icono: 'i-candado', texto: t('Demo bajo solicitud', 'Demo on request') },
   };
+
+  /** Texto que oye el lector de pantalla al cambiar de proyecto. */
+  function anunciar(p, posicion, total) {
+    return t(
+      `${p.nombre}, proyecto ${posicion} de ${total}`,
+      `${p.nombre}, project ${posicion} of ${total}`,
+    );
+  }
 
   function crear(tag, clase, texto) {
     const el = document.createElement(tag);
@@ -340,8 +348,14 @@
 
     // Indicación de uso según el dispositivo
     $('[data-vitrina-guia]').textContent = punteroFino.matches
-      ? 'Arrastra nuestros proyectos y haz doble clic en uno para verlo'
-      : 'Desliza nuestros proyectos y toca dos veces uno para verlo';
+      ? t(
+          'Arrastra nuestros proyectos y haz doble clic en uno para verlo',
+          'Drag our projects and double-click one to open it',
+        )
+      : t(
+          'Desliza nuestros proyectos y toca dos veces uno para verlo',
+          'Swipe our projects and double-tap one to open it',
+        );
 
     // ---------- Ficha del proyecto ----------
     function rellenar(p) {
@@ -350,8 +364,8 @@
         p.estado === 'en-vivo'
           ? hostDe(p.url)
           : p.estado === 'privado'
-            ? 'red local del negocio'
-            : 'demo privada';
+            ? t('red local del negocio', 'on-premise network')
+            : t('demo privada', 'private demo');
       fuenteMovil.srcset = p.imagenes.movil;
       foto.srcset = `${p.imagenes.escritorio.replace('.webp', '-800.webp')} 800w, ${p.imagenes.escritorio} 1280w`;
       foto.src = p.imagenes.escritorio;
@@ -370,8 +384,14 @@
         a.href = p.url;
         a.target = '_blank';
         a.rel = 'noopener noreferrer';
-        a.append('Ver en vivo', icono('i-externo'));
-        a.setAttribute('aria-label', `Ver en vivo: ${p.nombre} (abre una pestaña nueva)`);
+        a.append(t('Ver en vivo', 'See it live'), icono('i-externo'));
+        a.setAttribute(
+          'aria-label',
+          t(
+            `Ver en vivo: ${p.nombre} (abre una pestaña nueva)`,
+            `See ${p.nombre} live (opens in a new tab)`,
+          ),
+        );
         accion.append(a);
       } else {
         const etiqueta = ETIQUETAS[p.estado] ?? ETIQUETAS.demo;
@@ -380,7 +400,7 @@
         accion.append(nota);
         if (p.enObra && crearObrero) accion.append(crearObrero());
         if (p.estado === 'demo') {
-          const pide = crear('a', 'boton boton--borde', 'Pedir una demo');
+          const pide = crear('a', 'boton boton--borde', t('Pedir una demo', 'Request a demo'));
           pide.href = enlaceDemo(p);
           pide.target = '_blank';
           pide.rel = 'noopener noreferrer';
@@ -392,10 +412,13 @@
         repo.href = p.repo;
         repo.target = '_blank';
         repo.rel = 'noopener noreferrer';
-        repo.append(icono('i-github'), 'Ver en GitHub');
+        repo.append(icono('i-github'), t('Ver en GitHub', 'View on GitHub'));
         repo.setAttribute(
           'aria-label',
-          `Ver el código de ${p.nombre} en GitHub (abre una pestaña nueva)`,
+          t(
+            `Ver el código de ${p.nombre} en GitHub (abre una pestaña nueva)`,
+            `View the code of ${p.nombre} on GitHub (opens in a new tab)`,
+          ),
         );
         accion.append(repo);
       }
@@ -413,7 +436,7 @@
     function construirPista() {
       if (pista) return;
       pista = crear('div', 'ficha__pista');
-      pista.setAttribute('aria-label', 'Vistas previas de los proyectos');
+      pista.setAttribute('aria-label', t('Vistas previas de los proyectos', 'Project previews'));
       telefonos = items.map(({ p }) => {
         const figura = crear('figure', 'marco ficha__tel');
         const img = document.createElement('img');
@@ -464,7 +487,7 @@
       rellenar(item.p);
       piezas.forEach((pieza) => pieza.getAnimations().forEach((a) => a.cancel()));
       animarPiezas(true);
-      anuncio.textContent = `${item.p.nombre}, proyecto ${actual + 1} de ${items.length}`;
+      anuncio.textContent = anunciar(item.p, actual + 1, items.length);
     }
 
     const usaPista = () => esMovil.matches && pista !== null;
@@ -540,7 +563,7 @@
       };
       await (animar ? conTransicion(actualizar) : actualizar());
       destino.style.viewTransitionName = '';
-      anuncio.textContent = `${item.p.nombre}, proyecto ${actual + 1} de ${items.length}`;
+      anuncio.textContent = anunciar(item.p, actual + 1, items.length);
       if (enfocar) $('[data-ficha-titulo]').focus({ preventScroll: true });
       if (ficha.getBoundingClientRect().top > window.innerHeight * 0.7) {
         fila.scrollIntoView({ behavior: reduceMotion.matches ? 'auto' : 'smooth' });
@@ -564,7 +587,7 @@
       const item = items[actual];
       marcarActiva(item.boton);
       mostrar(item.p.vitrina);
-      anuncio.textContent = `${item.p.nombre}, proyecto ${actual + 1} de ${items.length}`;
+      anuncio.textContent = anunciar(item.p, actual + 1, items.length);
 
       if (reduceMotion.matches) {
         rellenar(item.p);
@@ -617,7 +640,7 @@
       });
       miniatura.style.viewTransitionName = '';
       history.replaceState(null, '', location.pathname + location.search);
-      anuncio.textContent = 'Ficha del proyecto cerrada';
+      anuncio.textContent = t('Ficha del proyecto cerrada', 'Project details closed');
       focoSilencioso = true;
       item.boton.focus({ preventScroll: true });
       focoSilencioso = false;

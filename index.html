@@ -13,9 +13,13 @@
     />
     <meta name="theme-color" content="#1C1C1F" />
     <link rel="canonical" href="https://bwl-soft.vercel.app/" />
+    <link rel="alternate" hreflang="es" href="https://bwl-soft.vercel.app/" />
+    <link rel="alternate" hreflang="en" href="https://bwl-soft.vercel.app/en" />
+    <link rel="alternate" hreflang="x-default" href="https://bwl-soft.vercel.app/" />
 
     <meta property="og:type" content="website" />
     <meta property="og:locale" content="es_CO" />
+    <meta property="og:locale:alternate" content="en_US" />
     <meta property="og:site_name" content="BWL & SOFT" />
     <meta property="og:title" content="BWL & SOFT | Software a la medida que impulsa tu negocio" />
     <meta
@@ -40,8 +44,8 @@
       href="https://fonts.googleapis.com/css2?family=Anton&family=Poppins:wght@400;500;600&display=swap"
     />
     <link rel="stylesheet" href="assets/brand/brand-tokens.css" />
-    <link rel="stylesheet" href="css/reset.css?v=2026-10-22-1" />
-    <link rel="stylesheet" href="css/style.css?v=2026-10-22-1" />
+    <link rel="stylesheet" href="css/reset.css?v=2026-11-08-1" />
+    <link rel="stylesheet" href="css/style.css?v=2026-11-08-1" />
 
     <script type="application/ld+json">
       {
@@ -63,22 +67,23 @@
           "@type": "ContactPoint",
           "telephone": "+57-320-936-7458",
           "contactType": "sales",
-          "availableLanguage": "Spanish"
+          "availableLanguage": ["Spanish", "English"]
         },
         "sameAs": ["https://github.com/dante312w"]
       }
     </script>
     <!-- Scripts clásicos con defer (no módulos): funcionan también abriendo el archivo con doble clic -->
-    <script src="js/intro.js?v=2026-10-22-1"></script>
-    <script defer src="js/config.js?v=2026-10-22-1"></script>
-    <script defer src="js/proyectos.js?v=2026-10-22-1"></script>
-    <script defer src="js/letras.js?v=2026-10-22-1"></script>
-    <script defer src="js/obrero.js?v=2026-10-22-1"></script>
-    <script defer src="js/vitrina.js?v=2026-10-22-1"></script>
-    <script defer src="js/servicios.js?v=2026-10-22-1"></script>
-    <script defer src="js/cotizar.js?v=2026-10-22-1"></script>
-    <script defer src="js/equipo.js?v=2026-10-22-1"></script>
-    <script defer src="js/main.js?v=2026-10-22-1"></script>
+    <script src="js/intro.js?v=2026-11-08-1"></script>
+    <script defer src="js/idioma.js?v=2026-11-08-1"></script>
+    <script defer src="js/config.js?v=2026-11-08-1"></script>
+    <script defer src="js/proyectos.js?v=2026-11-08-1"></script>
+    <script defer src="js/letras.js?v=2026-11-08-1"></script>
+    <script defer src="js/obrero.js?v=2026-11-08-1"></script>
+    <script defer src="js/vitrina.js?v=2026-11-08-1"></script>
+    <script defer src="js/servicios.js?v=2026-11-08-1"></script>
+    <script defer src="js/cotizar.js?v=2026-11-08-1"></script>
+    <script defer src="js/equipo.js?v=2026-11-08-1"></script>
+    <script defer src="js/main.js?v=2026-11-08-1"></script>
   </head>
   <body>
     <!-- Pantalla de inicio (ola de cobre): solo se ve si js/intro.js activa la clase "intro" en <html> -->
@@ -100,6 +105,14 @@
             height="740"
           />
         </a>
+        <a
+          class="nav__idioma"
+          href="en/"
+          hreflang="en"
+          lang="en"
+          aria-label="Read this page in English"
+          >EN</a
+        >
         <button
           class="nav__boton"
           type="button"
