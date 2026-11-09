@@ -6,6 +6,8 @@
 (function () {
   'use strict';
 
+  const { t } = window.BWL;
+
   const PAUSA_ESCRIBIENDO = 650; // ms que el "equipo" tarda en responder
   const LLAMADO_TRAS = 6000; // ms antes de que el botón se estire para llamar la atención
 
@@ -104,7 +106,12 @@
         respuestas.nombre = valor;
         burbuja(valor, 'cliente');
         actual.hidden = true;
-        await responder(`Mucho gusto, ${valor.split(' ')[0]}. ¿Qué quieres construir?`);
+        await responder(
+          t(
+            `Mucho gusto, ${valor.split(' ')[0]}. ¿Qué quieres construir?`,
+            `Nice to meet you, ${valor.split(' ')[0]}. What would you like to build?`,
+          ),
+        );
         mostrarPaso(1);
       } else if (tipo === 'mensaje') {
         const valor = form.elements.mensaje.value.trim();
@@ -120,15 +127,21 @@
       burbuja(valor, 'cliente');
       pasos[1].hidden = true;
       await responder(
-        'Perfecto. Cuéntanos tu idea en pocas palabras: qué haces y qué te gustaría.',
+        t(
+          'Perfecto. Cuéntanos tu idea en pocas palabras: qué haces y qué te gustaría.',
+          'Great. Tell us your idea in a few words: what your business does and what you need.',
+        ),
       );
       mostrarPaso(2);
     }
 
     function enviar() {
       const texto = [
-        `Hola, BWL & SOFT. Soy ${respuestas.nombre}.`,
-        `Tipo de proyecto: ${respuestas.tipo}.`,
+        t(
+          `Hola, BWL & SOFT. Soy ${respuestas.nombre}.`,
+          `Hi, BWL & SOFT. I'm ${respuestas.nombre}.`,
+        ),
+        t(`Tipo de proyecto: ${respuestas.tipo}.`, `Project type: ${respuestas.tipo}.`),
         '',
         respuestas.mensaje,
       ].join('\n');
@@ -141,7 +154,10 @@
       pasos[2].hidden = true;
       $('[data-cotizar-progreso]').style.setProperty('--avance', '1');
       responder(
-        '¡Listo! Abrimos WhatsApp con tu mensaje. Solo toca “Enviar” y te respondemos.',
+        t(
+          '¡Listo! Abrimos WhatsApp con tu mensaje. Solo toca “Enviar” y te respondemos.',
+          'Done! We opened WhatsApp with your message. Just tap “Send” and we will get back to you.',
+        ),
       ).then(() => {
         const final = $('[data-cotizar-final]');
         $('[data-cotizar-reabrir]').href = enlace;
@@ -157,7 +173,12 @@
       Object.keys(respuestas).forEach((k) => (respuestas[k] = ''));
       chat.replaceChildren();
       $('[data-cotizar-final]').hidden = true;
-      burbuja('Hola. Te ayudamos a armar el mensaje en tres pasos. ¿Cómo te llamas?');
+      burbuja(
+        t(
+          'Hola. Te ayudamos a armar el mensaje en tres pasos. ¿Cómo te llamas?',
+          "Hi. We'll help you write your message in three steps. What's your name?",
+        ),
+      );
       mostrarPaso(0);
     }
 
@@ -222,7 +243,7 @@
       document.dispatchEvent(new CustomEvent('bwl:panel', { detail: 'cotizar' }));
       boton.classList.remove('is-llamando');
       boton.setAttribute('aria-expanded', 'true');
-      boton.setAttribute('aria-label', 'Cerrar cotización');
+      boton.setAttribute('aria-label', t('Cerrar cotización', 'Close quote chat'));
       document.documentElement.classList.add('cotizar-abierto');
       panel.hidden = false;
       panel.style.transform = '';
@@ -247,7 +268,7 @@
       if (!abierto) return;
       abierto = false;
       boton.setAttribute('aria-expanded', 'false');
-      boton.setAttribute('aria-label', 'Cotizar por WhatsApp');
+      boton.setAttribute('aria-label', t('Cotizar por WhatsApp', 'Get a quote on WhatsApp'));
       document.documentElement.classList.remove('cotizar-abierto');
       animarFondo(false);
       if (animando) animando.cancel();

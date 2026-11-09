@@ -3,15 +3,20 @@
 (function () {
   'use strict';
 
+  const { t } = window.BWL;
+
   const MARCA = {
     nombre: 'BWL & SOFT',
     nombreLargo: 'BWL SOFT · Binomio Web Lab',
-    ciudad: 'Popayán, Cauca',
+    ciudad: t('Popayán, Cauca', 'Popayán, Colombia'),
     pais: 'Colombia',
     // Solo dígitos, con indicativo de país (57) y sin "+".
     whatsapp: '573209367458',
     whatsappVisible: '+57 320 936 7458',
-    mensajeWhatsapp: 'Hola, BWL & SOFT. Quiero cotizar un software para mi negocio.',
+    mensajeWhatsapp: t(
+      'Hola, BWL & SOFT. Quiero cotizar un software para mi negocio.',
+      'Hi, BWL & SOFT. I would like a quote for a website or software for my business.',
+    ),
     // Deja vacío lo que todavía no exista: no se muestra en la página.
     correo: '',
     redes: {
